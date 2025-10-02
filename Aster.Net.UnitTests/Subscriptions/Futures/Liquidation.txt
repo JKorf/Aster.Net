@@ -1,0 +1,23 @@
+> { "method": "SUBSCRIBE", "params": ["ethusdt@forceOrder"],"id": "|1|"}
+< { "id": |1|, "result": null }
+= 
+{
+  "stream": "ethusdt@forceOrder",
+  "data": {
+	"e":"forceOrder",                 
+	"E":1568014460893,             
+	"o":{	
+		"s":"BTCUSDT",           
+		"S":"SELL",                
+		"o":"LIMIT",              
+		"f":"IOC",                  
+		"q":"0.014",                    
+		"p":"9910",                 
+		"ap":"9910",                    
+		"X":"FILLED",                   
+		"l":"0.014",                   
+		"z":"0.014",                 
+		"T":1568014460893     	
+	}
+  }
+}

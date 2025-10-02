@@ -1,0 +1,23 @@
+GET
+/api/v1/allOrders
+true
+[
+    {
+        "orderId": 349661, 
+        "symbol": "BNBUSDT", 
+        "status": "NEW", 
+        "clientOrderId": "LzypgiMwkf3TQ8wwvLo8RA", 
+        "price": "1.10000000", 
+        "avgPrice": "0.0000000000000000", 
+        "origQty": "5",  
+        "executedQty": "0", 
+        "cumQuote": "0", 
+        "timeInForce": "GTC", 
+        "type": "LIMIT", 
+        "side": "BUY",   
+        "stopPrice": "0", 
+        "origType": "LIMIT", 
+        "time": 1756252940207, 
+        "updateTime": 1756252940207
+    }
+]

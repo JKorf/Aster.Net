@@ -1,0 +1,19 @@
+> { "method": "SUBSCRIBE", "params": ["ethusdt@aggTrade"],"id": "|1|"}
+< { "id": |1|, "result": null }
+= 
+{
+  "stream": "ethusdt@aggTrade",
+  "data": {
+	  "e": "aggTrade", 
+	  "E": 123456789,  
+	  "s": "BNBBTC",   
+	  "a": 12345,      
+	  "p": "0.001",   
+	  "q": "100",      
+	  "f": 100,       
+	  "l": 105,        
+	  "T": 123456785,   
+	  "m": true,        
+	  "M": true    
+	}
+}

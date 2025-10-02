@@ -1,0 +1,8 @@
+GET
+/api/v1/aster/withdraw/estimateFee
+true
+{
+  "tokenPrice": 1.00019000,
+   "gasCost": 0.5000,
+  "gasUsdValue": 0.5
+}

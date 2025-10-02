@@ -1,0 +1,8 @@
+GET
+/api/v1/commissionRate
+true
+{
+   "symbol": "APXUSDT",
+   "makerCommissionRate": "0.000200",    
+   "takerCommissionRate": "0.000700"
+}

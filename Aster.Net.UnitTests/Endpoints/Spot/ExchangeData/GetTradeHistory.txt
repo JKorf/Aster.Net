@@ -1,0 +1,13 @@
+GET
+/api/v1/historicalTrades
+false
+[
+ {
+    "id": 1140,
+    "price": "1.10000000",
+    "qty": "7.27200000",
+    "baseQty": "6.61090909",
+    "time": 1756094288700,
+    "isBuyerMaker": false
+ }
+]

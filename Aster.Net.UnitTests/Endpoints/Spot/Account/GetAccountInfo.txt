@@ -1,0 +1,23 @@
+GET
+/api/v1/account
+true
+{     
+   "feeTier": 0,
+   "canTrade": true,
+   "canDeposit": true,
+   "canWithdraw": true,
+   "canBurnAsset": true,
+   "updateTime": 0,
+   "balances": [
+    {
+      "asset": "BTC",
+      "free": "4723846.89208129",
+      "locked": "0.00000000"
+    },
+    {
+      "asset": "LTC",
+      "free": "4763368.68006011",
+      "locked": "0.00000000"
+    }
+  ]
+}

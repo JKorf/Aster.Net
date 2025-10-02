@@ -1,0 +1,27 @@
+> { "method": "SUBSCRIBE", "params": ["ethusdt@depth5@100ms"],"id": "|1|"}
+< { "id": |1|, "result": null }
+= 
+{
+  "stream": "ethusdt@depth5@100ms",
+  "data": { 
+  "e": "depthUpdate", 
+  "E": 123456789,    
+  "T": 123456788,   
+  "s": "BTCUSDT",   
+  "U": 100,          
+  "u": 120,        
+  "pu": 99,          
+  "bids": [            
+    [
+      "0.0024",        
+      "10"             
+    ]
+  ],
+  "asks": [          
+    [
+      "0.0026",       
+      "100"            
+    ]
+  ]
+} 
+}

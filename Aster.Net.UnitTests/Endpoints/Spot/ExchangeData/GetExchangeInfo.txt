@@ -1,0 +1,115 @@
+GET
+/api/v1/exchangeInfo
+false
+{
+	"timezone": "UTC",
+	"serverTime": 1756197279679,
+	"rateLimits": [{
+			"rateLimitType": "REQUEST_WEIGHT",
+			"interval": "MINUTE",
+			"intervalNum": 1,
+			"limit": 6000
+		},
+		{
+			"rateLimitType": "ORDERS",
+			"interval": "MINUTE",
+			"intervalNum": 1,
+			"limit": 6000
+		},
+		{
+			"rateLimitType": "ORDERS",
+			"interval": "SECOND",
+			"intervalNum": 10,
+			"limit": 300
+		}
+	],
+	"exchangeFilters": [],
+	"assets": [{
+			"asset": "USD"
+		}, {
+			"asset": "USDT"
+		},
+		{
+			"asset": "BNB"
+		}
+	],
+	"symbols": [{
+		"status": "TRADING",
+		"baseAsset": "BNB",
+		"quoteAsset": "USDT",
+		"pricePrecision": 8,
+		"quantityPrecision": 8,
+		"baseAssetPrecision": 8,
+		"quotePrecision": 8,
+		"filters": [{
+				"minPrice": "0.01000000",
+				"maxPrice": "100000",
+				"filterType": "PRICE_FILTER",
+				"tickSize": "0.01000000"
+			},
+			{
+				"stepSize": "0.00100000",
+				"filterType": "LOT_SIZE",
+				"maxQty": "1000",
+				"minQty": "1"
+			},
+			{
+				"stepSize": "0.00100000",
+				"filterType": "MARKET_LOT_SIZE",
+				"maxQty": "900000",
+				"minQty": "0.00100000"
+			},
+			{
+				"limit": 200,
+				"filterType": "MAX_NUM_ORDERS"
+			},
+			{
+				"minNotional": "5",
+				"filterType": "MIN_NOTIONAL"
+			},
+			{
+				"maxNotional": "100",
+				"filterType": "MAX_NOTIONAL"
+			},
+			{
+				"maxNotional": "100",
+				"minNotional": "5",
+				"avgPriceMins": 5,
+				"applyMinToMarket": true,
+				"filterType": "NOTIONAL",
+				"applyMaxToMarket": true
+			},
+			{
+				"multiplierDown": "0",
+				"multiplierUp": "5",
+				"multiplierDecimal": "0",
+				"filterType": "PERCENT_PRICE"
+			},
+			{
+				"bidMultiplierUp": "5",
+				"askMultiplierUp": "5",
+				"bidMultiplierDown": "0",
+				"avgPriceMins": 5,
+				"multiplierDecimal": "0",
+				"filterType": "PERCENT_PRICE_BY_SIDE",
+				"askMultiplierDown": "0"
+			}
+		],
+		"orderTypes": [
+			"LIMIT",
+			"MARKET",
+			"STOP",
+			"STOP_MARKET",
+			"TAKE_PROFIT",
+			"TAKE_PROFIT_MARKET"
+		],
+		"timeInForce": [
+			"GTC",
+			"IOC",
+			"FOK",
+			"GTX"
+		],
+		"symbol": "BNBUSDT",
+		"ocoAllowed": false
+	}]
+}

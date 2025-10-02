@@ -1,0 +1,13 @@
+GET
+/api/v1/trades
+false
+[
+ {
+    "id": 657,
+    "price": "1.01000000",
+    "qty": "5.00000000",
+    "baseQty": "4.95049505",
+    "time": 1755156533943,
+    "isBuyerMaker": false
+  }
+]

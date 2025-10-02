@@ -1,0 +1,16 @@
+GET
+/fapi/v1/leverageBracket
+true
+[{
+    "symbol": "ETHUSDT",
+    "brackets": [
+        {
+            "bracket": 1,
+            "initialLeverage": 75,
+            "notionalCap": 10000,
+            "notionalFloor": 0,
+            "maintMarginRatio": 0.0065,
+            "cum":0
+        }
+    ]
+}]

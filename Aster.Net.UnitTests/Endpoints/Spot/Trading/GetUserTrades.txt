@@ -1,0 +1,21 @@
+GET
+/api/v1/userTrades
+true
+[ 
+  {
+    "symbol": "BNBUSDT",
+    "id": 1002,
+    "orderId": 266358,
+    "side": "BUY",
+    "price": "1",
+    "qty": "2",
+    "quoteQty": "2",
+    "commission": "0.00105000",
+    "commissionAsset": "BNB",
+    "time": 1755656788798,
+    "counterpartyId": 19,
+    "createUpdateId": null,
+    "maker": false,
+    "buyer": true
+  }
+] 

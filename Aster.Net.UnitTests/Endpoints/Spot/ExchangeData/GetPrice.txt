@@ -1,0 +1,8 @@
+GET
+/api/v1/ticker/price
+false
+{
+    "symbol": "ADAUSDT",
+    "price": "1.30000000",
+    "time": 1649666690902
+}

@@ -1,0 +1,7 @@
+POST
+/api/v1/asset/wallet/transfer
+true
+{
+    "tranId": 21841,
+    "status": "SUCCESS"
+}
