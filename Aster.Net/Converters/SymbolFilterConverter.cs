@@ -8,6 +8,8 @@ using System;
 using System.Globalization;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using Aster.Net.Objects;
+using CryptoExchange.Net;
+using Microsoft.Extensions.Logging;
 
 namespace Aster.Net.Converters
 {
@@ -143,7 +145,7 @@ namespace Aster.Net.Converters
                     result = new AsterSymbolFilter();
                     break;
                 default:
-                    Trace.WriteLine($"{DateTime.Now:yyyy/MM/dd HH:mm:ss:fff} | Warning | Can't parse symbol filter of type: " + obj.GetProperty("filterType").GetString());
+                    LibraryHelpers.StaticLogger?.LogWarning("Can't parse symbol filter of type: " + obj.GetProperty("filterType").GetString());
                     result = new AsterSymbolFilter();
                     break;
             }
