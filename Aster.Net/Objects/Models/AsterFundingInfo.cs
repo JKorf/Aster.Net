@@ -31,7 +31,7 @@ namespace Aster.Net.Objects.Models
         /// Funding interval in hours
         /// </summary>
         [JsonPropertyName("fundingIntervalHours")]
-        public int FundingIntervalHours { get; set; }
+        public int? FundingIntervalHours { get; set; }
         /// <summary>
         /// Time
         /// </summary>
