@@ -55,6 +55,17 @@ namespace Aster.Net
         internal static JsonSerializerOptions _serializerContext = SerializerOptions.WithConverters(JsonSerializerContextCache.GetOrCreate<AsterSourceGenerationContext>());
 
         /// <summary>
+        /// Aliases for Aster assets
+        /// </summary>
+        public static AssetAliasConfiguration AssetAliases { get; } = new AssetAliasConfiguration
+        {
+            Aliases =
+            [
+                new AssetAlias("USDT", SharedSymbol.UsdOrStable.ToUpperInvariant(), AliasType.OnlyToExchange)
+            ]
+        };
+
+        /// <summary>
         /// Format a base and quote asset to an Aster recognized symbol 
         /// </summary>
         /// <param name="baseAsset">Base asset</param>
@@ -64,7 +75,10 @@ namespace Aster.Net
         /// <returns></returns>
         public static string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverTime = null)
         {
-            return baseAsset.ToUpperInvariant() + quoteAsset.ToUpperInvariant();
+            baseAsset = AssetAliases.CommonToExchangeName(baseAsset.ToUpperInvariant());
+            quoteAsset = AssetAliases.CommonToExchangeName(quoteAsset.ToUpperInvariant());
+
+            return baseAsset + quoteAsset;
         }
 
         /// <summary>
