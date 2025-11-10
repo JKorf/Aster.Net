@@ -8,7 +8,7 @@ namespace Aster.Net.Interfaces
     /// <summary>
     /// Aster local order book factory
     /// </summary>
-    public interface IAsterOrderBookFactory
+    public interface IAsterOrderBookFactory : IExchangeService
     {
         
         /// <summary>

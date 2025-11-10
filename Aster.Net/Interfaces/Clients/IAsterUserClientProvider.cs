@@ -1,11 +1,12 @@
 using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Interfaces;
 
 namespace Aster.Net.Interfaces.Clients
 {
     /// <summary>
     /// Provider for clients with credentials for specific users
     /// </summary>
-    public interface IAsterUserClientProvider
+    public interface IAsterUserClientProvider : IExchangeService
     {
         /// <summary>
         /// Initialize a client for the specified user identifier. This can be used so to initialize a client for a user so ApiCredentials do not need to be passed later.

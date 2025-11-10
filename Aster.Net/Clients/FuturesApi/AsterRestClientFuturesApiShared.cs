@@ -55,8 +55,9 @@ namespace Aster.Net.Clients.FuturesApi
             if (startTime < request.StartTime)
                 startTime = request.StartTime;
 
+            var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var result = await ExchangeData.GetKlinesAsync(
-                request.Symbol!.GetSymbol(FormatSymbol),
+                symbol,
                 interval,
                 startTime,
                 endTime,
@@ -75,7 +76,8 @@ namespace Aster.Net.Clients.FuturesApi
                     nextToken = new DateTimeToken(minOpenTime.AddSeconds(-(int)(interval - 1)));
             }
 
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => new SharedKline(x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice, x.Volume)).ToArray(), nextToken);
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => 
+            new SharedKline(request.Symbol, symbol, x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice, x.Volume)).ToArray(), nextToken);
         }
 
         #endregion
@@ -111,8 +113,9 @@ namespace Aster.Net.Clients.FuturesApi
             if (startTime < request.StartTime)
                 startTime = request.StartTime;
 
+            var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var result = await ExchangeData.GetMarkPriceKlinesAsync(
-                request.Symbol!.GetSymbol(FormatSymbol),
+                symbol,
                 interval,
                 limit,
                 startTime,
@@ -131,7 +134,8 @@ namespace Aster.Net.Clients.FuturesApi
                     nextToken = new DateTimeToken(minOpenTime.AddSeconds(-(int)(interval - 1)));
             }
 
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => new SharedFuturesKline(x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice)).ToArray(), nextToken);
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => 
+            new SharedFuturesKline(request.Symbol, symbol, x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice)).ToArray(), nextToken);
         }
 
         #endregion
@@ -174,7 +178,7 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region Ticker client
 
-        EndpointOptions<GetTickerRequest> IFuturesTickerRestClient.GetFuturesTickerOptions { get; } = new EndpointOptions<GetTickerRequest>(false);
+        GetTickerOptions IFuturesTickerRestClient.GetFuturesTickerOptions { get; } = new GetTickerOptions();
         async Task<ExchangeWebResult<SharedFuturesTicker>> IFuturesTickerRestClient.GetFuturesTickerAsync(GetTickerRequest request, CancellationToken ct)
         {
             var validationError = ((IFuturesTickerRestClient)this).GetFuturesTickerOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
@@ -200,7 +204,7 @@ namespace Aster.Net.Clients.FuturesApi
             });
         }
 
-        EndpointOptions<GetTickersRequest> IFuturesTickerRestClient.GetFuturesTickersOptions { get; } = new EndpointOptions<GetTickersRequest>(false);
+        GetTickersOptions IFuturesTickerRestClient.GetFuturesTickersOptions { get; } = new GetTickersOptions();
         async Task<ExchangeWebResult<SharedFuturesTicker[]>> IFuturesTickerRestClient.GetFuturesTickersAsync(GetTickersRequest request, CancellationToken ct)
         {
             var validationError = ((IFuturesTickerRestClient)this).GetFuturesTickersOptions.ValidateRequest(Exchange, request, request.TradingMode, SupportedTradingModes);
@@ -263,14 +267,16 @@ namespace Aster.Net.Clients.FuturesApi
             if (validationError != null)
                 return new ExchangeWebResult<SharedTrade[]>(Exchange, validationError);
 
+            var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var result = await ExchangeData.GetRecentTradesAsync(
-                request.Symbol!.GetSymbol(FormatSymbol),
+                symbol,
                 limit: request.Limit,
                 ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.AsExchangeResult<SharedTrade[]>(Exchange, null, default);
 
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Select(x => new SharedTrade(x.BaseQuantity, x.Price, x.TradeTime)
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Select(x => new SharedTrade(
+                request.Symbol, symbol, x.BaseQuantity, x.Price, x.TradeTime)
             {
                 Side = x.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
             }).ToArray());
@@ -748,8 +754,9 @@ namespace Aster.Net.Clients.FuturesApi
                 fromId = long.Parse(token.FromToken);
 
             // Get data
+            var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var result = await ExchangeData.GetAggregatedTradeHistoryAsync(
-                request.Symbol!.GetSymbol(FormatSymbol),
+                symbol,
                 startTime: fromId != null ? null : request.StartTime,
                 endTime: fromId != null ? null : request.EndTime,
                 limit: request.Limit ?? 500,
@@ -763,7 +770,8 @@ namespace Aster.Net.Clients.FuturesApi
                 nextToken = new FromIdToken((result.Data.Max(x => x.Id) + 1).ToString());
 
             // Return
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Where(x => x.TradeTime < request.EndTime).Select(x => new SharedTrade(x.Quantity, x.Price, x.TradeTime)
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Where(x => x.TradeTime < request.EndTime).Select(x => 
+            new SharedTrade(request.Symbol, symbol, x.Quantity, x.Price, x.TradeTime)
             {
                 Side = x.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
             }).ToArray(), nextToken);
@@ -801,8 +809,9 @@ namespace Aster.Net.Clients.FuturesApi
             if (startTime < request.StartTime)
                 startTime = request.StartTime;
 
+            var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var result = await ExchangeData.GetMarkPriceKlinesAsync(
-                request.Symbol!.GetSymbol(FormatSymbol),
+                symbol,
                 interval,
                 limit,
                 startTime,
@@ -821,7 +830,8 @@ namespace Aster.Net.Clients.FuturesApi
                     nextToken = new DateTimeToken(minOpenTime.AddSeconds(-(int)(interval - 1)));
             }
 
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => new SharedFuturesKline(x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice)).ToArray(), nextToken);
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => 
+            new SharedFuturesKline(request.Symbol, symbol, x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice)).ToArray(), nextToken);
         }
 
         #endregion

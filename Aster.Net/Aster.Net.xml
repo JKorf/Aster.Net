@@ -223,6 +223,9 @@
         <member name="T:Aster.Net.Clients.AsterUserClientProvider">
             <inheritdoc />
         </member>
+        <member name="P:Aster.Net.Clients.AsterUserClientProvider.ExchangeName">
+            <inheritdoc />
+        </member>
         <member name="M:Aster.Net.Clients.AsterUserClientProvider.#ctor(System.Action{Aster.Net.Objects.Options.AsterOptions})">
             <summary>
             ctor
@@ -7441,6 +7444,9 @@
             <summary>
             Aster order book factory
             </summary>
+        </member>
+        <member name="P:Aster.Net.SymbolOrderBooks.AsterOrderBookFactory.ExchangeName">
+            <inheritdoc />
         </member>
         <member name="M:Aster.Net.SymbolOrderBooks.AsterOrderBookFactory.#ctor(System.IServiceProvider)">
             <summary>

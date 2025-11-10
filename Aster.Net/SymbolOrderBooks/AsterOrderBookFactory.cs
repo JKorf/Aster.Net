@@ -17,6 +17,9 @@ namespace Aster.Net.SymbolOrderBooks
     {
         private readonly IServiceProvider _serviceProvider;
 
+        /// <inheritdoc />
+        public string ExchangeName => AsterExchange.ExchangeName;
+
         /// <summary>
         /// ctor
         /// </summary>
