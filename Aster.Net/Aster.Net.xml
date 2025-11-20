@@ -463,6 +463,9 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateSerializer">
             <inheritdoc />
         </member>
+        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateMessageConverter(System.Net.WebSockets.WebSocketMessageType)">
+            <inheritdoc />
+        </member>
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
             <inheritdoc />
         </member>
@@ -705,6 +708,9 @@
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateSerializer">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateMessageConverter(System.Net.WebSockets.WebSocketMessageType)">
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
@@ -7373,7 +7379,7 @@
         <member name="T:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.#ctor(Microsoft.Extensions.Logging.ILogger,System.Collections.Generic.List{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{`0}},System.Boolean)">
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.#ctor(Microsoft.Extensions.Logging.ILogger,System.Collections.Generic.List{System.String},System.Action{System.DateTime,System.String,`0},System.Boolean)">
             <summary>
             ctor
             </summary>
@@ -7388,7 +7394,7 @@
         <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetUnsubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.DoHandleMessage(CryptoExchange.Net.Sockets.SocketConnection,CryptoExchange.Net.Objects.Sockets.DataEvent{`0})">
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.DoHandleMessage(CryptoExchange.Net.Sockets.SocketConnection,System.DateTime,System.String,`0)">
             <inheritdoc />
         </member>
         <member name="T:Aster.Net.Objects.Sockets.AsterUserDataSubscription">
@@ -7546,6 +7552,9 @@
         </member>
         <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.Bind_AsterOptions(Microsoft.Extensions.Configuration.IConfiguration,System.Object)">
             <summary>Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.TryGetConfigurationValue(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.String@)">
+            <summary>Tries to get the configuration value for the specified key.</summary>
         </member>
         <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.ValidateConfigurationKeys(System.Type,System.Lazy{System.Collections.Generic.HashSet{System.String}},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Configuration.BinderOptions)">
             <summary>If required by the binder options, validates that there are no unknown keys in the input configuration object.</summary>

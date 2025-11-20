@@ -1,3 +1,4 @@
+using Aster.Net.Clients.SpotApi;
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Objects.Internal;
@@ -9,6 +10,7 @@ using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Converters.MessageParsing;
+using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
@@ -68,6 +70,10 @@ namespace Aster.Net.Clients.FuturesApi
         protected override IMessageSerializer CreateSerializer() => new SystemTextJsonMessageSerializer(AsterExchange._serializerContext);
 
         /// <inheritdoc />
+        public override IMessageConverter CreateMessageConverter(WebSocketMessageType messageType)
+            => new AsterSocketClientFuturesApiMessageConverter();
+
+        /// <inheritdoc />
         protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
             => new AsterAuthenticationProvider(credentials);
 
@@ -83,11 +89,17 @@ namespace Aster.Net.Clients.FuturesApi
         {
             symbols.ValidateNotNull(nameof(symbols));
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterAggregatedTradeUpdate>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterAggregatedTradeUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterAggregatedTradeUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
+
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@aggTrade").ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
         }
@@ -100,10 +112,15 @@ namespace Aster.Net.Clients.FuturesApi
         {
             updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterMarkPriceUpdate[]>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithDataTimestamp(data.Data.Data.Max(x => x.EventTime))));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMarkPriceUpdate[]>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterMarkPriceUpdate[]>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             return await SubscribeAsync(BaseAddress, ["!markPrice@arr" + (updateInterval == 1000 ? "@1s" : "")], handler, ct).ConfigureAwait(false);
         }
 
@@ -118,11 +135,16 @@ namespace Aster.Net.Clients.FuturesApi
 
             updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterMarkPriceUpdate>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMarkPriceUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterMarkPriceUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@markPrice" + (updateInterval == 1000 ? "@1s" : "")).ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
         }
@@ -147,11 +169,16 @@ namespace Aster.Net.Clients.FuturesApi
         {
             symbols.ValidateNotNull(nameof(symbols));
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterKlineUpdate>>>(data =>
-                onMessage(data.As<AsterKlineUpdate>(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterKlineUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterKlineUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             symbols = symbols.SelectMany(a => intervals.Select(i =>
                 a.ToLower(CultureInfo.InvariantCulture) + "@kline_" + EnumConverter.GetString(i))).ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
@@ -170,11 +197,16 @@ namespace Aster.Net.Clients.FuturesApi
         {
             symbols.ValidateNotNull(nameof(symbols));
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterMiniTickUpdate>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMiniTickUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterMiniTickUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@miniTicker").ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
         }
@@ -182,10 +214,15 @@ namespace Aster.Net.Clients.FuturesApi
         /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(Action<DataEvent<AsterMiniTickUpdate[]>> onMessage, CancellationToken ct = default)
         {
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterMiniTickUpdate[]>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithDataTimestamp(data.Data.Data.Max(x => x.EventTime))));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMiniTickUpdate[]>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterMiniTickUpdate[]>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             return await SubscribeAsync(BaseAddress, new[] { "!miniTicker@arr" }, handler, ct).ConfigureAwait(false);
         }
         #endregion
@@ -201,11 +238,16 @@ namespace Aster.Net.Clients.FuturesApi
         {
             symbols.ValidateNotNull(nameof(symbols));
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterTickerUpdate>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterTickerUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterTickerUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@ticker").ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
         }
@@ -213,10 +255,15 @@ namespace Aster.Net.Clients.FuturesApi
         /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(Action<DataEvent<AsterTickerUpdate[]>> onMessage, CancellationToken ct = default)
         {
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterTickerUpdate[]>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithDataTimestamp(data.Data.Data.Max(x => x.EventTime))));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterTickerUpdate[]>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterTickerUpdate[]>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             return await SubscribeAsync(BaseAddress, new[] { "!ticker@arr" }, handler, ct).ConfigureAwait(false);
         }
         #endregion
@@ -232,11 +279,16 @@ namespace Aster.Net.Clients.FuturesApi
         {
             symbols.ValidateNotNull(nameof(symbols));
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterBookTickerUpdate>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterBookTickerUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@bookTicker").ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
         }
@@ -244,11 +296,16 @@ namespace Aster.Net.Clients.FuturesApi
         /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToBookTickerUpdatesAsync(Action<DataEvent<AsterBookTickerUpdate>> onMessage, CancellationToken ct = default)
         {
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterBookTickerUpdate>>>(data =>
-                onMessage(data.As(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterBookTickerUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             return await SubscribeAsync(BaseAddress, new[] { "!bookTicker" }, handler, ct).ConfigureAwait(false);
         }
 
@@ -265,11 +322,16 @@ namespace Aster.Net.Clients.FuturesApi
         {
             symbols.ValidateNotNull(nameof(symbols));
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterLiquidationUpdateEvent>>>(data =>
-                onMessage(data.As(data.Data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterLiquidationUpdate>(data.Data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@forceOrder").ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
         }
@@ -277,11 +339,16 @@ namespace Aster.Net.Clients.FuturesApi
         /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToLiquidationUpdatesAsync(Action<DataEvent<AsterLiquidationUpdate>> onMessage, CancellationToken ct = default)
         {
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterLiquidationUpdateEvent>>>(data =>
-                onMessage(data.As(data.Data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterLiquidationUpdate>(data.Data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             return await SubscribeAsync(BaseAddress, new[] { "!forceOrder@arr" }, handler, ct).ConfigureAwait(false);
         }
 
@@ -300,12 +367,15 @@ namespace Aster.Net.Clients.FuturesApi
             levels.ValidateIntValues(nameof(levels), 5, 10, 20);
             updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 250, 500);
 
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterOrderBookUpdate>>>(data =>
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
-                onMessage(data.As<AsterOrderBookUpdate>(data.Data.Data)
-                    .WithStreamId(data.Data.Stream)
-                    .WithSymbol(data.Data.Data.Symbol)
-                    .WithDataTimestamp(data.Data.Data.EventTime));
+                onMessage(
+                    new DataEvent<AsterOrderBookUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
             });
 
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
@@ -324,13 +394,18 @@ namespace Aster.Net.Clients.FuturesApi
         public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(IEnumerable<string> symbols, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default)
         {
             symbols.ValidateNotNull(nameof(symbols));
-
             updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 250, 500);
-            var handler = new Action<DataEvent<AsterCombinedStream<AsterOrderBookUpdate>>>(data =>
-                onMessage(data.As<AsterOrderBookUpdate>(data.Data.Data)
-                .WithStreamId(data.Data.Stream)
-                .WithSymbol(data.Data.Data.Symbol)
-                .WithDataTimestamp(data.Data.Data.EventTime)));
+
+            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
+            {
+                onMessage(
+                    new DataEvent<AsterOrderBookUpdate>(data.Data, receiveTime, originalData)
+                        .WithStreamId(data.Stream)
+                        .WithSymbol(data.Data.Symbol)
+                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithUpdateType(SocketUpdateType.Update)
+                    );
+            });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@ depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
             return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
         }
@@ -357,7 +432,7 @@ namespace Aster.Net.Clients.FuturesApi
 
         #endregion
 
-        internal Task<CallResult<UpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<DataEvent<T>> onData, CancellationToken ct)
+        internal Task<CallResult<UpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<DateTime, string?, T> onData, CancellationToken ct)
         {
             var subscription = new AsterSubscription<T>(_logger, topics.ToList(), onData, false);
             return SubscribeAsync(url.AppendPath("stream"), subscription, ct);

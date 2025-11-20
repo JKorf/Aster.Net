@@ -60,17 +60,28 @@ namespace Aster.Net.Objects.Sockets
             }, false);
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterSpotAccountUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotAccountUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _accountHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, null, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _accountHandler?.Invoke(
+                new DataEvent<AsterSpotAccountUpdate>(message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterSpotOrderUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotOrderUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _orderHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, message.Data.Data.Symbol, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _orderHandler?.Invoke(
+                new DataEvent<AsterSpotOrderUpdate>(message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithSymbol(message.Data.Symbol)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
     }

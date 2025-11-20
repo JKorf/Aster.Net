@@ -72,37 +72,63 @@ namespace Aster.Net.Objects.Sockets
             }, false);
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterConfigUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterConfigUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _configHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, null, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _configHandler?.Invoke(
+                new DataEvent<AsterConfigUpdate>(message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterMarginUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterMarginUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _marginHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, null, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _marginHandler?.Invoke(
+                new DataEvent<AsterMarginUpdate>(message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterAccountUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterAccountUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _accountHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, null, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _accountHandler?.Invoke(
+                new DataEvent<AsterAccountUpdate>(message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterOrderUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterOrderUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _orderHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, message.Data.Data.UpdateData.Symbol, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _orderHandler?.Invoke(
+                new DataEvent<AsterOrderUpdate>(message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithSymbol(message.Data.UpdateData.Symbol)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterSocketEvent>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSocketEvent> message)
         {
-            _listenkeyHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, null, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            _listenkeyHandler?.Invoke(
+                new DataEvent<AsterSocketEvent>(message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
     }
