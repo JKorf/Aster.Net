@@ -3,17 +3,14 @@ using CryptoExchange.Net.Converters.SystemTextJson;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.MessageHandlers
 {
-    internal class AsterSocketClientFuturesApiMessageConverter : DynamicJsonConverter
+    internal class AsterSocketSpotMessageConverter : JsonSocketMessageHandler
     {
         private static readonly HashSet<string> _userEvents = new HashSet<string>
         {
-            "ACCOUNT_CONFIG_UPDATE",
-            "MARGIN_CALL",
-            "ACCOUNT_UPDATE",
-            "ORDER_TRADE_UPDATE",
-            "listenKeyExpired",
+            "outboundAccountPosition",
+            "executionReport",
         };
 
         public override JsonSerializerOptions Options { get; } = AsterExchange._serializerContext;

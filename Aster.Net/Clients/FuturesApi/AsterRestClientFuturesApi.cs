@@ -1,20 +1,23 @@
+using Aster.Net.Clients.MessageHandlers;
+using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Objects.Options;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Clients;
+using CryptoExchange.Net.Converters.MessageParsing;
+using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
+using CryptoExchange.Net.Converters.SystemTextJson;
+using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
+using CryptoExchange.Net.Objects.Errors;
+using CryptoExchange.Net.SharedApis;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Aster.Net.Interfaces.Clients.FuturesApi;
-using Aster.Net.Objects.Options;
-using CryptoExchange.Net.Clients;
-using CryptoExchange.Net.Converters.SystemTextJson;
-using CryptoExchange.Net.Interfaces;
-using CryptoExchange.Net.SharedApis;
-using CryptoExchange.Net.Objects.Errors;
-using CryptoExchange.Net.Converters.MessageParsing;
 
 namespace Aster.Net.Clients.FuturesApi
 {
@@ -24,6 +27,7 @@ namespace Aster.Net.Clients.FuturesApi
         #region fields 
         internal static TimeSyncState _timeSyncState = new TimeSyncState("Futures Api");
 
+        protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.FuturesErrors);
         protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
 
         public new AsterRestOptions ClientOptions => (AsterRestOptions)base.ClientOptions;
@@ -89,7 +93,7 @@ namespace Aster.Net.Clients.FuturesApi
         }
 
         /// <inheritdoc />
-        protected override Error ParseErrorResponse(int httpStatusCode, KeyValuePair<string, string[]>[] responseHeaders, IMessageAccessor accessor, Exception? exception)
+        protected override Error ParseErrorResponse(int httpStatusCode, HttpResponseHeaders responseHeaders, IMessageAccessor accessor, Exception? exception)
         {
             if (!accessor.IsValid)
                 return new ServerError(ErrorInfo.Unknown, exception: exception);

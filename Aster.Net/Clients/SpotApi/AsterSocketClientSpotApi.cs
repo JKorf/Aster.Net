@@ -1,4 +1,5 @@
 using Aster.Net.Clients.FuturesApi;
+using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
@@ -68,8 +69,8 @@ namespace Aster.Net.Clients.SpotApi
         protected override IMessageSerializer CreateSerializer() => new SystemTextJsonMessageSerializer(AsterExchange._serializerContext);
 
         /// <inheritdoc />
-        public override IMessageConverter CreateMessageConverter(WebSocketMessageType messageType)
-            => new AsterSocketClientSpotApiMessageConverter();
+        public override ISocketMessageHandler CreateMessageConverter(WebSocketMessageType messageType)
+            => new AsterSocketSpotMessageConverter();
         /// <inheritdoc />
         protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
             => new AsterAuthenticationProvider(credentials);
