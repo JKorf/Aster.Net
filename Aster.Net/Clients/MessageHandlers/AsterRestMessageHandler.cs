@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,10 +24,10 @@ namespace Aster.Net.Clients.MessageHandlers
             _errorMapping = errorMapping;
         }
 
-        public override async Task<Error> ParseErrorResponse(
+        public override async ValueTask<Error> ParseErrorResponse(
             int httpStatusCode,
-            object state,
-            KeyValuePair<string, string[]>[] responseHeaders,
+            object? state,
+            HttpResponseHeaders responseHeaders,
             Stream responseStream)
         {
             var (error, document) = await GetJsonDocument(responseStream, state).ConfigureAwait(false);

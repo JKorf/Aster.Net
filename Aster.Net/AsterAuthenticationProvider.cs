@@ -17,13 +17,14 @@ namespace Aster.Net
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
+            request.Headers ??= new Dictionary<string, string>();
             request.Headers.Add("X-MBX-APIKEY", ApiKey);
 
             if (!request.Authenticated)
                 return;
 
             var timestamp = GetMillisecondTimestamp(apiClient);
-            var parameters = request.GetPositionParameters();
+            var parameters = request.GetPositionParameters() ?? new Dictionary<string, object>();
             parameters.Add("timestamp", timestamp);
 
             if (request.ParameterPosition == HttpMethodParameterPosition.InUri)
@@ -35,7 +36,7 @@ namespace Aster.Net
             }
             else
             {
-                var parameterData = request.BodyParameters.ToFormData();
+                var parameterData = request.BodyParameters?.ToFormData() ?? string.Empty;
                 var signature = Sign(parameterData);
                 parameters.Add("signature", signature);
                 request.SetBodyContent($"{parameterData}&signature={signature}");
