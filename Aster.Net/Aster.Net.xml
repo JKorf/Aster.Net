@@ -3945,7 +3945,7 @@
             The default addresses to connect to the Aster API
             </summary>
         </member>
-        <member name="P:Aster.Net.Objects.Internal.AsterCombinedStream`1.Stream">
+        <member name="P:Aster.Net.Objects.Internal.AsterCombinedStream.Stream">
             <summary>
             The stream combined
             </summary>
@@ -7379,7 +7379,7 @@
         <member name="T:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.#ctor(Microsoft.Extensions.Logging.ILogger,System.Collections.Generic.List{System.String},System.Action{System.DateTime,System.String,`0},System.Boolean)">
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.#ctor(Microsoft.Extensions.Logging.ILogger,System.String,System.Collections.Generic.List{System.String},System.Action{System.DateTime,System.String,`0},System.Boolean)">
             <summary>
             ctor
             </summary>

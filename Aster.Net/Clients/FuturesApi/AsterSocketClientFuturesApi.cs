@@ -102,7 +102,7 @@ namespace Aster.Net.Clients.FuturesApi
             });
 
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@aggTrade").ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "aggTrade", symbols, handler, ct).ConfigureAwait(false);
         }
         #endregion
 
@@ -122,7 +122,7 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
-            return await SubscribeAsync(BaseAddress, ["!markPrice@arr" + (updateInterval == 1000 ? "@1s" : "")], handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "markPriceUpdate",["!markPrice@arr" + (updateInterval == 1000 ? "@1s" : "")], handler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -147,7 +147,7 @@ namespace Aster.Net.Clients.FuturesApi
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@markPrice" + (updateInterval == 1000 ? "@1s" : "")).ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "markPriceUpdate", symbols, handler, ct).ConfigureAwait(false);
         }
         #endregion
 
@@ -182,7 +182,7 @@ namespace Aster.Net.Clients.FuturesApi
             });
             symbols = symbols.SelectMany(a => intervals.Select(i =>
                 a.ToLower(CultureInfo.InvariantCulture) + "@kline_" + EnumConverter.GetString(i))).ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "kline", symbols, handler, ct).ConfigureAwait(false);
         }
 
         #endregion
@@ -209,7 +209,7 @@ namespace Aster.Net.Clients.FuturesApi
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@miniTicker").ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "24hrMiniTicker", symbols, handler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -224,7 +224,7 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
-            return await SubscribeAsync(BaseAddress, new[] { "!miniTicker@arr" }, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "24hrMiniTicker", new[] { "!miniTicker@arr" }, handler, ct).ConfigureAwait(false);
         }
         #endregion
 
@@ -250,7 +250,7 @@ namespace Aster.Net.Clients.FuturesApi
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@ticker").ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "24hrTicker", symbols, handler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -265,7 +265,7 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
-            return await SubscribeAsync(BaseAddress, new[] { "!ticker@arr" }, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "24hrTicker", new[] { "!ticker@arr" }, handler, ct).ConfigureAwait(false);
         }
         #endregion
 
@@ -291,7 +291,7 @@ namespace Aster.Net.Clients.FuturesApi
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@bookTicker").ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "bookTicker", symbols, handler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -307,7 +307,7 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
-            return await SubscribeAsync(BaseAddress, new[] { "!bookTicker" }, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "bookTicker", new[] { "!bookTicker" }, handler, ct).ConfigureAwait(false);
         }
 
         #endregion
@@ -334,7 +334,7 @@ namespace Aster.Net.Clients.FuturesApi
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@forceOrder").ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "forceOrder", symbols, handler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -350,7 +350,7 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
-            return await SubscribeAsync(BaseAddress, new[] { "!forceOrder@arr" }, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "forceOrder", new[] { "!forceOrder@arr" }, handler, ct).ConfigureAwait(false);
         }
 
         #endregion
@@ -380,7 +380,7 @@ namespace Aster.Net.Clients.FuturesApi
             });
 
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "depthUpdate", symbols, handler, ct).ConfigureAwait(false);
         }
 
         #endregion
@@ -408,7 +408,7 @@ namespace Aster.Net.Clients.FuturesApi
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@ depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
-            return await SubscribeAsync(BaseAddress, symbols, handler, ct).ConfigureAwait(false);
+            return await SubscribeAsync(BaseAddress, "depthUpdate", symbols, handler, ct).ConfigureAwait(false);
         }
 
         #endregion
@@ -433,9 +433,9 @@ namespace Aster.Net.Clients.FuturesApi
 
         #endregion
 
-        internal Task<CallResult<UpdateSubscription>> SubscribeAsync<T>(string url, IEnumerable<string> topics, Action<DateTime, string?, T> onData, CancellationToken ct)
+        internal Task<CallResult<UpdateSubscription>> SubscribeAsync<T>(string url, string dataType, IEnumerable<string> topics, Action<DateTime, string?, T> onData, CancellationToken ct)
         {
-            var subscription = new AsterSubscription<T>(_logger, topics.ToList(), onData, false);
+            var subscription = new AsterSubscription<T>(_logger, dataType, topics.ToList(), onData, false);
             return SubscribeAsync(url.AppendPath("stream"), subscription, ct);
         }
 

@@ -48,6 +48,14 @@ namespace Aster.Net.Objects.Sockets
                 new MessageHandlerLink<AsterCombinedStream<AsterOrderUpdate>>(_lk + "ORDER_TRADE_UPDATE", DoHandleMessage),
                 new MessageHandlerLink<AsterCombinedStream<AsterSocketEvent>>(_lk + "listenKeyExpired", DoHandleMessage)
                 ]);
+
+            MessageRouter = MessageRouter.Create([
+                new MessageRoute<AsterCombinedStream<AsterConfigUpdate>>("ACCOUNT_CONFIG_UPDATE", _lk, DoHandleMessage),
+                new MessageRoute<AsterCombinedStream<AsterMarginUpdate>>("MARGIN_CALL", _lk, DoHandleMessage),
+                new MessageRoute<AsterCombinedStream<AsterAccountUpdate>>("ACCOUNT_UPDATE", _lk, DoHandleMessage),
+                new MessageRoute<AsterCombinedStream<AsterOrderUpdate>>("ORDER_TRADE_UPDATE", _lk, DoHandleMessage),
+                new MessageRoute<AsterCombinedStream<AsterSocketEvent>>("listenKeyExpired", _lk, DoHandleMessage)
+                ]);
         }
 
         /// <inheritdoc />
