@@ -17,17 +17,13 @@ namespace Aster.Net.Objects.Sockets.Subscriptions
         /// <summary>
         /// ctor
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="topics"></param>
-        /// <param name="handler"></param>
-        /// <param name="auth"></param>
         public AsterSubscription(ILogger logger, string dataType, List<string> topics, Action<DateTime, string?, T> handler, bool auth) : base(logger, auth)
         {
             _handler = handler;
             _params = topics.ToArray();
 
             MessageMatcher = MessageMatcher.Create<T>(topics, DoHandleMessage);
-            MessageRouter = MessageRouter.Create<T>(dataType, topics, DoHandleMessage);
+            MessageRouter = MessageRouter.CreateWithTopicFilters<T>(dataType, topics, DoHandleMessage);
         }
 
         /// <inheritdoc />

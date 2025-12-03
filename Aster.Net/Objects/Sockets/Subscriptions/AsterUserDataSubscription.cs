@@ -50,11 +50,11 @@ namespace Aster.Net.Objects.Sockets
                 ]);
 
             MessageRouter = MessageRouter.Create([
-                new MessageRoute<AsterCombinedStream<AsterConfigUpdate>>("ACCOUNT_CONFIG_UPDATE", _lk, DoHandleMessage),
-                new MessageRoute<AsterCombinedStream<AsterMarginUpdate>>("MARGIN_CALL", _lk, DoHandleMessage),
-                new MessageRoute<AsterCombinedStream<AsterAccountUpdate>>("ACCOUNT_UPDATE", _lk, DoHandleMessage),
-                new MessageRoute<AsterCombinedStream<AsterOrderUpdate>>("ORDER_TRADE_UPDATE", _lk, DoHandleMessage),
-                new MessageRoute<AsterCombinedStream<AsterSocketEvent>>("listenKeyExpired", _lk, DoHandleMessage)
+                MessageRoute<AsterCombinedStream<AsterConfigUpdate>>.CreateWithTopicFilter("ACCOUNT_CONFIG_UPDATE", _lk, DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterMarginUpdate>>.CreateWithTopicFilter("MARGIN_CALL", _lk, DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterAccountUpdate>>.CreateWithTopicFilter("ACCOUNT_UPDATE", _lk, DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterOrderUpdate>>.CreateWithTopicFilter("ORDER_TRADE_UPDATE", _lk, DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterSocketEvent>>.CreateWithTopicFilter("listenKeyExpired", _lk, DoHandleMessage)
                 ]);
         }
 

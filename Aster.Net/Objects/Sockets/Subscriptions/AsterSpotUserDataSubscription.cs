@@ -33,8 +33,8 @@ namespace Aster.Net.Objects.Sockets
             _lk = listenKey;
 
             MessageRouter = MessageRouter.Create([
-                new MessageRoute<AsterCombinedStream<AsterSpotAccountUpdate>>("outboundAccountPosition", _lk, DoHandleMessage),
-                new MessageRoute<AsterCombinedStream<AsterSpotOrderUpdate>>("executionReport", _lk, DoHandleMessage)
+                MessageRoute<AsterCombinedStream<AsterSpotAccountUpdate>>.CreateWithTopicFilter("outboundAccountPosition", _lk, DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterSpotOrderUpdate>>.CreateWithTopicFilter("executionReport", _lk, DoHandleMessage)
                 ]);
 
             MessageMatcher = MessageMatcher.Create([

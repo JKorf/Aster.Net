@@ -20,7 +20,6 @@ namespace Aster.Net.Clients.MessageHandlers
             new MessageEvaluator {
                 Priority = 1,
                 Fields = [
-                    //new PropertyFieldReference("stream"),
                     new PropertyFieldReference("e") { Depth = 2 },
                 ],
                 IdentifyMessageCallback = x => x.FieldValue("e")!,
