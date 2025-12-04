@@ -11,7 +11,7 @@ using System;
 namespace Aster.Net.Objects.Sockets
 {
     /// <inheritdoc />
-    internal class AsterSpotUserDataSubscription : Subscription<AsterSocketQueryResponse, AsterSocketQueryResponse>
+    internal class AsterSpotUserDataSubscription : Subscription
     {
         private readonly string _lk;
 

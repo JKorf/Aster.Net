@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace Aster.Net.Objects.Sockets.Subscriptions
 {
     /// <inheritdoc />
-    internal class AsterSubscription<T> : Subscription<AsterSocketQueryResponse, AsterSocketQueryResponse>
+    internal class AsterSubscription<T> : Subscription
     {
         private readonly Action<DateTime, string?, T> _handler;
         private string[] _params;
