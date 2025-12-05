@@ -16,6 +16,26 @@ namespace Aster.Net.UnitTests
     {
         [TestCase(false)]
         [TestCase(true)]
+        public async Task ValidateConcurrentFuturesSubscriptions(bool newDeserialization)
+        {
+            var logger = new LoggerFactory();
+            logger.AddProvider(new TraceLoggerProvider());
+
+            var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
+            {
+                OutputOriginalData = true,
+                UseUpdatedDeserialization = newDeserialization
+            }), logger);
+
+            var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Futures", "wss://fstream.asterdex.com");
+            await tester.ValidateConcurrentAsync<AsterKlineUpdate>(
+                (client, handler) => client.FuturesApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneDay, handler),
+                (client, handler) => client.FuturesApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneHour, handler),
+                "Concurrent");
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
         public async Task ValidateFuturesSubscriptions(bool newDeserialization)
         {
             var logger = new LoggerFactory();
@@ -42,6 +62,26 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync<AsterConfigUpdate>((client, handler) => client.FuturesApi.SubscribeToUserDataUpdatesAsync("123", onConfigUpdate: handler), "AccountConfig", nestedJsonProperty: "data");
             await tester.ValidateAsync<AsterConfigUpdate>((client, handler) => client.FuturesApi.SubscribeToUserDataUpdatesAsync("123", onConfigUpdate: handler), "AccountConfig2", nestedJsonProperty: "data");
             await tester.ValidateAsync<AsterMarginUpdate>((client, handler) => client.FuturesApi.SubscribeToUserDataUpdatesAsync("123", onMarginUpdate: handler), "AccountMargin", nestedJsonProperty: "data");
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task ValidateConcurrentSpotSubscriptions(bool newDeserialization)
+        {
+            var logger = new LoggerFactory();
+            logger.AddProvider(new TraceLoggerProvider());
+
+            var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
+            {
+                OutputOriginalData = true,
+                UseUpdatedDeserialization = newDeserialization
+            }), logger);
+
+            var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Spot", "wss://sstream.asterdex.com");
+            await tester.ValidateConcurrentAsync<AsterKlineUpdate>(
+                (client, handler) => client.SpotApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneDay, handler),
+                (client, handler) => client.SpotApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneHour, handler),
+                "Concurrent");
         }
 
         [TestCase(false)]

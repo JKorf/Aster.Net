@@ -1,0 +1,6 @@
+>1 { "method": "SUBSCRIBE", "params": ["ethusdt@kline_1h"],"id": "|*|"}
+>2 { "method": "SUBSCRIBE", "params": ["ethusdt@kline_1d"],"id": "|*|"}
+<1 { "id": |id|, "result": null }
+<2 { "id": |id|, "result": null }
+=1 { "stream": "ethusdt@kline_1h", "data": { "e": "kline", "E": 123456789, "s": "ETHUSDT", "k": { "t": 123400000 }}}
+=2 { "stream": "ethusdt@kline_1d", "data": { "e": "kline", "E": 123456789, "s": "ETHUSDT", "k": { "t": 123400000 }}}
