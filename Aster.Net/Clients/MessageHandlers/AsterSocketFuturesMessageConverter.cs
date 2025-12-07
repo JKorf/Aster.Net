@@ -15,23 +15,21 @@ namespace Aster.Net.Clients.MessageHandlers
             AddTopicMapping<AsterCombinedStream>(x => x.Stream);
         }
 
-        protected override MessageEvaluator[] TypeEvaluators { get; } = [
+        protected override MessageTypeDefinition[] TypeEvaluators { get; } = [
 
-            new MessageEvaluator {
-                Priority = 1,
+            new MessageTypeDefinition {
                 Fields = [
                     new PropertyFieldReference("e") { Depth = 2 },
                 ],
-                IdentifyMessageCallback = x => x.FieldValue("e")!,
+                TypeIdentifierCallback = x => x.FieldValue("e")!,
             },
 
-            new MessageEvaluator {
-                Priority = 3,
+            new MessageTypeDefinition {
                 ForceIfFound = true,
                 Fields = [
                     new PropertyFieldReference("id"),
                 ],
-                IdentifyMessageCallback = x => x.FieldValue("id")!,
+                TypeIdentifierCallback = x => x.FieldValue("id")!,
             }
         ];
     }
