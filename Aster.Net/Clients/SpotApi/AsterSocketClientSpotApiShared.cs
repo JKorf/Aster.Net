@@ -1,5 +1,4 @@
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
@@ -8,8 +7,6 @@ using CryptoExchange.Net.SharedApis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

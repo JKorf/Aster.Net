@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
-using System.Net;
 using System.Net.Http;
 using Aster.Net;
 using Aster.Net.Clients;
@@ -13,6 +12,7 @@ using Aster.Net.Interfaces;
 using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
 using Aster.Net.SymbolOrderBooks;
+using CryptoExchange.Net.Interfaces.Clients;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

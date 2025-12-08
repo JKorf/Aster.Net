@@ -1,5 +1,4 @@
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;

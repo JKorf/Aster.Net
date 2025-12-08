@@ -2,11 +2,11 @@ using CryptoExchange.Net.Objects;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects.Sockets;
 using Aster.Net.Objects.Models;
 using System.Collections.Generic;
 using Aster.Net.Enums;
+using CryptoExchange.Net.Interfaces.Clients;
 
 namespace Aster.Net.Interfaces.Clients.SpotApi
 {

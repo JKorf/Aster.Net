@@ -1,12 +1,10 @@
 ﻿using Aster.Net.Enums;
-using System.Diagnostics;
 using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization.Metadata;
 using System.Text.Json.Serialization;
 using System;
 using System.Globalization;
-using CryptoExchange.Net.Converters.SystemTextJson;
 using Aster.Net.Objects;
 using CryptoExchange.Net;
 using Microsoft.Extensions.Logging;

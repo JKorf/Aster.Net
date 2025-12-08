@@ -6,10 +6,8 @@ using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Objects;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 

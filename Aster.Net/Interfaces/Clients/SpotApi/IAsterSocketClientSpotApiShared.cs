@@ -1,7 +1,4 @@
 using CryptoExchange.Net.SharedApis;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aster.Net.Interfaces.Clients.SpotApi
 {

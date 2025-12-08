@@ -1,6 +1,4 @@
-using Aster.Net.Clients.SpotApi;
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
@@ -8,13 +6,8 @@ using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Objects;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 

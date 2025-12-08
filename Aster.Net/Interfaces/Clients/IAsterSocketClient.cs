@@ -1,7 +1,7 @@
 using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Interfaces;
+using CryptoExchange.Net.Interfaces.Clients;
 
 namespace Aster.Net.Interfaces.Clients
 {

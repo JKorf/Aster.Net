@@ -4,7 +4,6 @@ using Aster.Net.Objects.Models;
 using Aster.Net.Objects.Sockets;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Converters

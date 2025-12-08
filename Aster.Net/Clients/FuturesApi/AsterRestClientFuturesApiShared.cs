@@ -1,7 +1,6 @@
 using CryptoExchange.Net.SharedApis;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Aster.Net.Interfaces.Clients.FuturesApi;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,7 +75,7 @@ namespace Aster.Net.Clients.FuturesApi
                     nextToken = new DateTimeToken(minOpenTime.AddSeconds(-(int)(interval - 1)));
             }
 
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => 
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.AsEnumerable().Reverse().Select(x => 
             new SharedKline(request.Symbol, symbol, x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice, x.Volume)).ToArray(), nextToken);
         }
 
@@ -134,7 +133,7 @@ namespace Aster.Net.Clients.FuturesApi
                     nextToken = new DateTimeToken(minOpenTime.AddSeconds(-(int)(interval - 1)));
             }
 
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => 
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.AsEnumerable().Reverse().Select(x => 
             new SharedFuturesKline(request.Symbol, symbol, x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice)).ToArray(), nextToken);
         }
 
@@ -830,7 +829,7 @@ namespace Aster.Net.Clients.FuturesApi
                     nextToken = new DateTimeToken(minOpenTime.AddSeconds(-(int)(interval - 1)));
             }
 
-            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.Reverse().Select(x => 
+            return result.AsExchangeResult(Exchange, request.Symbol!.TradingMode, result.Data.AsEnumerable().Reverse().Select(x => 
             new SharedFuturesKline(request.Symbol, symbol, x.OpenTime, x.ClosePrice, x.HighPrice, x.LowPrice, x.OpenPrice)).ToArray(), nextToken);
         }
 

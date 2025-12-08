@@ -550,7 +550,7 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="P:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.SharedClient">
@@ -779,7 +779,7 @@
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="P:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.SharedClient">
@@ -7370,10 +7370,10 @@
             ctor
             </summary>
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="T:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1">
@@ -7384,13 +7384,13 @@
             ctor
             </summary>
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetSubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetSubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetUnsubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetUnsubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.DoHandleMessage(CryptoExchange.Net.Sockets.SocketConnection,System.DateTime,System.String,`0)">
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.DoHandleMessage(CryptoExchange.Net.Sockets.Default.SocketConnection,System.DateTime,System.String,`0)">
             <inheritdoc />
         </member>
         <member name="T:Aster.Net.Objects.Sockets.AsterUserDataSubscription">
@@ -7401,10 +7401,10 @@
             ctor
             </summary>
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="T:Aster.Net.SymbolOrderBooks.AsterFuturesSymbolOrderBook">
@@ -7511,14 +7511,14 @@
             Extensions for the ICryptoRestClient and ICryptoSocketClient interfaces
             </summary>
         </member>
-        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.ICryptoRestClient)">
+        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.Clients.ICryptoRestClient)">
             <summary>
             Get the Aster REST Api client
             </summary>
             <param name="baseClient"></param>
             <returns></returns>
         </member>
-        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.ICryptoSocketClient)">
+        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.Clients.ICryptoSocketClient)">
             <summary>
             Get the Aster Websocket Api client
             </summary>
