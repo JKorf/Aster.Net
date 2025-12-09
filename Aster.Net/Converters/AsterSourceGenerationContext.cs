@@ -77,6 +77,8 @@ namespace Aster.Net.Converters
     [JsonSerializable(typeof(AsterCombinedStream<AsterSpotAccountUpdate>))]
     [JsonSerializable(typeof(AsterCombinedStream<AsterSpotOrderUpdate>))]
 
+    [JsonSerializable(typeof(AsterCombinedStream<AsterStreamMinimalTrade>))]
+
     [JsonSerializable(typeof(AsterSocketRequest))]
     [JsonSerializable(typeof(AsterSocketQueryResponse))]
 

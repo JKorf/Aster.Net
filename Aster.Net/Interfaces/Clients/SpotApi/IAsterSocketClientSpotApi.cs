@@ -35,6 +35,16 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="ct">Cancellation token for closing this subscription</param>
         /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         Task<CallResult<UpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<AsterAggregatedTradeUpdate>> onMessage, CancellationToken ct = default);
+        /// <summary>
+        /// Subscribe to the aggregated trades update stream in high-performance mode<br />
+        /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flows" /></para>
+        /// </summary>
+        /// <param name="symbols">Symbols to subscribe</param>
+        /// <param name="onMessage">The event handler for the received data</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        Task<CallResult<HighPerfUpdateSubscription>> SubscribeToAggregatedTradeUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterStreamMinimalTrade> onMessage, CancellationToken ct);
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
@@ -109,7 +119,16 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="ct">Cancellation token for closing this subscription</param>
         /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         Task<CallResult<UpdateSubscription>> SubscribeToMiniTickerUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<AsterMiniTickUpdate>> onMessage, CancellationToken ct = default);
-
+        /// <summary>
+        /// Subscribes to mini ticker updates stream in high-performance mode<br />
+        /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+        /// </summary>
+        /// <param name="symbols">Symbols to subscribe</param>
+        /// <param name="onMessage">The event handler for the received data</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        Task<CallResult<HighPerfUpdateSubscription>> SubscribeToMiniTickerUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterMiniTickUpdate> onMessage, CancellationToken ct);
 
         /// <summary>
         /// Subscribe to price ticker updates for all symbols
@@ -168,6 +187,16 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="ct">Cancellation token for closing this subscription</param>
         /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         Task<CallResult<UpdateSubscription>> SubscribeToBookTickerUpdatesAsync(IEnumerable<string> symbol, Action<DataEvent<AsterBookTickerUpdate>> onMessage, CancellationToken ct = default);
+        /// <summary>
+        /// Subscribe to the book ticker update stream in high-performance mode<br />
+        /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+        /// </summary>
+        /// <param name="symbols">Symbols to subscribe</param>
+        /// <param name="onMessage">The event handler for the received data</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        Task<CallResult<HighPerfUpdateSubscription>> SubscribeToBookTickerUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterBookTickerUpdate> onMessage, CancellationToken ct);
 
         /// <summary>
         /// Subscribe to snapshot order book updates for the top x rows
@@ -192,6 +221,18 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="ct">Cancellation token for closing this subscription</param>
         /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         Task<CallResult<UpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(IEnumerable<string> symbols, int levels, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default);
+        /// <summary>
+        /// Subscribes to the depth updates for the provided symbol in high-performance mode<br />
+        /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+        /// </summary>
+        /// <param name="symbols">Symbols to subscribe</param>
+        /// <param name="levels">The amount of entries to be returned in the update, 5, 10 or 20</param>
+        /// <param name="updateInterval">Update interval in milliseconds, 1000ms or 100ms</param>
+        /// <param name="onMessage">The event handler for the received data</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        Task<CallResult<HighPerfUpdateSubscription>> SubscribeToPartialOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int levels, int? updateInterval, Action<AsterOrderBookUpdate> onMessage, CancellationToken ct);
 
         /// <summary>
         /// Subscribe to order book difference updates
@@ -214,6 +255,18 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="ct">Cancellation token for closing this subscription</param>
         /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(IEnumerable<string> symbols, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default);
+
+        /// <summary>
+        /// Subscribe to the book ticker update stream in high-performance mode<br />
+        /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+        /// </summary>
+        /// <param name="symbols">Symbols to subscribe</param>
+        /// <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
+        /// <param name="onMessage">The event handler for the received data</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        Task<CallResult<HighPerfUpdateSubscription>> SubscribeToOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int? updateInterval, Action<AsterOrderBookUpdate> onMessage, CancellationToken ct);
 
         /// <summary>
         /// Subscribes to the account update stream. Prior to using this, the <see cref="IAsterRestClientSpotApiAccount.StartUserStreamAsync(CancellationToken)">restClient.SpotApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.

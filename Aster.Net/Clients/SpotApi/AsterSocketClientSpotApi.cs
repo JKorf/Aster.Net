@@ -19,6 +19,7 @@ using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default;
+using CryptoExchange.Net.Sockets.HighPerf;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -97,6 +98,12 @@ namespace Aster.Net.Clients.SpotApi
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@aggTrade").ToArray();
             return await SubscribeAsync(BaseAddress, "aggTrade", symbols, handler, ct).ConfigureAwait(false);
         }
+
+        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToAggregatedTradeUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterStreamMinimalTrade> callback, CancellationToken ct)
+        {
+            var topics = new HashSet<string>(symbols.Select(x => x.ToLowerInvariant() + "@aggTrade"));
+            return SubscribeHighPerfAsync<AsterCombinedStream<AsterStreamMinimalTrade>, AsterStreamMinimalTrade>(BaseAddress, topics.ToArray(), callback, ct: ct);
+        }
         #endregion
 
         #region Kline/Candlestick Streams
@@ -173,6 +180,12 @@ namespace Aster.Net.Clients.SpotApi
                     );
             });
             return await SubscribeAsync(BaseAddress, "24hrMiniTicker", new[] { "!miniTicker@arr" }, handler, ct).ConfigureAwait(false);
+        }
+
+        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToMiniTickerUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterMiniTickUpdate> onMessage, CancellationToken ct)
+        {
+            var topics = new HashSet<string>(symbols.Select(x => x.ToLowerInvariant() + "@miniTicker"));
+            return SubscribeHighPerfAsync<AsterCombinedStream<AsterMiniTickUpdate>, AsterMiniTickUpdate>(BaseAddress, topics.ToArray(), onMessage, ct: ct);
         }
         #endregion
 
@@ -258,8 +271,13 @@ namespace Aster.Net.Clients.SpotApi
             return await SubscribeAsync(BaseAddress, "bookTicker", new[] { "!bookTicker" }, handler, ct).ConfigureAwait(false);
         }
 
-        #endregion
+        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToBookTickerUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterBookTickerUpdate> callback, CancellationToken ct)
+        {
+            var topics = new HashSet<string>(symbols.Select(x => x.ToLowerInvariant() + "@bookTicker"));
+            return SubscribeHighPerfAsync<AsterCombinedStream<AsterBookTickerUpdate>, AsterBookTickerUpdate>(BaseAddress, topics.ToArray(), callback, ct);
+        }
 
+        #endregion
 
         #region Partial Book Depth Streams
 
@@ -288,6 +306,12 @@ namespace Aster.Net.Clients.SpotApi
             return await SubscribeAsync(BaseAddress, "depthUpdate", symbols, handler, ct).ConfigureAwait(false);
         }
 
+        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToPartialOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int levels, int? updateInterval, Action<AsterOrderBookUpdate> onMessage, CancellationToken ct)
+        {
+            var topics = new HashSet<string>(symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels +
+                (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")));
+            return SubscribeHighPerfAsync<AsterCombinedStream<AsterOrderBookUpdate>, AsterOrderBookUpdate>(BaseAddress, topics.ToArray(), onMessage, ct: ct);
+        }
         #endregion
 
         #region Diff. Book Depth Streams
@@ -316,6 +340,13 @@ namespace Aster.Net.Clients.SpotApi
             return await SubscribeAsync(BaseAddress, "depthUpdate", symbols, handler, ct).ConfigureAwait(false);
         }
 
+        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int? updateInterval, Action<AsterOrderBookUpdate> callback, CancellationToken ct)
+        {
+            var topics = new HashSet<string>(symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" +
+                (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")));
+            return SubscribeHighPerfAsync<AsterCombinedStream<AsterOrderBookUpdate>, AsterOrderBookUpdate>(BaseAddress, topics.ToArray(), callback, ct: ct);
+        }
+
         #endregion
 
         #region User Data Streams
@@ -339,6 +370,30 @@ namespace Aster.Net.Clients.SpotApi
         {
             var subscription = new AsterSubscription<T>(_logger, dataType, topics.ToList(), onData, false);
             return SubscribeAsync(url.AppendPath("stream"), subscription, ct);
+        }
+
+        internal Task<CallResult<HighPerfUpdateSubscription>> SubscribeHighPerfAsync<T, U>(
+            string url,
+            string[] topics,
+            Action<U> onData,
+            CancellationToken ct) where T : AsterCombinedStream<U>
+        {
+            var subscription = new AsterHighPerfSubscription<T>(topics, x =>
+            {
+                if (x.Data == null)
+                {
+                    // It's probably a different message (sub confirm for instance), ignore
+                    return;
+                }
+
+                onData(x.Data);
+            });
+
+            return base.SubscribeHighPerfAsync(
+                url.AppendPath("stream"),
+                subscription,
+                HighPerfConnectionFactory ??= new HighPerfJsonSocketConnectionFactory(AsterExchange._serializerContext),
+                ct);
         }
 
         internal Task<CallResult<UpdateSubscription>> SubscribeInternalAsync(string url, Subscription subscription, CancellationToken ct)
