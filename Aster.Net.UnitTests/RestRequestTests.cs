@@ -11,14 +11,12 @@ namespace Aster.Net.UnitTests
     [TestFixture]
     public class RestRequestTests
     {
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ValidateSpotAccountCalls(bool useUpdatedDeserialization)
+        [Test]
+        public async Task ValidateSpotAccountCalls()
         {
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.UseUpdatedDeserialization = useUpdatedDeserialization;
                 opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Spot/Account", "https://sapi.asterdex.com", IsAuthenticated);
@@ -29,14 +27,12 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.SpotApi.Account.GetAccountInfoAsync(), "GetAccountInfo");
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ValidateSpotExchangeDataCalls(bool useUpdatedDeserialization)
+        [Test]
+        public async Task ValidateSpotExchangeDataCalls()
         {
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.UseUpdatedDeserialization = useUpdatedDeserialization;
                 opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Spot/ExchangeData", "https://sapi.asterdex.com", IsAuthenticated);
@@ -51,14 +47,12 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.SpotApi.ExchangeData.GetBookTickerAsync("ETHUSDT"), "GetBookTicker");
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ValidateSpotTradingCalls(bool useUpdatedDeserialization)
+        [Test]
+        public async Task ValidateSpotTradingCalls()
         {
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.UseUpdatedDeserialization = useUpdatedDeserialization;
                 opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Spot/Trading", "https://sapi.asterdex.com", IsAuthenticated);
@@ -71,14 +65,12 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.SpotApi.Trading.GetUserTradesAsync(), "GetUserTrades", ignoreProperties: ["counterpartyId", "createUpdateId"]);
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ValidateFuturesAccountCalls(bool useUpdatedDeserialization)
+        [Test]
+        public async Task ValidateFuturesAccountCalls()
         {
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.UseUpdatedDeserialization = useUpdatedDeserialization;
                 opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Futures/Account", "https://fapi.asterdex.com", IsAuthenticated);
@@ -99,14 +91,12 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.FuturesApi.Account.GetUserCommissionRateAsync("ETHUSDT"), "GetUserCommissionRate");
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ValidateFuturesExchangeDataCalls(bool useUpdatedDeserialization)
+        [Test]
+        public async Task ValidateFuturesExchangeDataCalls()
         {
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.UseUpdatedDeserialization = useUpdatedDeserialization;
                 opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Futures/ExchangeData", "https://fapi.asterdex.com", IsAuthenticated);
@@ -129,14 +119,12 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.FuturesApi.ExchangeData.GetBookTickersAsync(), "GetBookTickers");
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ValidateFuturesTradingCalls(bool useUpdatedDeserialization)
+        [Test]
+        public async Task ValidateFuturesTradingCalls()
         {
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.UseUpdatedDeserialization = useUpdatedDeserialization;
                 opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Futures/Trading", "https://fapi.asterdex.com", IsAuthenticated);

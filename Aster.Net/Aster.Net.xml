@@ -273,9 +273,6 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.ParseErrorResponse(System.Int32,System.Net.Http.Headers.HttpResponseHeaders,CryptoExchange.Net.Interfaces.IMessageAccessor,System.Exception)">
-            <inheritdoc />
-        </member>
         <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.GetServerTimestampAsync">
             <inheritdoc />
         </member>
@@ -581,9 +578,6 @@
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.ParseErrorResponse(System.Int32,System.Net.Http.Headers.HttpResponseHeaders,CryptoExchange.Net.Interfaces.IMessageAccessor,System.Exception)">
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.GetServerTimestampAsync">
