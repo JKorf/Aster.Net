@@ -22,6 +22,8 @@ namespace Aster.Net.Objects.Sockets.Subscriptions
             _handler = handler;
             _params = topics.ToArray();
 
+            IndividualSubscriptionCount = topics.Count;
+
             MessageMatcher = MessageMatcher.Create<T>(topics, DoHandleMessage);
             MessageRouter = MessageRouter.CreateWithTopicFilters<T>(dataType, topics, DoHandleMessage);
         }

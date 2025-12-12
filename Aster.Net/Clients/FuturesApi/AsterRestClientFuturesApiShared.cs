@@ -220,13 +220,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             return resultTickers.Result.AsExchangeResult(Exchange, request.TradingMode == null ? SupportedTradingModes : new[] { request.TradingMode.Value }, resultTickers.Result.Data.Select(x =>
             {
-                var markPrice = resultMarkPrices.Result.Data.Single(p => p.Symbol == x.Symbol);
+                var markPrice = resultMarkPrices.Result.Data.SingleOrDefault(p => p.Symbol == x.Symbol);
                 return new SharedFuturesTicker(ExchangeSymbolCache.ParseSymbol(_topicId, x.Symbol), x.Symbol, x.LastPrice, x.HighPrice, x.LowPrice, x.Volume, x.PriceChangePercent)
                 {
-                    IndexPrice = markPrice.IndexPrice,
-                    MarkPrice = markPrice.MarkPrice,
-                    FundingRate = markPrice.FundingRate,
-                    NextFundingTime = markPrice.NextFundingTime == default ? null : markPrice.NextFundingTime
+                    IndexPrice = markPrice?.IndexPrice,
+                    MarkPrice = markPrice?.MarkPrice,
+                    FundingRate = markPrice?.FundingRate,
+                    NextFundingTime = markPrice?.NextFundingTime == default ? null : markPrice?.NextFundingTime
                 };
             }).ToArray());
         }
