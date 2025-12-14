@@ -50,11 +50,11 @@ namespace Aster.Net.Objects.Sockets
                 ]);
 
             MessageRouter = MessageRouter.Create([
-                MessageRoute<AsterCombinedStream<AsterConfigUpdate>>.CreateWithTopicFilter("ACCOUNT_CONFIG_UPDATE", _lk, DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterMarginUpdate>>.CreateWithTopicFilter("MARGIN_CALL", _lk, DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterAccountUpdate>>.CreateWithTopicFilter("ACCOUNT_UPDATE", _lk, DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterOrderUpdate>>.CreateWithTopicFilter("ORDER_TRADE_UPDATE", _lk, DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterSocketEvent>>.CreateWithTopicFilter("listenKeyExpired", _lk, DoHandleMessage)
+                MessageRoute<AsterCombinedStream<AsterConfigUpdate>>.CreateWithoutTopicFilter("ACCOUNT_CONFIG_UPDATE", DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterMarginUpdate>>.CreateWithoutTopicFilter("MARGIN_CALL", DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterAccountUpdate>>.CreateWithoutTopicFilter("ACCOUNT_UPDATE", DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterOrderUpdate>>.CreateWithoutTopicFilter("ORDER_TRADE_UPDATE", DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterSocketEvent>>.CreateWithoutTopicFilter("listenKeyExpired", DoHandleMessage)
                 ]);
         }
 
@@ -84,7 +84,7 @@ namespace Aster.Net.Objects.Sockets
         {
             message.Data.ListenKey = message.Stream;
             _configHandler?.Invoke(
-                new DataEvent<AsterConfigUpdate>(message.Data, receiveTime, originalData)
+                new DataEvent<AsterConfigUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime)
@@ -96,7 +96,7 @@ namespace Aster.Net.Objects.Sockets
         {
             message.Data.ListenKey = message.Stream;
             _marginHandler?.Invoke(
-                new DataEvent<AsterMarginUpdate>(message.Data, receiveTime, originalData)
+                new DataEvent<AsterMarginUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime)
@@ -108,7 +108,7 @@ namespace Aster.Net.Objects.Sockets
         {
             message.Data.ListenKey = message.Stream;
             _accountHandler?.Invoke(
-                new DataEvent<AsterAccountUpdate>(message.Data, receiveTime, originalData)
+                new DataEvent<AsterAccountUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime)
@@ -120,7 +120,7 @@ namespace Aster.Net.Objects.Sockets
         {
             message.Data.ListenKey = message.Stream;
             _orderHandler?.Invoke(
-                new DataEvent<AsterOrderUpdate>(message.Data, receiveTime, originalData)
+                new DataEvent<AsterOrderUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
                     .WithSymbol(message.Data.UpdateData.Symbol)
@@ -132,7 +132,7 @@ namespace Aster.Net.Objects.Sockets
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSocketEvent> message)
         {
             _listenkeyHandler?.Invoke(
-                new DataEvent<AsterSocketEvent>(message.Data, receiveTime, originalData)
+                new DataEvent<AsterSocketEvent>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime)

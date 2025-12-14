@@ -93,7 +93,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterAggregatedTradeUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterAggregatedTradeUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterAggregatedTradeUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -122,7 +122,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMarkPriceUpdate[]>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterMarkPriceUpdate[]>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterMarkPriceUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithDataTimestamp(data.Data.Max(x => x.EventTime))
                         .WithUpdateType(SocketUpdateType.Update)
@@ -145,7 +145,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMarkPriceUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterMarkPriceUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterMarkPriceUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -179,7 +179,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterKlineUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterKlineUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterKlineUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -207,7 +207,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMiniTickUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterMiniTickUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterMiniTickUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -224,7 +224,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMiniTickUpdate[]>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterMiniTickUpdate[]>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterMiniTickUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithDataTimestamp(data.Data.Max(x => x.EventTime))
                         .WithUpdateType(SocketUpdateType.Update)
@@ -254,7 +254,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterTickerUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterTickerUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -271,7 +271,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterTickerUpdate[]>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterTickerUpdate[]>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterTickerUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithDataTimestamp(data.Data.Max(x => x.EventTime))
                         .WithUpdateType(SocketUpdateType.Update)
@@ -295,7 +295,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterBookTickerUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterBookTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -312,7 +312,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterBookTickerUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterBookTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -344,7 +344,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterLiquidationUpdate>(data.Data.Data, receiveTime, originalData)
+                    new DataEvent<AsterLiquidationUpdate>(Exchange, data.Data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -361,7 +361,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterLiquidationUpdate>(data.Data.Data, receiveTime, originalData)
+                    new DataEvent<AsterLiquidationUpdate>(Exchange, data.Data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -389,7 +389,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterOrderBookUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterOrderBookUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
@@ -423,7 +423,7 @@ namespace Aster.Net.Clients.FuturesApi
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
                 onMessage(
-                    new DataEvent<AsterOrderBookUpdate>(data.Data, receiveTime, originalData)
+                    new DataEvent<AsterOrderBookUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime)
