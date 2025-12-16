@@ -2,28 +2,28 @@ using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
-using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
 
 namespace Aster.Net
 {
     internal class AsterAuthenticationProvider : AuthenticationProvider
     {
+        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Hmac, ApiCredentialsType.RsaXml, ApiCredentialsType.RsaPem];
         public AsterAuthenticationProvider(ApiCredentials credentials) : base(credentials)
         {
         }
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
+            request.Headers ??= new Dictionary<string, string>();
             request.Headers.Add("X-MBX-APIKEY", ApiKey);
 
             if (!request.Authenticated)
                 return;
 
             var timestamp = GetMillisecondTimestamp(apiClient);
-            var parameters = request.GetPositionParameters();
+            var parameters = request.GetPositionParameters() ?? new Dictionary<string, object>();
             parameters.Add("timestamp", timestamp);
 
             if (request.ParameterPosition == HttpMethodParameterPosition.InUri)
@@ -35,7 +35,7 @@ namespace Aster.Net
             }
             else
             {
-                var parameterData = request.BodyParameters.ToFormData();
+                var parameterData = request.BodyParameters?.ToFormData() ?? string.Empty;
                 var signature = Sign(parameterData);
                 parameters.Add("signature", signature);
                 request.SetBodyContent($"{parameterData}&signature={signature}");

@@ -1,21 +1,21 @@
-using CryptoExchange.Net;
-using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Objects;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Clients.MessageHandlers;
+using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Objects.Options;
+using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
+using CryptoExchange.Net.Converters.MessageParsing;
+using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Interfaces;
-using CryptoExchange.Net.SharedApis;
+using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Errors;
-using CryptoExchange.Net.Converters.MessageParsing;
-using Aster.Net.Interfaces.Clients.SpotApi;
+using CryptoExchange.Net.SharedApis;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aster.Net.Clients.SpotApi
 {
@@ -25,6 +25,7 @@ namespace Aster.Net.Clients.SpotApi
         #region fields 
         internal static TimeSyncState _timeSyncState = new TimeSyncState("Spot Api");
 
+        protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.SpotErrors);
         protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
 
         public new AsterRestOptions ClientOptions => (AsterRestOptions)base.ClientOptions;
@@ -90,24 +91,6 @@ namespace Aster.Net.Clients.SpotApi
         }
 
         /// <inheritdoc />
-        protected override Error ParseErrorResponse(int httpStatusCode, KeyValuePair<string, string[]>[] responseHeaders, IMessageAccessor accessor, Exception? exception)
-        {
-            if (!accessor.IsValid)
-                return new ServerError(ErrorInfo.Unknown, exception: exception);
-
-            var code = accessor.GetValue<int?>(MessagePath.Get().Property("code"));
-            var msg = accessor.GetValue<string>(MessagePath.Get().Property("msg"));
-            if (msg == null)
-                return new ServerError(ErrorInfo.Unknown, exception: exception);
-
-            if (code == null)
-                return new ServerError(new ErrorInfo(ErrorType.Unknown, false, msg));
-
-            var errorInfo = GetErrorInfo(code.Value, msg);
-            return new ServerError(code.Value.ToString(), errorInfo, exception);
-        }
-
-        /// <inheritdoc />
         protected override Task<WebCallResult<DateTime>> GetServerTimestampAsync()
             => ExchangeData.GetServerTimeAsync();
 
@@ -125,6 +108,5 @@ namespace Aster.Net.Clients.SpotApi
 
         /// <inheritdoc />
         public IAsterRestClientSpotApiShared SharedClient => this;
-
     }
 }

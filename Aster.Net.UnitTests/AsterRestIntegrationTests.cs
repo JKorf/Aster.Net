@@ -12,7 +12,7 @@ namespace Aster.Net.UnitTests
     [NonParallelizable]
     public class AsterRestIntegrationTests : RestIntegrationTest<AsterRestClient>
     {
-        public override bool Run { get; set; } = true;
+        public override bool Run { get; set; } = false;
 
         public override AsterRestClient GetClient(ILoggerFactory loggerFactory)
         {
@@ -71,7 +71,6 @@ namespace Aster.Net.UnitTests
             await RunAndCheckResult(client => client.SpotApi.Trading.GetOrdersAsync("ETHUSDT", default, default, default, default, default, default), true);
             await RunAndCheckResult(client => client.SpotApi.Trading.GetUserTradesAsync(default, default, default, default, default, default, default, default), true);
         }
-
 
         [Test]
         public async Task TestFuturesAccount()

@@ -1,7 +1,7 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
-using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.Sockets;
+using CryptoExchange.Net.Sockets.Default;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,24 +9,23 @@ using System.Collections.Generic;
 namespace Aster.Net.Objects.Sockets.Subscriptions
 {
     /// <inheritdoc />
-    internal class AsterSubscription<T> : Subscription<AsterSocketQueryResponse, AsterSocketQueryResponse>
+    internal class AsterSubscription<T> : Subscription
     {
-        private readonly Action<DataEvent<T>> _handler;
+        private readonly Action<DateTime, string?, T> _handler;
         private string[] _params;
 
         /// <summary>
         /// ctor
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="topics"></param>
-        /// <param name="handler"></param>
-        /// <param name="auth"></param>
-        public AsterSubscription(ILogger logger, List<string> topics, Action<DataEvent<T>> handler, bool auth) : base(logger, auth)
+        public AsterSubscription(ILogger logger, string dataType, List<string> topics, Action<DateTime, string?, T> handler, bool auth) : base(logger, auth)
         {
             _handler = handler;
             _params = topics.ToArray();
 
+            IndividualSubscriptionCount = topics.Count;
+
             MessageMatcher = MessageMatcher.Create<T>(topics, DoHandleMessage);
+            MessageRouter = MessageRouter.CreateWithoutTopicFilter<T>(topics, DoHandleMessage);
         }
 
         /// <inheritdoc />
@@ -52,9 +51,9 @@ namespace Aster.Net.Objects.Sockets.Subscriptions
         }
 
         /// <inheritdoc />
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<T> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, T message)
         {
-            _handler.Invoke(message.As(message.Data!, null!, null, SocketUpdateType.Update));
+            _handler.Invoke(receiveTime, originalData, message);
             return CallResult.SuccessResult;
         }
     }

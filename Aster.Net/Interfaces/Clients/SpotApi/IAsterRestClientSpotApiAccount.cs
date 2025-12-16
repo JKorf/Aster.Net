@@ -1,7 +1,6 @@
 using Aster.Net.Enums;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net.Objects;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 

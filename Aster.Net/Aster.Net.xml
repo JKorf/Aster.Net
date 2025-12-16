@@ -273,9 +273,6 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.ParseErrorResponse(System.Int32,System.Collections.Generic.KeyValuePair{System.String,System.String[]}[],CryptoExchange.Net.Interfaces.IMessageAccessor,System.Exception)">
-            <inheritdoc />
-        </member>
         <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.GetServerTimestampAsync">
             <inheritdoc />
         </member>
@@ -463,6 +460,9 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateSerializer">
             <inheritdoc />
         </member>
+        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateMessageConverter(System.Net.WebSockets.WebSocketMessageType)">
+            <inheritdoc />
+        </member>
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
             <inheritdoc />
         </member>
@@ -547,7 +547,7 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="P:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.SharedClient">
@@ -578,9 +578,6 @@
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.ParseErrorResponse(System.Int32,System.Collections.Generic.KeyValuePair{System.String,System.String[]}[],CryptoExchange.Net.Interfaces.IMessageAccessor,System.Exception)">
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.GetServerTimestampAsync">
@@ -707,6 +704,9 @@
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateSerializer">
             <inheritdoc />
         </member>
+        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateMessageConverter(System.Net.WebSockets.WebSocketMessageType)">
+            <inheritdoc />
+        </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateAuthenticationProvider(CryptoExchange.Net.Authentication.ApiCredentials)">
             <inheritdoc />
         </member>
@@ -773,7 +773,7 @@
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="P:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.SharedClient">
@@ -998,6 +998,11 @@
             </summary>
         </member>
         <member name="P:Aster.Net.Converters.AsterSourceGenerationContext.AsterCombinedStreamAsterSpotOrderUpdate">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Aster.Net.Converters.AsterSourceGenerationContext.AsterCombinedStreamAsterStreamMinimalTrade">
             <summary>
             Defines the source generated JSON serialization contract metadata for a given type.
             </summary>
@@ -1493,6 +1498,11 @@
             </summary>
         </member>
         <member name="P:Aster.Net.Converters.AsterSourceGenerationContext.AsterSpotUserTradeArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Aster.Net.Converters.AsterSourceGenerationContext.AsterStreamMinimalTrade">
             <summary>
             Defines the source generated JSON serialization contract metadata for a given type.
             </summary>
@@ -2990,6 +3000,17 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToAggregatedTradeUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{Aster.Net.Objects.Models.AsterAggregatedTradeUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to the aggregated trades update stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMarkPriceUpdatesAsync(System.String,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarkPriceUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mark price updates
@@ -3095,6 +3116,17 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMiniTickerUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{Aster.Net.Objects.Models.AsterMiniTickUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribes to mini ticker updates stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate[]}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates for all symbols
@@ -3153,6 +3185,17 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToBookTickerUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{Aster.Net.Objects.Models.AsterBookTickerUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to the book ticker update stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToLiquidationUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterLiquidationUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to liquidation updates for all symbols
@@ -3206,6 +3249,19 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToPartialOrderBookUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Int32,System.Nullable{System.Int32},System.Action{Aster.Net.Objects.Models.AsterOrderBookUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribes to the depth updates stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="levels">Number of rows, 5, 10 or 20</param>
+            <param name="updateInterval">Update interval in milliseconds, either 100, 250 or 500</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToOrderBookUpdatesAsync(System.String,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to order book difference updates
@@ -3227,6 +3283,18 @@
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        </member>
+        <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToOrderBookUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Nullable{System.Int32},System.Action{Aster.Net.Objects.Models.AsterOrderBookUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to the depth update stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToUserDataUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterConfigUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarginUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSocketEvent}},System.Threading.CancellationToken)">
             <summary>
@@ -3683,6 +3751,17 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToAggregatedTradeUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{Aster.Net.Objects.Models.AsterStreamMinimalTrade},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to the aggregated trades update stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flows" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToKlineUpdatesAsync(System.String,Aster.Net.Enums.KlineInterval,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
@@ -3756,6 +3835,17 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToMiniTickerUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{Aster.Net.Objects.Models.AsterMiniTickUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribes to mini ticker updates stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate[]}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates for all symbols
@@ -3814,6 +3904,17 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToBookTickerUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{Aster.Net.Objects.Models.AsterBookTickerUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to the book ticker update stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToPartialOrderBookUpdatesAsync(System.String,System.Int32,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to snapshot order book updates for the top x rows
@@ -3838,6 +3939,19 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         </member>
+        <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToPartialOrderBookUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Int32,System.Nullable{System.Int32},System.Action{Aster.Net.Objects.Models.AsterOrderBookUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribes to the depth updates for the provided symbol in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="levels">The amount of entries to be returned in the update, 5, 10 or 20</param>
+            <param name="updateInterval">Update interval in milliseconds, 1000ms or 100ms</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
+        </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToOrderBookUpdatesAsync(System.String,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to order book difference updates
@@ -3859,6 +3973,18 @@
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        </member>
+        <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToOrderBookUpdatesPerfAsync(System.Collections.Generic.IEnumerable{System.String},System.Nullable{System.Int32},System.Action{Aster.Net.Objects.Models.AsterOrderBookUpdate},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to the book ticker update stream in high-performance mode<br />
+            More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
+            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+            </summary>
+            <param name="symbols">Symbols to subscribe</param>
+            <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
+            <param name="onMessage">The event handler for the received data</param>
+            <param name="ct">Cancellation token for closing this subscription</param>
+            <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected</returns>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToUserDataUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotOrderUpdate}},System.Threading.CancellationToken)">
             <summary>
@@ -3939,7 +4065,7 @@
             The default addresses to connect to the Aster API
             </summary>
         </member>
-        <member name="P:Aster.Net.Objects.Internal.AsterCombinedStream`1.Stream">
+        <member name="P:Aster.Net.Objects.Internal.AsterCombinedStream.Stream">
             <summary>
             The stream combined
             </summary>
@@ -6476,6 +6602,26 @@
             Quote quantity
             </summary>
         </member>
+        <member name="T:Aster.Net.Objects.Models.AsterStreamMinimalTrade">
+            <summary>
+            Aggregated trade update
+            </summary>
+        </member>
+        <member name="P:Aster.Net.Objects.Models.AsterStreamMinimalTrade.Price">
+            <summary>
+            The price of the trades
+            </summary>
+        </member>
+        <member name="P:Aster.Net.Objects.Models.AsterStreamMinimalTrade.Quantity">
+            <summary>
+            The combined quantity of the trades
+            </summary>
+        </member>
+        <member name="P:Aster.Net.Objects.Models.AsterStreamMinimalTrade.TradeTime">
+            <summary>
+            The time of the trades
+            </summary>
+        </member>
         <member name="T:Aster.Net.Objects.Models.AsterSymbol">
             <summary>
             Symbol info
@@ -7356,6 +7502,34 @@
             Futures API options
             </summary>
         </member>
+        <member name="T:Aster.Net.Objects.Sockets.Subscriptions.AsterHighPerfSubscription`1">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterHighPerfSubscription`1.#ctor(System.String[],System.Action{`0})">
+            <summary>
+            ctor
+            </summary>
+        </member>
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterHighPerfSubscription`1.GetSubQuery(CryptoExchange.Net.Sockets.HighPerf.HighPerfSocketConnection)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.#ctor(Microsoft.Extensions.Logging.ILogger,System.String,System.Collections.Generic.List{System.String},System.Action{System.DateTime,System.String,`0},System.Boolean)">
+            <summary>
+            ctor
+            </summary>
+        </member>
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetSubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetUnsubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.DoHandleMessage(CryptoExchange.Net.Sockets.Default.SocketConnection,System.DateTime,System.String,`0)">
+            <inheritdoc />
+        </member>
         <member name="T:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription">
             <inheritdoc />
         </member>
@@ -7364,31 +7538,10 @@
             ctor
             </summary>
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
-            <inheritdoc />
-        </member>
-        <member name="T:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.#ctor(Microsoft.Extensions.Logging.ILogger,System.Collections.Generic.List{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{`0}},System.Boolean)">
-            <summary>
-            ctor
-            </summary>
-            <param name="logger"></param>
-            <param name="topics"></param>
-            <param name="handler"></param>
-            <param name="auth"></param>
-        </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetSubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.GetUnsubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Objects.Sockets.Subscriptions.AsterSubscription`1.DoHandleMessage(CryptoExchange.Net.Sockets.SocketConnection,CryptoExchange.Net.Objects.Sockets.DataEvent{`0})">
+        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="T:Aster.Net.Objects.Sockets.AsterUserDataSubscription">
@@ -7399,10 +7552,10 @@
             ctor
             </summary>
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetSubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.SocketConnection)">
+        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.GetUnsubQuery(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="T:Aster.Net.SymbolOrderBooks.AsterFuturesSymbolOrderBook">
@@ -7509,14 +7662,14 @@
             Extensions for the ICryptoRestClient and ICryptoSocketClient interfaces
             </summary>
         </member>
-        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.ICryptoRestClient)">
+        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.Clients.ICryptoRestClient)">
             <summary>
             Get the Aster REST Api client
             </summary>
             <param name="baseClient"></param>
             <returns></returns>
         </member>
-        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.ICryptoSocketClient)">
+        <member name="M:CryptoExchange.Net.Interfaces.CryptoClientExtensions.Aster(CryptoExchange.Net.Interfaces.Clients.ICryptoSocketClient)">
             <summary>
             Get the Aster Websocket Api client
             </summary>
@@ -7546,6 +7699,9 @@
         </member>
         <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.Bind_AsterOptions(Microsoft.Extensions.Configuration.IConfiguration,System.Object)">
             <summary>Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.TryGetConfigurationValue(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.String@)">
+            <summary>Tries to get the configuration value for the specified key.</summary>
         </member>
         <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.ValidateConfigurationKeys(System.Type,System.Lazy{System.Collections.Generic.HashSet{System.String}},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Configuration.BinderOptions)">
             <summary>If required by the binder options, validates that there are no unknown keys in the input configuration object.</summary>

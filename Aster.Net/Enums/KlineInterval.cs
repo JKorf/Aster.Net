@@ -1,5 +1,4 @@
-﻿using Aster.Net.Converters;
-using CryptoExchange.Net.Attributes;
+﻿using CryptoExchange.Net.Attributes;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using System.Text.Json.Serialization;
 

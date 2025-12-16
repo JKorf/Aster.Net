@@ -1,17 +1,17 @@
 ﻿using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
-using CryptoExchange.Net.Converters.MessageParsing;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.Sockets;
+using CryptoExchange.Net.Sockets.Default;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace Aster.Net.Objects.Sockets
 {
     /// <inheritdoc />
-    internal class AsterSpotUserDataSubscription : Subscription<AsterSocketQueryResponse, AsterSocketQueryResponse>
+    internal class AsterSpotUserDataSubscription : Subscription
     {
         private readonly string _lk;
 
@@ -31,6 +31,11 @@ namespace Aster.Net.Objects.Sockets
             _accountHandler = accountHandler;
 
             _lk = listenKey;
+
+            MessageRouter = MessageRouter.Create([
+                MessageRoute<AsterCombinedStream<AsterSpotAccountUpdate>>.CreateWithoutTopicFilter("outboundAccountPosition", DoHandleMessage),
+                MessageRoute<AsterCombinedStream<AsterSpotOrderUpdate>>.CreateWithoutTopicFilter("executionReport", DoHandleMessage)
+                ]);
 
             MessageMatcher = MessageMatcher.Create([
                 new MessageHandlerLink<AsterCombinedStream<AsterSpotAccountUpdate>>(_lk + "outboundAccountPosition", DoHandleMessage),
@@ -60,17 +65,28 @@ namespace Aster.Net.Objects.Sockets
             }, false);
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterSpotAccountUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotAccountUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _accountHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, null, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _accountHandler?.Invoke(
+                new DataEvent<AsterSpotAccountUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
 
-        public CallResult DoHandleMessage(SocketConnection connection, DataEvent<AsterCombinedStream<AsterSpotOrderUpdate>> message)
+        public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotOrderUpdate> message)
         {
-            message.Data.Data.ListenKey = message.Data.Stream;
-            _orderHandler?.Invoke(message.As(message.Data.Data, message.Data.Stream, message.Data.Data.Symbol, SocketUpdateType.Update).WithDataTimestamp(message.Data.Data.EventTime));
+            message.Data.ListenKey = message.Stream;
+            _orderHandler?.Invoke(
+                new DataEvent<AsterSpotOrderUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
+                    .WithUpdateType(SocketUpdateType.Update)
+                    .WithStreamId(message.Stream)
+                    .WithSymbol(message.Data.Symbol)
+                    .WithDataTimestamp(message.Data.EventTime)
+                );
             return CallResult.SuccessResult;
         }
     }

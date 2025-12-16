@@ -1,6 +1,6 @@
-using CryptoExchange.Net.Interfaces;
 using Aster.Net.Clients;
 using Aster.Net.Interfaces.Clients;
+using CryptoExchange.Net.Interfaces.Clients;
 
 namespace CryptoExchange.Net.Interfaces
 {

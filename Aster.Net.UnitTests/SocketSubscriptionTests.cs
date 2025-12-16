@@ -14,17 +14,39 @@ namespace Aster.Net.UnitTests
     [TestFixture]
     public class SocketSubscriptionTests
     {
-        [Test]
-        public async Task ValidateFuturesSubscriptions()
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task ValidateConcurrentFuturesSubscriptions(bool newDeserialization)
         {
-            var logFactory = new LoggerFactory();
-            logFactory.AddProvider(new TraceLoggerProvider());
+            var logger = new LoggerFactory();
+            logger.AddProvider(new TraceLoggerProvider());
+
+            var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
+            {
+                OutputOriginalData = true,
+                UseUpdatedDeserialization = newDeserialization
+            }), logger);
+
+            var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Futures", "wss://fstream.asterdex.com");
+            await tester.ValidateConcurrentAsync<AsterKlineUpdate>(
+                (client, handler) => client.FuturesApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneDay, handler),
+                (client, handler) => client.FuturesApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneHour, handler),
+                "Concurrent");
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task ValidateFuturesSubscriptions(bool newDeserialization)
+        {
+            var logger = new LoggerFactory();
+            logger.AddProvider(new TraceLoggerProvider());
 
             var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
             {
                 ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456"),
-                OutputOriginalData = true
-            }), logFactory);
+                OutputOriginalData = true,
+                UseUpdatedDeserialization = newDeserialization
+            }), logger);
             var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Futures", "wss://fstream.asterdex.com");
             await tester.ValidateAsync<AsterAggregatedTradeUpdate>((client, handler) => client.FuturesApi.SubscribeToAggregatedTradeUpdatesAsync("ETHUSDT", handler), "Trades", nestedJsonProperty: "data");
             await tester.ValidateAsync<AsterMarkPriceUpdate>((client, handler) => client.FuturesApi.SubscribeToMarkPriceUpdatesAsync("ETHUSDT", null, handler), "MarkPrice", nestedJsonProperty: "data");
@@ -42,17 +64,39 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync<AsterMarginUpdate>((client, handler) => client.FuturesApi.SubscribeToUserDataUpdatesAsync("123", onMarginUpdate: handler), "AccountMargin", nestedJsonProperty: "data");
         }
 
-        [Test]
-        public async Task ValidateSpotSubscriptions()
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task ValidateConcurrentSpotSubscriptions(bool newDeserialization)
         {
-            var logFactory = new LoggerFactory();
-            logFactory.AddProvider(new TraceLoggerProvider());
+            var logger = new LoggerFactory();
+            logger.AddProvider(new TraceLoggerProvider());
+
+            var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
+            {
+                OutputOriginalData = true,
+                UseUpdatedDeserialization = newDeserialization
+            }), logger);
+
+            var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Spot", "wss://sstream.asterdex.com");
+            await tester.ValidateConcurrentAsync<AsterKlineUpdate>(
+                (client, handler) => client.SpotApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneDay, handler),
+                (client, handler) => client.SpotApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneHour, handler),
+                "Concurrent");
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task ValidateSpotSubscriptions(bool newDeserialization)
+        {
+            var logger = new LoggerFactory();
+            logger.AddProvider(new TraceLoggerProvider());
 
             var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
             {
                 ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456"),
-                OutputOriginalData = true
-            }), logFactory);
+                OutputOriginalData = true,
+                UseUpdatedDeserialization = newDeserialization
+            }), logger);
             var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Spot", "wss://sstream.asterdex.com");
             await tester.ValidateAsync<AsterAggregatedTradeUpdate>((client, handler) => client.SpotApi.SubscribeToAggregatedTradeUpdatesAsync("ETHUSDT", handler), "Trades", nestedJsonProperty: "data", ignoreProperties: ["M"]);
             await tester.ValidateAsync<AsterKlineUpdate>((client, handler) => client.SpotApi.SubscribeToKlineUpdatesAsync("ETHUSDT", Enums.KlineInterval.OneHour, handler), "Klines", nestedJsonProperty: "data", ignoreProperties: ["B"]);
