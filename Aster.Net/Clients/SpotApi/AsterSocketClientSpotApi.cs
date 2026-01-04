@@ -87,11 +87,13 @@ namespace Aster.Net.Clients.SpotApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterAggregatedTradeUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterAggregatedTradeUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -127,11 +129,13 @@ namespace Aster.Net.Clients.SpotApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterKlineUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterKlineUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -155,11 +159,13 @@ namespace Aster.Net.Clients.SpotApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMiniTickUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterMiniTickUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -175,7 +181,7 @@ namespace Aster.Net.Clients.SpotApi
                 onMessage(
                     new DataEvent<AsterMiniTickUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
-                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime), GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -202,11 +208,13 @@ namespace Aster.Net.Clients.SpotApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterTickerUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -222,7 +230,7 @@ namespace Aster.Net.Clients.SpotApi
                 onMessage(
                     new DataEvent<AsterTickerUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
-                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime), GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -243,11 +251,13 @@ namespace Aster.Net.Clients.SpotApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterBookTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -260,11 +270,13 @@ namespace Aster.Net.Clients.SpotApi
         {
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterBookTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -294,11 +306,13 @@ namespace Aster.Net.Clients.SpotApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterOrderBookUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -328,11 +342,13 @@ namespace Aster.Net.Clients.SpotApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterOrderBookUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -360,7 +376,7 @@ namespace Aster.Net.Clients.SpotApi
         {
             listenKey.ValidateNotNull(nameof(listenKey));
 
-            var subscription = new AsterSpotUserDataSubscription(_logger, listenKey, onOrderUpdate, onAccountUpdate);
+            var subscription = new AsterSpotUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onAccountUpdate);
             return await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
         }
 
@@ -415,9 +431,6 @@ namespace Aster.Net.Clients.SpotApi
 
             return stream;
         }
-
-        /// <inheritdoc />
-        protected override Task<Query?> GetAuthenticationRequestAsync(SocketConnection connection) => Task.FromResult<Query?>(null);
 
         /// <inheritdoc />
         public IAsterSocketClientSpotApiShared SharedClient => this;

@@ -1,4 +1,5 @@
-﻿using Aster.Net.Objects.Internal;
+﻿using Aster.Net.Clients.FuturesApi;
+using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
@@ -14,6 +15,7 @@ namespace Aster.Net.Objects.Sockets
     internal class AsterUserDataSubscription : Subscription
     {
         private readonly string _lk;
+        private readonly AsterSocketClientFuturesApi _client;
 
         private readonly Action<DataEvent<AsterOrderUpdate>>? _orderHandler;
         private readonly Action<DataEvent<AsterConfigUpdate>>? _configHandler;
@@ -26,6 +28,7 @@ namespace Aster.Net.Objects.Sockets
         /// </summary>
         public AsterUserDataSubscription(
             ILogger logger,
+            AsterSocketClientFuturesApi client,
             string listenKey,
             Action<DataEvent<AsterOrderUpdate>>? orderHandler,
             Action<DataEvent<AsterConfigUpdate>>? configHandler,
@@ -33,6 +36,7 @@ namespace Aster.Net.Objects.Sockets
             Action<DataEvent<AsterAccountUpdate>>? accountHandler,
             Action<DataEvent<AsterSocketEvent>>? listenkeyHandler) : base(logger, false)
         {
+            _client = client;
             _orderHandler = orderHandler;
             _configHandler = configHandler;
             _marginHandler = marginHandler;
@@ -82,6 +86,8 @@ namespace Aster.Net.Objects.Sockets
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterConfigUpdate> message)
         {
+            _client.UpdateTimeOffset(message.Data.EventTime);
+
             message.Data.ListenKey = message.Stream;
             _configHandler?.Invoke(
                 new DataEvent<AsterConfigUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
@@ -94,6 +100,8 @@ namespace Aster.Net.Objects.Sockets
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterMarginUpdate> message)
         {
+            _client.UpdateTimeOffset(message.Data.EventTime);
+
             message.Data.ListenKey = message.Stream;
             _marginHandler?.Invoke(
                 new DataEvent<AsterMarginUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
@@ -106,6 +114,8 @@ namespace Aster.Net.Objects.Sockets
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterAccountUpdate> message)
         {
+            _client.UpdateTimeOffset(message.Data.EventTime);
+
             message.Data.ListenKey = message.Stream;
             _accountHandler?.Invoke(
                 new DataEvent<AsterAccountUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
@@ -118,6 +128,8 @@ namespace Aster.Net.Objects.Sockets
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterOrderUpdate> message)
         {
+            _client.UpdateTimeOffset(message.Data.EventTime);
+
             message.Data.ListenKey = message.Stream;
             _orderHandler?.Invoke(
                 new DataEvent<AsterOrderUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
@@ -131,6 +143,8 @@ namespace Aster.Net.Objects.Sockets
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSocketEvent> message)
         {
+            _client.UpdateTimeOffset(message.Data.EventTime);
+
             _listenkeyHandler?.Invoke(
                 new DataEvent<AsterSocketEvent>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)

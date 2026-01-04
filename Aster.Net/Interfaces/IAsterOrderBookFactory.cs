@@ -10,7 +10,11 @@ namespace Aster.Net.Interfaces
     /// </summary>
     public interface IAsterOrderBookFactory : IExchangeService
     {
-        
+        /// <summary>
+        /// Spot order book factory methods
+        /// </summary>
+        IOrderBookFactory<AsterOrderBookOptions> Spot { get; }
+
         /// <summary>
         /// Futures order book factory methods
         /// </summary>
@@ -24,8 +28,12 @@ namespace Aster.Net.Interfaces
         /// <param name="options">Book options</param>
         /// <returns></returns>
         ISymbolOrderBook Create(SharedSymbol symbol, Action<AsterOrderBookOptions>? options = null);
+                
+        /// <summary>
+        /// Create a new Spot local order book instance
+        /// </summary>
+        ISymbolOrderBook CreateSpot(string symbol, Action<AsterOrderBookOptions>? options = null);
 
-        
         /// <summary>
         /// Create a new Futures local order book instance
         /// </summary>

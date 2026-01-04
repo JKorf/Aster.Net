@@ -92,11 +92,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterAggregatedTradeUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterAggregatedTradeUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -124,7 +126,7 @@ namespace Aster.Net.Clients.FuturesApi
                 onMessage(
                     new DataEvent<AsterMarkPriceUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
-                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime), GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -144,11 +146,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMarkPriceUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterMarkPriceUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -178,11 +182,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterKlineUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterKlineUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -206,11 +212,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMiniTickUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterMiniTickUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -226,7 +234,7 @@ namespace Aster.Net.Clients.FuturesApi
                 onMessage(
                     new DataEvent<AsterMiniTickUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
-                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime), GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -253,11 +261,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterTickerUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -273,7 +283,7 @@ namespace Aster.Net.Clients.FuturesApi
                 onMessage(
                     new DataEvent<AsterTickerUpdate[]>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
-                        .WithDataTimestamp(data.Data.Max(x => x.EventTime))
+                        .WithDataTimestamp(data.Data.Max(x => x.EventTime), GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -294,11 +304,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterBookTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -311,11 +323,13 @@ namespace Aster.Net.Clients.FuturesApi
         {
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterBookTickerUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterBookTickerUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -343,11 +357,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterLiquidationUpdate>(Exchange, data.Data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -360,11 +376,13 @@ namespace Aster.Net.Clients.FuturesApi
         {
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterLiquidationUpdate>(Exchange, data.Data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -388,11 +406,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterOrderBookUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -422,11 +442,13 @@ namespace Aster.Net.Clients.FuturesApi
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
+                UpdateTimeOffset(data.Data.EventTime);
+
                 onMessage(
                     new DataEvent<AsterOrderBookUpdate>(Exchange, data.Data, receiveTime, originalData)
                         .WithStreamId(data.Stream)
                         .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime)
+                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
@@ -456,7 +478,7 @@ namespace Aster.Net.Clients.FuturesApi
         {
             listenKey.ValidateNotNull(nameof(listenKey));
 
-            var subscription = new AsterUserDataSubscription(_logger, listenKey, onOrderUpdate, onConfigUpdate, onMarginUpdate, onAccountUpdate, onListenKeyExpired);
+            var subscription = new AsterUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onConfigUpdate, onMarginUpdate, onAccountUpdate, onListenKeyExpired);
             return await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
         }
 
@@ -510,9 +532,6 @@ namespace Aster.Net.Clients.FuturesApi
 
             return stream;
         }
-
-        /// <inheritdoc />
-        protected override Task<Query?> GetAuthenticationRequestAsync(SocketConnection connection) => Task.FromResult<Query?>(null);
 
         /// <inheritdoc />
         public IAsterSocketClientFuturesApiShared SharedClient => this;

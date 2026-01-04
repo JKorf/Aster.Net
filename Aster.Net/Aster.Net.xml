@@ -276,12 +276,6 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.GetServerTimestampAsync">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.GetTimeSyncInfo">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.GetTimeOffset">
-            <inheritdoc />
-        </member>
         <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.FormatSymbol(System.String,System.String,CryptoExchange.Net.SharedApis.TradingMode,System.Nullable{System.DateTime})">
             <inheritdoc />
         </member>
@@ -581,12 +575,6 @@
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.GetServerTimestampAsync">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.GetTimeSyncInfo">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.GetTimeOffset">
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.FormatSymbol(System.String,System.String,CryptoExchange.Net.SharedApis.TradingMode,System.Nullable{System.DateTime})">
@@ -4012,6 +4000,11 @@
             Aster local order book factory
             </summary>
         </member>
+        <member name="P:Aster.Net.Interfaces.IAsterOrderBookFactory.Spot">
+            <summary>
+            Spot order book factory methods
+            </summary>
+        </member>
         <member name="P:Aster.Net.Interfaces.IAsterOrderBookFactory.Futures">
             <summary>
             Futures order book factory methods
@@ -4024,6 +4017,11 @@
             <param name="symbol">The symbol</param>
             <param name="options">Book options</param>
             <returns></returns>
+        </member>
+        <member name="M:Aster.Net.Interfaces.IAsterOrderBookFactory.CreateSpot(System.String,System.Action{Aster.Net.Objects.Options.AsterOrderBookOptions})">
+            <summary>
+            Create a new Spot local order book instance
+            </summary>
         </member>
         <member name="M:Aster.Net.Interfaces.IAsterOrderBookFactory.CreateFutures(System.String,System.Action{Aster.Net.Objects.Options.AsterOrderBookOptions})">
             <summary>
@@ -7533,7 +7531,7 @@
         <member name="T:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.#ctor(Microsoft.Extensions.Logging.ILogger,System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotOrderUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotAccountUpdate}})">
+        <member name="M:Aster.Net.Objects.Sockets.AsterSpotUserDataSubscription.#ctor(Microsoft.Extensions.Logging.ILogger,Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi,System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotOrderUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotAccountUpdate}})">
             <summary>
             ctor
             </summary>
@@ -7547,7 +7545,7 @@
         <member name="T:Aster.Net.Objects.Sockets.AsterUserDataSubscription">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.#ctor(Microsoft.Extensions.Logging.ILogger,System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterConfigUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarginUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSocketEvent}})">
+        <member name="M:Aster.Net.Objects.Sockets.AsterUserDataSubscription.#ctor(Microsoft.Extensions.Logging.ILogger,Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi,System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterConfigUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarginUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSocketEvent}})">
             <summary>
             ctor
             </summary>
