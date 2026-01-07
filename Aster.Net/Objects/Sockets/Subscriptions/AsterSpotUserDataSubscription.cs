@@ -80,7 +80,7 @@ namespace Aster.Net.Objects.Sockets
                 new DataEvent<AsterSpotAccountUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
-                    .WithDataTimestamp(message.Data.EventTime)
+                    .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
             return CallResult.SuccessResult;
         }
@@ -95,7 +95,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
                     .WithSymbol(message.Data.Symbol)
-                    .WithDataTimestamp(message.Data.EventTime)
+                    .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
             return CallResult.SuccessResult;
         }

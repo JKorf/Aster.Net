@@ -541,9 +541,6 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.Default.SocketConnection)">
-            <inheritdoc />
-        </member>
         <member name="P:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.SharedClient">
             <inheritdoc />
         </member>
@@ -759,9 +756,6 @@
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetAuthenticationRequestAsync(CryptoExchange.Net.Sockets.Default.SocketConnection)">
             <inheritdoc />
         </member>
         <member name="P:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.SharedClient">
