@@ -10,6 +10,7 @@ namespace Aster.Net
     internal class AsterAuthenticationProvider : AuthenticationProvider
     {
         public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Hmac, ApiCredentialsType.RsaXml, ApiCredentialsType.RsaPem];
+
         public AsterAuthenticationProvider(ApiCredentials credentials) : base(credentials)
         {
         }

@@ -1,4 +1,6 @@
-﻿using Aster.Net.Objects.Internal;
+﻿using Aster.Net.Clients.FuturesApi;
+using Aster.Net.Clients.SpotApi;
+using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
@@ -14,6 +16,7 @@ namespace Aster.Net.Objects.Sockets
     internal class AsterSpotUserDataSubscription : Subscription
     {
         private readonly string _lk;
+        private readonly AsterSocketClientSpotApi _client;
 
         private readonly Action<DataEvent<AsterSpotOrderUpdate>>? _orderHandler;
         private readonly Action<DataEvent<AsterSpotAccountUpdate>>? _accountHandler;
@@ -23,10 +26,13 @@ namespace Aster.Net.Objects.Sockets
         /// </summary>
         public AsterSpotUserDataSubscription(
             ILogger logger,
+            AsterSocketClientSpotApi client,
             string listenKey,
             Action<DataEvent<AsterSpotOrderUpdate>>? orderHandler,
             Action<DataEvent<AsterSpotAccountUpdate>>? accountHandler) : base(logger, false)
         {
+            _client = client;
+
             _orderHandler = orderHandler;
             _accountHandler = accountHandler;
 
@@ -67,25 +73,29 @@ namespace Aster.Net.Objects.Sockets
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotAccountUpdate> message)
         {
+            _client.UpdateTimeOffset(message.Data.EventTime);
+
             message.Data.ListenKey = message.Stream;
             _accountHandler?.Invoke(
                 new DataEvent<AsterSpotAccountUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
-                    .WithDataTimestamp(message.Data.EventTime)
+                    .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
             return CallResult.SuccessResult;
         }
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotOrderUpdate> message)
         {
+            _client.UpdateTimeOffset(message.Data.EventTime);
+
             message.Data.ListenKey = message.Stream;
             _orderHandler?.Invoke(
                 new DataEvent<AsterSpotOrderUpdate>(AsterExchange.ExchangeName, message.Data, receiveTime, originalData)
                     .WithUpdateType(SocketUpdateType.Update)
                     .WithStreamId(message.Stream)
                     .WithSymbol(message.Data.Symbol)
-                    .WithDataTimestamp(message.Data.EventTime)
+                    .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
             return CallResult.SuccessResult;
         }

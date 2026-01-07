@@ -111,9 +111,9 @@ namespace Aster.Net.SymbolOrderBooks
         private void HandleUpdate(DataEvent<AsterOrderBookUpdate> data)
         {
             if (Levels == null)
-                UpdateOrderBook(data.Data.LastUpdateId, data.Data.Bids, data.Data.Asks);
+                UpdateOrderBook(data.Data.LastUpdateId, data.Data.Bids, data.Data.Asks, data.DataTime, data.DataTimeLocal);
             else
-                SetInitialOrderBook(data.Data.LastUpdateId, data.Data.Bids, data.Data.Asks);
+                SetInitialOrderBook(data.Data.LastUpdateId, data.Data.Bids, data.Data.Asks, data.DataTime, data.DataTimeLocal);
         }
 
         /// <inheritdoc />

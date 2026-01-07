@@ -1,6 +1,7 @@
 using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Objects.Options;
+using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Converters.MessageParsing;
@@ -23,8 +24,6 @@ namespace Aster.Net.Clients.FuturesApi
     internal partial class AsterRestClientFuturesApi : RestApiClient, IAsterRestClientFuturesApi
     {
         #region fields 
-        internal static TimeSyncState _timeSyncState = new TimeSyncState("Futures Api");
-
         protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.FuturesErrors);
         protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
 
@@ -71,7 +70,7 @@ namespace Aster.Net.Clients.FuturesApi
             if (!result && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
                 _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
-                _timeSyncState.LastSyncTime = DateTime.MinValue;
+                TimeOffsetManager.ResetRestUpdateTime(ClientName);
             }
             return result;
         }
@@ -85,7 +84,7 @@ namespace Aster.Net.Clients.FuturesApi
             if (!result && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
                 _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
-                _timeSyncState.LastSyncTime = DateTime.MinValue;
+                TimeOffsetManager.ResetRestUpdateTime(ClientName);
             }
             return result;
         }
@@ -93,14 +92,6 @@ namespace Aster.Net.Clients.FuturesApi
         /// <inheritdoc />
         protected override Task<WebCallResult<DateTime>> GetServerTimestampAsync()
             => ExchangeData.GetServerTimeAsync();
-
-        /// <inheritdoc />
-        public override TimeSyncInfo? GetTimeSyncInfo()
-            => new TimeSyncInfo(_logger, ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp, ApiOptions.TimestampRecalculationInterval ?? ClientOptions.TimestampRecalculationInterval, _timeSyncState);
-
-        /// <inheritdoc />
-        public override TimeSpan? GetTimeOffset()
-            => _timeSyncState.TimeOffset;
 
         /// <inheritdoc />
         public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null) 
