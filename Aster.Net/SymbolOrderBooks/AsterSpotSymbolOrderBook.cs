@@ -56,8 +56,9 @@ namespace Aster.Net.SymbolOrderBooks
             Initialize(options);
 
             _strictLevels = false;
-            _sequencesAreConsecutive = options?.Limit == null;
             _updateInterval = options?.UpdateInterval;
+            _sequencesAreConsecutive = true;
+            _skipSequenceCheckFirstUpdateAfterSnapshotSet = true;
 
             Levels = options?.Limit;
             _initialDataTimeout = options?.InitialDataTimeout ?? TimeSpan.FromSeconds(30);
@@ -111,9 +112,13 @@ namespace Aster.Net.SymbolOrderBooks
         private void HandleUpdate(DataEvent<AsterOrderBookUpdate> data)
         {
             if (Levels == null)
-                UpdateOrderBook(data.Data.LastUpdateId, data.Data.Bids, data.Data.Asks, data.DataTime, data.DataTimeLocal);
+            {
+                UpdateOrderBook(data.Data.LastUpdateIdStream + 1, data.Data.LastUpdateId, data.Data.Bids, data.Data.Asks, data.DataTime);
+            }
             else
-                SetInitialOrderBook(data.Data.LastUpdateId, data.Data.Bids, data.Data.Asks, data.DataTime, data.DataTimeLocal);
+            {
+                SetInitialOrderBook(data.Data.LastUpdateIdStream + 1, data.Data.Bids, data.Data.Asks, data.DataTime, data.DataTimeLocal);
+            }
         }
 
         /// <inheritdoc />
