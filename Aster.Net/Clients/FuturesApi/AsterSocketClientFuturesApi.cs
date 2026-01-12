@@ -414,6 +414,7 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
+                        .WithSequenceNumber(data.Data.LastUpdateId)
                     );
             });
 
@@ -450,6 +451,7 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
+                        .WithSequenceNumber(data.Data.LastUpdateId)
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
