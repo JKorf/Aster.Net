@@ -314,6 +314,7 @@ namespace Aster.Net.Clients.SpotApi
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
+                        .WithSequenceNumber(data.Data.LastUpdateId)
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
@@ -350,6 +351,7 @@ namespace Aster.Net.Clients.SpotApi
                         .WithSymbol(data.Data.Symbol)
                         .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
                         .WithUpdateType(SocketUpdateType.Update)
+                        .WithSequenceNumber(data.Data.LastUpdateId)
                     );
             });
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
