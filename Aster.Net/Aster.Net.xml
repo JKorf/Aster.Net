@@ -2300,12 +2300,12 @@
         </member>
         <member name="F:Aster.Net.Enums.SymbolStatus.AuctionMatch">
             <summary>
-            
+            Action Match
             </summary>
         </member>
         <member name="F:Aster.Net.Enums.SymbolStatus.Break">
             <summary>
-            
+            Break
             </summary>
         </member>
         <member name="F:Aster.Net.Enums.SymbolStatus.Close">
@@ -2331,6 +2331,11 @@
         <member name="F:Aster.Net.Enums.SymbolStatus.Settling">
             <summary>
             Settings
+            </summary>
+        </member>
+        <member name="F:Aster.Net.Enums.SymbolStatus.Delisted">
+            <summary>
+            Delisted
             </summary>
         </member>
         <member name="T:Aster.Net.Enums.TimeInForce">

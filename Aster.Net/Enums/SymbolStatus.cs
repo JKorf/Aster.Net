@@ -41,12 +41,12 @@ namespace Aster.Net.Enums
         [Map("HALT")]
         Halt,
         /// <summary>
-        /// 
+        /// Action Match
         /// </summary>
         [Map("AUCTION_MATCH")]
         AuctionMatch,
         /// <summary>
-        /// 
+        /// Break
         /// </summary>
         [Map("BREAK")]
         Break,
@@ -74,6 +74,11 @@ namespace Aster.Net.Enums
         /// Settings
         /// </summary>
         [Map("SETTLING")]
-        Settling
+        Settling,
+        /// <summary>
+        /// Delisted
+        /// </summary>
+        [Map("DELISTED")]
+        Delisted
     }
 }
