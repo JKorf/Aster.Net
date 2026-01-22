@@ -37,16 +37,6 @@ namespace Aster.Net.Clients.SpotApi
     internal partial class AsterSocketClientSpotApi : SocketApiClient, IAsterSocketClientSpotApi
     {
         #region fields
-        private static readonly MessagePath _idPath = MessagePath.Get().Property("id");
-        private static readonly MessagePath _streamPath = MessagePath.Get().Property("stream");
-        private static readonly MessagePath _ePath = MessagePath.Get().Property("data").Property("e");
-
-        private readonly HashSet<string> _userEvents = new HashSet<string>
-        {
-            "outboundAccountPosition",
-            "executionReport",
-        };
-
         protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
         #endregion
 
@@ -62,8 +52,6 @@ namespace Aster.Net.Clients.SpotApi
         }
         #endregion
 
-        /// <inheritdoc />
-        protected override IByteMessageAccessor CreateAccessor(WebSocketMessageType type) => new SystemTextJsonByteMessageAccessor(AsterExchange._serializerContext);
         /// <inheritdoc />
         protected override IMessageSerializer CreateSerializer() => new SystemTextJsonMessageSerializer(AsterExchange._serializerContext);
 
@@ -417,21 +405,6 @@ namespace Aster.Net.Clients.SpotApi
         internal Task<CallResult<UpdateSubscription>> SubscribeInternalAsync(string url, Subscription subscription, CancellationToken ct)
         {
             return base.SubscribeAsync(url.AppendPath("stream"), subscription, ct);
-        }
-
-        /// <inheritdoc />
-        public override string? GetListenerIdentifier(IMessageAccessor message)
-        {
-            var id = message.GetValue<int?>(_idPath);
-            if (id != null)
-                return id.ToString();
-
-            var stream = message.GetValue<string>(_streamPath);
-            var e = message.GetValue<string>(_ePath);
-            if (e != null && _userEvents.Contains(e))
-                return stream + e;
-
-            return stream;
         }
 
         /// <inheritdoc />

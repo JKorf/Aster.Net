@@ -60,6 +60,11 @@
             Aster exchange information and configuration
             </summary>
         </member>
+        <member name="P:Aster.Net.AsterExchange.Metadata">
+            <summary>
+            Platform metadata
+            </summary>
+        </member>
         <member name="P:Aster.Net.AsterExchange.ExchangeName">
             <summary>
             Exchange name
@@ -264,9 +269,6 @@
         <member name="P:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.ExchangeName">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.CreateAccessor">
-            <inheritdoc />
-        </member>
         <member name="M:Aster.Net.Clients.FuturesApi.AsterRestClientFuturesApi.CreateSerializer">
             <inheritdoc />
         </member>
@@ -448,9 +450,6 @@
             ctor
             </summary>
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateAccessor(System.Net.WebSockets.WebSocketMessageType)">
-            <inheritdoc />
-        </member>
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.CreateSerializer">
             <inheritdoc />
         </member>
@@ -538,9 +537,6 @@
         <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.SubscribeToUserDataUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterConfigUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarginUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSocketEvent}},System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
-            <inheritdoc />
-        </member>
         <member name="P:Aster.Net.Clients.FuturesApi.AsterSocketClientFuturesApi.SharedClient">
             <inheritdoc />
         </member>
@@ -560,9 +556,6 @@
             <inheritdoc />
         </member>
         <member name="P:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.ExchangeName">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.CreateAccessor">
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterRestClientSpotApi.CreateSerializer">
@@ -683,9 +676,6 @@
             ctor
             </summary>
         </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateAccessor(System.Net.WebSockets.WebSocketMessageType)">
-            <inheritdoc />
-        </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.CreateSerializer">
             <inheritdoc />
         </member>
@@ -753,9 +743,6 @@
             <inheritdoc />
         </member>
         <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.SubscribeToUserDataUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotOrderUpdate}},System.Threading.CancellationToken)">
-            <inheritdoc />
-        </member>
-        <member name="M:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.GetListenerIdentifier(CryptoExchange.Net.Interfaces.IMessageAccessor)">
             <inheritdoc />
         </member>
         <member name="P:Aster.Net.Clients.SpotApi.AsterSocketClientSpotApi.SharedClient">

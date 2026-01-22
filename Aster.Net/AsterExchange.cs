@@ -18,6 +18,19 @@ namespace Aster.Net
     public static class AsterExchange
     {
         /// <summary>
+        /// Platform metadata
+        /// </summary>
+        public static PlatformInfo Metadata { get; } = new PlatformInfo(
+                "Aster",
+                "Aster",
+                "https://raw.githubusercontent.com/JKorf/Aster.Net/main/Aster.Net/Icon/icon.png",
+                "https://www.asterdex.com/",
+                ["https://github.com/asterdex/api-docs/blob/master/README.md"],
+                PlatformType.CryptoCurrencyExchange,
+                CentralizationType.Decentralized
+                );
+
+        /// <summary>
         /// Exchange name
         /// </summary>
         public static string ExchangeName => "Aster";

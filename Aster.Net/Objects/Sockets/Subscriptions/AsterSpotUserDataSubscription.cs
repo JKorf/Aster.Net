@@ -42,11 +42,6 @@ namespace Aster.Net.Objects.Sockets
                 MessageRoute<AsterCombinedStream<AsterSpotAccountUpdate>>.CreateWithoutTopicFilter("outboundAccountPosition", DoHandleMessage),
                 MessageRoute<AsterCombinedStream<AsterSpotOrderUpdate>>.CreateWithoutTopicFilter("executionReport", DoHandleMessage)
                 ]);
-
-            MessageMatcher = MessageMatcher.Create([
-                new MessageHandlerLink<AsterCombinedStream<AsterSpotAccountUpdate>>(_lk + "outboundAccountPosition", DoHandleMessage),
-                new MessageHandlerLink<AsterCombinedStream<AsterSpotOrderUpdate>>(_lk + "executionReport", DoHandleMessage)
-                ]);
         }
 
         /// <inheritdoc />
