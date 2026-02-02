@@ -156,6 +156,12 @@
         <member name="M:Aster.Net.AsterTrackerFactory.CreateTradeTracker(CryptoExchange.Net.SharedApis.SharedSymbol,System.Nullable{System.Int32},System.Nullable{System.TimeSpan})">
             <inheritdoc />
         </member>
+        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserSpotDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.UserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserFuturesDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.UserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
+            <inheritdoc />
+        </member>
         <member name="T:Aster.Net.Clients.AsterRestClient">
             <inheritdoc cref="T:Aster.Net.Interfaces.Clients.IAsterRestClient" />
         </member>
