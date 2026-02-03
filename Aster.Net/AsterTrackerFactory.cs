@@ -5,7 +5,8 @@ using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Trackers.Klines;
 using CryptoExchange.Net.Trackers.Trades;
-using CryptoExchange.Net.Trackers.UserData;
+using CryptoExchange.Net.Trackers.UserData.Interfaces;
+using CryptoExchange.Net.Trackers.UserData.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -105,7 +106,8 @@ namespace Aster.Net
                 );
         }
 
-        public IUserSpotDataTracker CreateUserSpotDataTracker(UserDataTrackerConfig config)
+        /// <inheritdoc />
+        public IUserSpotDataTracker CreateUserSpotDataTracker(SpotUserDataTrackerConfig config)
         {
             var restClient = _serviceProvider?.GetRequiredService<IAsterRestClient>() ?? new AsterRestClient();
             var socketClient = _serviceProvider?.GetRequiredService<IAsterSocketClient>() ?? new AsterSocketClient();
@@ -119,7 +121,7 @@ namespace Aster.Net
         }
 
         /// <inheritdoc />
-        public IUserSpotDataTracker CreateUserSpotDataTracker(string userIdentifier, UserDataTrackerConfig config, ApiCredentials credentials, AsterEnvironment? environment = null)
+        public IUserSpotDataTracker CreateUserSpotDataTracker(string userIdentifier, SpotUserDataTrackerConfig config, ApiCredentials credentials, AsterEnvironment? environment = null)
         {
             var clientProvider = _serviceProvider?.GetRequiredService<IAsterUserClientProvider>() ?? new AsterUserClientProvider();
             var restClient = clientProvider.GetRestClient(userIdentifier, credentials, environment);
@@ -133,7 +135,8 @@ namespace Aster.Net
                 );
         }
 
-        public IUserFuturesDataTracker CreateUserFuturesDataTracker(UserDataTrackerConfig config)
+        /// <inheritdoc />
+        public IUserFuturesDataTracker CreateUserFuturesDataTracker(FuturesUserDataTrackerConfig config)
         {
             var restClient = _serviceProvider?.GetRequiredService<IAsterRestClient>() ?? new AsterRestClient();
             var socketClient = _serviceProvider?.GetRequiredService<IAsterSocketClient>() ?? new AsterSocketClient();
@@ -147,7 +150,7 @@ namespace Aster.Net
         }
 
         /// <inheritdoc />
-        public IUserFuturesDataTracker CreateUserFuturesDataTracker(string userIdentifier, UserDataTrackerConfig config, ApiCredentials credentials, AsterEnvironment? environment = null)
+        public IUserFuturesDataTracker CreateUserFuturesDataTracker(string userIdentifier, FuturesUserDataTrackerConfig config, ApiCredentials credentials, AsterEnvironment? environment = null)
         {
             var clientProvider = _serviceProvider?.GetRequiredService<IAsterUserClientProvider>() ?? new AsterUserClientProvider();
             var restClient = clientProvider.GetRestClient(userIdentifier, credentials, environment);
