@@ -156,11 +156,36 @@
         <member name="M:Aster.Net.AsterTrackerFactory.CreateTradeTracker(CryptoExchange.Net.SharedApis.SharedSymbol,System.Nullable{System.Int32},System.Nullable{System.TimeSpan})">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserSpotDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.UserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
+        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserSpotDataTracker(CryptoExchange.Net.Trackers.UserData.Objects.SpotUserDataTrackerConfig)">
             <inheritdoc />
         </member>
-        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserFuturesDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.UserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
+        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserSpotDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.Objects.SpotUserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
             <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserFuturesDataTracker(CryptoExchange.Net.Trackers.UserData.Objects.FuturesUserDataTrackerConfig)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.AsterTrackerFactory.CreateUserFuturesDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.Objects.FuturesUserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aster.Net.AsterUserSpotDataTracker">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.AsterUserSpotDataTracker.#ctor(Microsoft.Extensions.Logging.ILogger{Aster.Net.AsterUserSpotDataTracker},Aster.Net.Interfaces.Clients.IAsterRestClient,Aster.Net.Interfaces.Clients.IAsterSocketClient,System.String,CryptoExchange.Net.Trackers.UserData.Objects.SpotUserDataTrackerConfig)">
+            <summary>
+            ctor
+            </summary>
+        </member>
+        <member name="T:Aster.Net.AsterUserFuturesDataTracker">
+            <inheritdoc />
+        </member>
+        <member name="P:Aster.Net.AsterUserFuturesDataTracker.WebsocketPositionUpdatesAreFullSnapshots">
+            <inheritdoc />
+        </member>
+        <member name="M:Aster.Net.AsterUserFuturesDataTracker.#ctor(Microsoft.Extensions.Logging.ILogger{Aster.Net.AsterUserFuturesDataTracker},Aster.Net.Interfaces.Clients.IAsterRestClient,Aster.Net.Interfaces.Clients.IAsterSocketClient,System.String,CryptoExchange.Net.Trackers.UserData.Objects.FuturesUserDataTrackerConfig)">
+            <summary>
+            ctor
+            </summary>
         </member>
         <member name="T:Aster.Net.Clients.AsterRestClient">
             <inheritdoc cref="T:Aster.Net.Interfaces.Clients.IAsterRestClient" />
@@ -4024,6 +4049,36 @@
             <summary>
             Tracker factory
             </summary>
+        </member>
+        <member name="M:Aster.Net.Interfaces.IAsterTrackerFactory.CreateUserSpotDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.Objects.SpotUserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
+            <summary>
+            Create a new Spot user data tracker
+            </summary>
+            <param name="userIdentifier">User identifier</param>
+            <param name="config">Configuration</param>
+            <param name="credentials">Credentials</param>
+            <param name="environment">Environment</param>
+        </member>
+        <member name="M:Aster.Net.Interfaces.IAsterTrackerFactory.CreateUserSpotDataTracker(CryptoExchange.Net.Trackers.UserData.Objects.SpotUserDataTrackerConfig)">
+            <summary>
+            Create a new spot user data tracker
+            </summary>
+            <param name="config">Configuration</param>
+        </member>
+        <member name="M:Aster.Net.Interfaces.IAsterTrackerFactory.CreateUserFuturesDataTracker(System.String,CryptoExchange.Net.Trackers.UserData.Objects.FuturesUserDataTrackerConfig,CryptoExchange.Net.Authentication.ApiCredentials,Aster.Net.AsterEnvironment)">
+            <summary>
+            Create a new futures user data tracker
+            </summary>
+            <param name="userIdentifier">User identifier</param>
+            <param name="config">Configuration</param>
+            <param name="credentials">Credentials</param>
+            <param name="environment">Environment</param>
+        </member>
+        <member name="M:Aster.Net.Interfaces.IAsterTrackerFactory.CreateUserFuturesDataTracker(CryptoExchange.Net.Trackers.UserData.Objects.FuturesUserDataTrackerConfig)">
+            <summary>
+            Create a new futures user data tracker
+            </summary>
+            <param name="config">Configuration</param>
         </member>
         <member name="T:Aster.Net.Objects.AsterApiAddresses">
             <summary>
