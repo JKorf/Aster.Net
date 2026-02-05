@@ -16,7 +16,7 @@ namespace Aster.Net
             IAsterRestClient restClient,
             IAsterSocketClient socketClient,
             string? userIdentifier,
-            SpotUserDataTrackerConfig config) : base(
+            SpotUserDataTrackerConfig? config) : base(
                 logger,
                 restClient.SpotApi.SharedClient,
                 restClient.SpotApi.SharedClient,
@@ -26,7 +26,7 @@ namespace Aster.Net
                 socketClient.SpotApi.SharedClient,
                 null,
                 userIdentifier,
-                config)
+                config ?? new SpotUserDataTrackerConfig())
         {
 
         }
@@ -46,7 +46,7 @@ namespace Aster.Net
             IAsterRestClient restClient,
             IAsterSocketClient socketClient,
             string? userIdentifier,
-            FuturesUserDataTrackerConfig config) : base(logger,
+            FuturesUserDataTrackerConfig? config) : base(logger,
                 restClient.FuturesApi.SharedClient,
                 restClient.FuturesApi.SharedClient,
                 restClient.FuturesApi.SharedClient,
@@ -56,7 +56,7 @@ namespace Aster.Net
                 null,
                 socketClient.FuturesApi.SharedClient,
                 userIdentifier,
-                config)
+                config ?? new FuturesUserDataTrackerConfig())
         {
 
         }
