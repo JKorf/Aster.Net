@@ -12,8 +12,8 @@ namespace Aster.Net.Clients
     /// <inheritdoc />
     public class AsterUserClientProvider : IAsterUserClientProvider
     {
-        private static ConcurrentDictionary<string, IAsterRestClient> _restClients = new ConcurrentDictionary<string, IAsterRestClient>();
-        private static ConcurrentDictionary<string, IAsterSocketClient> _socketClients = new ConcurrentDictionary<string, IAsterSocketClient>();
+        private ConcurrentDictionary<string, IAsterRestClient> _restClients = new ConcurrentDictionary<string, IAsterRestClient>();
+        private ConcurrentDictionary<string, IAsterSocketClient> _socketClients = new ConcurrentDictionary<string, IAsterSocketClient>();
         
         private readonly IOptions<AsterRestOptions> _restOptions;
         private readonly IOptions<AsterSocketOptions> _socketOptions;
