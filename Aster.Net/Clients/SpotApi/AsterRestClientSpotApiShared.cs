@@ -40,7 +40,7 @@ namespace Aster.Net.Clients.SpotApi
             var direction = request.Direction ?? DataDirection.Descending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var limit = request.Limit ?? 1000;
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
 
             // Get data
             var result = await ExchangeData.GetKlinesAsync(
@@ -62,8 +62,6 @@ namespace Aster.Net.Clients.SpotApi
                     result.Data.Select(x => x.OpenTime),
                     request.StartTime,
                     request.EndTime ?? DateTime.UtcNow,
-                    limit,
-                    direction,
                     pageParams);
 
             return result.AsExchangeResult(
@@ -253,7 +251,7 @@ namespace Aster.Net.Clients.SpotApi
             var direction = request.Direction ?? DataDirection.Ascending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var limit = request.Limit ?? 1000;
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
             if (pageParams.FromId != null)
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
@@ -276,8 +274,6 @@ namespace Aster.Net.Clients.SpotApi
                 result.Data.Select(x => x.TradeTime),
                 request.StartTime,
                 request.EndTime ?? DateTime.UtcNow,
-                limit,
-                direction,
                 pageParams);
 
             // Return
@@ -455,7 +451,7 @@ namespace Aster.Net.Clients.SpotApi
             var direction = request.Direction ?? DataDirection.Ascending;
             var limit = request.Limit ?? 1000;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
             if (pageParams.FromId != null)
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
@@ -477,8 +473,6 @@ namespace Aster.Net.Clients.SpotApi
                 result.Data.Select(x => x.CreateTime),
                 request.StartTime,
                 request.EndTime ?? DateTime.UtcNow,
-                limit,
-                direction,
                 pageParams);
 
             return result.AsExchangeResult(
@@ -548,7 +542,7 @@ namespace Aster.Net.Clients.SpotApi
             var direction = request.Direction ?? DataDirection.Ascending;
             var limit = request.Limit ?? 1000;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
             if (pageParams.FromId != null)
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
@@ -571,8 +565,6 @@ namespace Aster.Net.Clients.SpotApi
                 result.Data.Select(x => x.Timestamp),
                 request.StartTime,
                 request.EndTime ?? DateTime.UtcNow,
-                limit,
-                direction,
                 pageParams);
 
             return result.AsExchangeResult(

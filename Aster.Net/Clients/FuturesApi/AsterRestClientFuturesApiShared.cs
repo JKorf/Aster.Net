@@ -40,7 +40,7 @@ namespace Aster.Net.Clients.FuturesApi
             var direction = request.Direction ?? DataDirection.Descending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var limit = request.Limit ?? 1000;
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
 
             var result = await ExchangeData.GetKlinesAsync(
                 symbol,
@@ -61,8 +61,6 @@ namespace Aster.Net.Clients.FuturesApi
                     result.Data.Select(x => x.OpenTime),
                     request.StartTime,
                     request.EndTime ?? DateTime.UtcNow,
-                    limit,
-                    direction,
                     pageParams);
 
             return result.AsExchangeResult(
@@ -101,7 +99,7 @@ namespace Aster.Net.Clients.FuturesApi
             var direction = request.Direction ?? DataDirection.Descending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var limit = request.Limit ?? 1000;
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
 
             var result = await ExchangeData.GetMarkPriceKlinesAsync(
                 symbol,
@@ -122,8 +120,6 @@ namespace Aster.Net.Clients.FuturesApi
                     result.Data.Select(x => x.OpenTime),
                     request.StartTime,
                     request.EndTime ?? DateTime.UtcNow,
-                    limit,
-                    direction,
                     pageParams);
 
             return result.AsExchangeResult(
@@ -453,7 +449,7 @@ namespace Aster.Net.Clients.FuturesApi
             var direction = request.Direction ?? DataDirection.Ascending;
             var limit = request.Limit ?? 1000;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
             if (pageParams.FromId != null)
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
@@ -476,8 +472,6 @@ namespace Aster.Net.Clients.FuturesApi
                 result.Data.Select(x => x.CreateTime ?? x.UpdateTime),
                 request.StartTime,
                 request.EndTime ?? DateTime.UtcNow,
-                limit,
-                direction,
                 pageParams);
 
             return result.AsExchangeResult(
@@ -548,7 +542,7 @@ namespace Aster.Net.Clients.FuturesApi
             var direction = request.Direction ?? DataDirection.Ascending;
             var limit = request.Limit ?? 500;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
             if (pageParams.FromId != null)
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
@@ -572,8 +566,6 @@ namespace Aster.Net.Clients.FuturesApi
                 result.Data.Select(x => x.Timestamp),
                 request.StartTime,
                 request.EndTime ?? DateTime.UtcNow,
-                limit,
-                direction,
                 pageParams);
 
             return result.AsExchangeResult(
@@ -829,7 +821,7 @@ namespace Aster.Net.Clients.FuturesApi
             var direction = request.Direction ?? DataDirection.Ascending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var limit = request.Limit ?? 1000;
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
             if (pageParams.FromId != null)
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
@@ -852,8 +844,6 @@ namespace Aster.Net.Clients.FuturesApi
                 result.Data.Select(x => x.TradeTime),
                 request.StartTime,
                 request.EndTime ?? DateTime.UtcNow,
-                limit,
-                direction,
                 pageParams);
 
             // Return
@@ -887,7 +877,7 @@ namespace Aster.Net.Clients.FuturesApi
             var direction = request.Direction ?? DataDirection.Descending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var limit = request.Limit ?? 1000;
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
 
             var result = await ExchangeData.GetIndexPriceKlinesAsync(
                 symbol,
@@ -908,8 +898,6 @@ namespace Aster.Net.Clients.FuturesApi
                     result.Data.Select(x => x.OpenTime),
                     request.StartTime,
                     request.EndTime ?? DateTime.UtcNow,
-                    limit,
-                    direction,
                     pageParams);
 
             return result.AsExchangeResult(
@@ -942,7 +930,7 @@ namespace Aster.Net.Clients.FuturesApi
             var direction = DataDirection.Ascending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
             var limit = request.Limit ?? 1000;
-            var pageParams = Pagination.GetPaginationParameters(direction, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, true);
+            var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, true);
 
             // Get data
             var result = await ExchangeData.GetFundingRatesAsync(
@@ -960,8 +948,6 @@ namespace Aster.Net.Clients.FuturesApi
                     result.Data.Select(x => x.FundingTime),
                     request.StartTime,
                     request.EndTime ?? DateTime.UtcNow,
-                    limit,
-                    direction,
                     pageParams);
 
             return result.AsExchangeResult(
