@@ -1,18 +1,21 @@
-using CryptoExchange.Net;
-using CryptoExchange.Net.Clients;
-using CryptoExchange.Net.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
-using System.Net.Http;
 using Aster.Net;
 using Aster.Net.Clients;
 using Aster.Net.Interfaces;
 using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
 using Aster.Net.SymbolOrderBooks;
+using CryptoExchange.Net;
+using CryptoExchange.Net.Clients;
+using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Interfaces.Clients;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
+using System.Net.Http;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -93,10 +96,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 var options = serviceProvider.GetRequiredService<IOptions<AsterRestOptions>>().Value;
                 client.Timeout = options.RequestTimeout;
                 return new AsterRestClient(client, serviceProvider.GetRequiredService<ILoggerFactory>(), serviceProvider.GetRequiredService<IOptions<AsterRestOptions>>());
-            }).ConfigurePrimaryHttpMessageHandler((serviceProvider) => {
+            }).ConfigurePrimaryHttpMessageHandler((serviceProvider) =>
+            {
                 var options = serviceProvider.GetRequiredService<IOptions<AsterRestOptions>>().Value;
-                return LibraryHelpers.CreateHttpClientMessageHandler(options.Proxy, options.HttpKeepAliveInterval);
-            });
+                return LibraryHelpers.CreateHttpClientMessageHandler(options);
+            }).SetHandlerLifetime(Timeout.InfiniteTimeSpan);
             services.Add(new ServiceDescriptor(typeof(IAsterSocketClient), x => { return new AsterSocketClient(x.GetRequiredService<IOptions<AsterSocketOptions>>(), x.GetRequiredService<ILoggerFactory>()); }, socketClientLifeTime ?? ServiceLifetime.Singleton));
 
             services.AddTransient<ICryptoRestClient, CryptoRestClient>();
@@ -106,7 +110,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<ITrackerFactory, AsterTrackerFactory>();
             services.AddSingleton<IAsterUserClientProvider, AsterUserClientProvider>(x =>
                 new AsterUserClientProvider(
-                    x.GetRequiredService<HttpClient>(),
+                    x.GetRequiredService<IHttpClientFactory>().CreateClient(typeof(IAsterRestClient).Name),
                     x.GetRequiredService<ILoggerFactory>(),
                     x.GetRequiredService<IOptions<AsterRestOptions>>(),
                     x.GetRequiredService<IOptions<AsterSocketOptions>>()));
