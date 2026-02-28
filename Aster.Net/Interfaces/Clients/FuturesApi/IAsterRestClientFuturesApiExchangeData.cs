@@ -14,21 +14,36 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
     {
         /// <summary>
         /// Get the current server time
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#check-server-time" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#check-server-time" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/time
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get symbol and asset information
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#exchange-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#exchange-information" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/exchangeInfo
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get a snapshot of the current order book
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#order-book" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#order-book" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/depth
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="limit">Number of rows in the orderbook. 5, 10, 20, 50, 100, 500 or 1000</param>
@@ -37,7 +52,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get list of the most recent trades
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#recent-trades-list" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#recent-trades-list" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/trades
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="limit">Number of rows to return, max 1000</param>
@@ -46,7 +66,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get trade history
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#old-trades-lookup-market_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#old-trades-lookup-market_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/historicalTrades
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="limit">Number of rows to return, max 1000</param>
@@ -57,7 +82,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get aggregated trade history. Trades are aggregated if they're executed on the same time at the same price.
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#compressedaggregate-trades-list" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#compressedaggregate-trades-list" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/aggTrades
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="fromId">Return from this id</param>
@@ -70,7 +100,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get kline/candlestick data
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/klines
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="interval">Kline interval</param>
@@ -83,7 +118,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get index kline data
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/indexPriceKlines
+        /// </para>
         /// </summary>
         /// <param name="index">The index</param>
         /// <param name="interval">Kline interval</param>
@@ -96,7 +136,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get mark price kline data
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/markPriceKlines
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="interval">Kline interval</param>
@@ -109,7 +154,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get mark price for a symbol
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/premiumIndex
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
@@ -117,14 +167,24 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get mark price for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/premiumIndex
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterMarkPrice[]>> GetMarkPricesAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get funding rate history
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/fundingRate
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="startTime">Filter by start time</param>
@@ -135,14 +195,24 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get funding rate configuration
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/fundingInfo
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterFundingInfo[]>> GetFundingInfoAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get price ticker info
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/ticker/24hr
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
@@ -150,14 +220,24 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get price ticker info
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/ticker/24hr
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterTicker[]>> GetTickersAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get last price
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/ticker/price
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
@@ -165,14 +245,24 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get last prices
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/ticker/price
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterPrice[]>> GetPricesAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get book ticker
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/ticker/bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
@@ -180,7 +270,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get book tickers
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/ticker/bookTicker
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterBookTicker[]>> GetBookTickersAsync(CancellationToken ct = default);

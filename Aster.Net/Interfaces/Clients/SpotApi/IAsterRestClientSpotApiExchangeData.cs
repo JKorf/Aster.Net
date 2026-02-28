@@ -14,21 +14,36 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
     {
         /// <summary>
         /// Get the current server time
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-server-time" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-server-time" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/time
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get exchange information
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#trading-specification-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#trading-specification-information" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/exchangeInfo
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterSpotExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get order book snapshot
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#depth-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#depth-information" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/depth
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="limit">Max number of results. 5, 10, 20, 50, 100, 500 or 1000</param>
@@ -37,7 +52,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get recent trades for a symbol
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#recent-trades-list" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#recent-trades-list" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/trades
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="limit">Max number of results. Max 1000</param>
@@ -46,7 +66,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get trade history
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/historicalTrades
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="fromId">Return results after this</param>
@@ -56,7 +81,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get aggregated trade history
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/aggTrades
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="fromId">Return results after this</param>
@@ -69,7 +99,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get kline/candlestick data
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/klines
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="interval">Kline interval</param>
@@ -82,7 +117,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get price ticker info
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/ticker/24hr
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
@@ -90,14 +130,24 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get price ticker info for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/ticker/24hr
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterSpotTicker[]>> GetTickersAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get price info for a symbol
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/ticker/price
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
@@ -105,14 +155,24 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get price info for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/ticker/price
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterPrice[]>> GetPricesAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get book ticker
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/ticker/bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
@@ -120,7 +180,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get book tickers
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/ticker/bookTicker
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterBookTicker[]>> GetBookTickersAsync(CancellationToken ct = default);

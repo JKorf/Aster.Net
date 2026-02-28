@@ -15,7 +15,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
     {
         /// <summary>
         /// Place a new order
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#new-order--trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#new-order--trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/order
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="side">Order side</param>
@@ -55,7 +60,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Place multiple new orders in a single call
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#place-multiple-orders--trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#place-multiple-orders--trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/batchOrders
+        /// </para>
         /// </summary>
         /// <param name="orders">Orders to place</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -67,7 +77,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get order info by id or clientOrderId
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#query-order-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#query-order-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/order
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="orderId">Get by order id, either this or clientOrderId should be provided</param>
@@ -83,7 +98,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Cancel and order by id or clientOrderId
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-order-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-order-trade" /><br />
+        /// Endpoint:<br />
+        /// DELETE /fapi/v1/order
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
         /// <param name="orderId">Get by order id, either this or clientOrderId should be provided</param>
@@ -99,7 +119,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Cancel all open orders for a symbol
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-all-open-orders-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-all-open-orders-trade" /><br />
+        /// Endpoint:<br />
+        /// DELETE /fapi/v1/allOpenOrders
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -121,7 +146,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Cancel all open orders on a symbol when the timeout expires. Can be called on an interval to act as a dead man switch
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#auto-cancel-all-open-orders-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#auto-cancel-all-open-orders-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/countdownCancelAll
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="countDownTime">Timeout time</param>
@@ -131,7 +161,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get list of current open orders
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#current-all-open-orders-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#current-all-open-orders-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/openOrders
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -143,7 +178,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get list of all orders
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-orders-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-orders-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/allOrders
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="orderId">Return orders after this id</param>
@@ -163,7 +203,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get positions
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-information-v2-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-information-v2-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v2/positionRisk
+        /// </para>
         /// </summary>
         /// <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -172,7 +217,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get user trade history
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-trade-list-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-trade-list-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/userTrades
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="fromId">Return results after this</param>
@@ -186,7 +236,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get users forced orders
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#users-force-orders-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#users-force-orders-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/forceOrders
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="closeType">Filter by close type</param>

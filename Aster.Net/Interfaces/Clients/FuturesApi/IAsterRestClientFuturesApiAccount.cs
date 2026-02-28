@@ -14,7 +14,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
     {
         /// <summary>
         /// Set the position mode for the whole account
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-position-modetrade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-position-modetrade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/positionSide/dual
+        /// </para>
         /// </summary>
         /// <param name="dualPositionSide">True: Hedge mode, False: One-way mode</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -23,7 +28,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get the current account position mode
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-current-multi-assets-mode-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-current-multi-assets-mode-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/positionSide/dual
+        /// </para>
         /// </summary>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
@@ -31,7 +41,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Set multi asset margin mode
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#change-multi-assets-mode-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#change-multi-assets-mode-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/multiAssetsMargin
+        /// </para>
         /// </summary>
         /// <param name="multiAssetMargin">Multi asset mode margin enabled or not</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -40,7 +55,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get multi asset margin mode
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#get-current-multi-assets-mode-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#get-current-multi-assets-mode-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/multiAssetsMargin
+        /// </para>
         /// </summary>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
@@ -48,7 +68,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Transfer between Spot and Futures account
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#transfer-between-futures-and-spot-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#transfer-between-futures-and-spot-user_data" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/asset/wallet/transfer
+        /// </para>
         /// </summary>
         /// <param name="asset">Asset to transfer</param>
         /// <param name="direction">Transfer direction</param>
@@ -60,7 +85,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get account balances
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#futures-account-balance-v2-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#futures-account-balance-v2-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v2/balance
+        /// </para>
         /// </summary>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
@@ -68,7 +98,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get account info, including assets and positions
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-information-v4-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-information-v4-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v4/account
+        /// </para>
         /// </summary>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
@@ -76,7 +111,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Set initial leverage
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-initial-leverage-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-initial-leverage-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/leverage
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="leverage">Leverage</param>
@@ -86,7 +126,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Set margin type
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-margin-type-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-margin-type-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/marginType
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="marginType">Margin type</param>
@@ -96,7 +141,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Modify isolated margin
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#modify-isolated-position-margin-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#modify-isolated-position-margin-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/positionMargin
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="side">Adjust side</param>
@@ -108,7 +158,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get position margin change history
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-position-margin-change-history-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-position-margin-change-history-trade" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/positionMargin/history
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="side">Filter by adjust side</param>
@@ -122,7 +177,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get income history
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-income-historyuser_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-income-historyuser_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/income
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="type">Filter by type</param>
@@ -136,7 +196,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get leverage brackets
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#notional-and-leverage-brackets-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#notional-and-leverage-brackets-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/leverageBracket
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -145,7 +210,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get position ADL quantile estimations
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-adl-quantile-estimation-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-adl-quantile-estimation-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/adlQuantile
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -154,7 +224,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Get user fee rates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#user-commission-rate-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#user-commission-rate-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v1/commissionRate
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -163,7 +238,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Start a user stream. The resulting listen key can be used to subscribe to the user stream using the socket client. The stream will close after 60 minutes unless <see cref="KeepAliveUserStreamAsync">KeepAliveUserStreamAsync</see> is called.
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#start-user-data-stream-user_stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#start-user-data-stream-user_stream" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v1/listenKey
+        /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
@@ -171,7 +251,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Keep alive the user stream. This should be called every 30 minutes to prevent the user stream being stopped
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#keepalive-user-data-stream-user_stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#keepalive-user-data-stream-user_stream" /><br />
+        /// Endpoint:<br />
+        /// PUT /fapi/v1/listenKey
+        /// </para>
         /// </summary>
         /// <param name="listenKey">The listen key to keep alive</param>
         /// <param name="ct">Cancellation token</param>
@@ -180,7 +265,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Stop the user stream, no updates will be send anymore
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#close-user-data-stream-user_stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#close-user-data-stream-user_stream" /><br />
+        /// Endpoint:<br />
+        /// DELETE /fapi/v1/listenKey
+        /// </para>
         /// </summary>
         /// <param name="listenKey">The listen key to stop</param>
         /// <param name="ct">Cancellation token</param>

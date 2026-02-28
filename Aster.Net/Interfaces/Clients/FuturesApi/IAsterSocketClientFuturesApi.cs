@@ -17,7 +17,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
     {
         /// <summary>
         /// Subscribe to aggregated trade updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@aggTrade
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -27,7 +32,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to aggregated trade updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@aggTrade
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -38,7 +48,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <summary>
         /// Subscribe to the aggregated trades update stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@aggTrade
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -48,7 +63,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to mark price updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@markPrice[@1s]
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="updateInterval">The interval for updates in milliseconds, either 1000 or 3000</param>
@@ -59,7 +79,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to mark price updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@markPrice[@1s]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="updateInterval">The interval for updates in milliseconds, either 1000 or 3000</param>
@@ -70,7 +95,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to mark price updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream-for-all-market" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream-for-all-market" /><br />
+        /// Endpoint:<br />
+        /// !markPrice@arr[@1s]
+        /// </para>
         /// </summary>
         /// <param name="updateInterval">The interval for updates in milliseconds, either 1000 or 3000</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -80,7 +110,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol</param>
         /// <param name="interval">Interval for the klines</param>
@@ -91,7 +126,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbols">The symbols</param>
         /// <param name="interval">Interval for the klines</param>
@@ -102,7 +142,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol</param>
         /// <param name="intervals">Intervals for the klines</param>
@@ -113,7 +158,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbols">The symbols</param>
         /// <param name="intervals">Intervals for the klines</param>
@@ -124,7 +174,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to mini price ticker updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-mini-tickers-stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-mini-tickers-stream" /><br />
+        /// Endpoint:<br />
+        /// !miniTicker@arr
+        /// </para>
         /// </summary>
         /// <param name="onMessage">The event handler for the received data</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -133,7 +188,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to mini price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@miniTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -143,7 +203,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to mini price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@miniTicker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -154,7 +219,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <summary>
         /// Subscribes to mini ticker updates stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@miniTicker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -164,7 +234,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to price ticker updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-tickers-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-tickers-streams" /><br />
+        /// Endpoint:<br />
+        /// !ticker@arr
+        /// </para>
         /// </summary>
         /// <param name="onMessage">The event handler for the received data</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -173,7 +248,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@ticker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -183,7 +263,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@ticker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -193,7 +278,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to book ticker updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-book-tickers-stream" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-book-tickers-stream" /><br />
+        /// Endpoint:<br />
+        /// !bookTicker
+        /// </para>
         /// </summary>
         /// <param name="onMessage">The event handler for the received data</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -202,7 +292,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to book ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -212,7 +307,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to book ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -222,7 +322,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <summary>
         /// Subscribe to the book ticker update stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -232,7 +337,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to liquidation updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-liquidation-order-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-liquidation-order-streams" /><br />
+        /// Endpoint:<br />
+        /// !forceOrder@arr
+        /// </para>
         /// </summary>
         /// <param name="onMessage">The event handler for the received data</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -241,7 +351,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to liquidation updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@forceOrder
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -251,7 +366,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to liquidation updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@forceOrder
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -261,7 +381,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to snapshot order book updates for the top x rows
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -273,7 +398,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to snapshot order book updates for the top x rows
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -286,7 +416,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <summary>
         /// Subscribes to the depth updates stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -298,7 +433,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to order book difference updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="updateInterval">Update interval in milliseconds, either 100, 250 or 500</param>
@@ -309,7 +449,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribe to order book difference updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="updateInterval">Update interval in milliseconds, either 100, 250 or 500</param>
@@ -320,7 +465,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <summary>
         /// Subscribe to the depth update stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -331,7 +481,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
 
         /// <summary>
         /// Subscribes to the account update stream. Prior to using this, the <see cref="IAsterRestClientFuturesApiAccount.StartUserStreamAsync(CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#event-user-data-stream-expired" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#event-user-data-stream-expired" /><br />
+        /// Endpoint:<br />
+        /// &lt;listenKey&gt;
+        /// </para>
         /// </summary>
         /// <param name="listenKey">Listen key retrieved by the <see cref="IAsterRestClientFuturesApiAccount.StartUserStreamAsync(CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method</param>
         /// <param name="onConfigUpdate">The event handler for leverage changed update</param>

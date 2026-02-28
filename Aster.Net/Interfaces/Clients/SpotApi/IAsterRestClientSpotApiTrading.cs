@@ -14,7 +14,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
     {
         /// <summary>
         /// Place a new order
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#place-order-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#place-order-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /api/v1/order
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="side">Order side</param>
@@ -41,7 +46,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Cancel an order
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-order-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-order-trade" /><br />
+        /// Endpoint:<br />
+        /// DELETE /api/v1/order
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="orderId">Cancel by order id</param>
@@ -57,7 +67,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get info on an order
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-order-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-order-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/order
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="orderId">Cancel by order id</param>
@@ -73,7 +88,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get current open order list
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-open-orders-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-open-orders-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/openOrders
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -85,7 +105,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Cancel all open orders for a symbol
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-all-open-orders-trade" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-all-open-orders-trade" /><br />
+        /// Endpoint:<br />
+        /// DELETE /api/v1/allOpenOrders
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -97,7 +122,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get list of all orders
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-all-orders-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-all-orders-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/allOrders
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="orderId">Return orders after this id</param>
@@ -117,7 +147,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Get user trades
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-trade-history-user_data" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-trade-history-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v1/userTrades
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
         /// <param name="orderId">Filter by order id</param>

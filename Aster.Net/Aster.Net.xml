@@ -2487,7 +2487,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.SetPositionModeAsync(System.Boolean,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Set the position mode for the whole account
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-position-modetrade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-position-modetrade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/positionSide/dual
+            </para>
             </summary>
             <param name="dualPositionSide">True: Hedge mode, False: One-way mode</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2496,7 +2501,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetPositionModeAsync(System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get the current account position mode
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-current-multi-assets-mode-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-current-multi-assets-mode-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/positionSide/dual
+            </para>
             </summary>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
             <param name="ct">Cancellation token</param>
@@ -2504,7 +2514,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.SetMultiAssetModeAsync(System.Boolean,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Set multi asset margin mode
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#change-multi-assets-mode-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#change-multi-assets-mode-trade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/multiAssetsMargin
+            </para>
             </summary>
             <param name="multiAssetMargin">Multi asset mode margin enabled or not</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2513,7 +2528,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetMultiAssetModeAsync(System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get multi asset margin mode
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#get-current-multi-assets-mode-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#get-current-multi-assets-mode-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/multiAssetsMargin
+            </para>
             </summary>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
             <param name="ct">Cancellation token</param>
@@ -2521,7 +2541,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.TransferAsync(System.String,Aster.Net.Enums.TransferDirection,System.Decimal,System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Transfer between Spot and Futures account
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#transfer-between-futures-and-spot-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#transfer-between-futures-and-spot-user_data" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/asset/wallet/transfer
+            </para>
             </summary>
             <param name="asset">Asset to transfer</param>
             <param name="direction">Transfer direction</param>
@@ -2533,7 +2558,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetBalancesAsync(System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get account balances
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#futures-account-balance-v2-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#futures-account-balance-v2-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v2/balance
+            </para>
             </summary>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
             <param name="ct">Cancellation token</param>
@@ -2541,7 +2571,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetAccountInfoAsync(System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get account info, including assets and positions
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-information-v4-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-information-v4-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v4/account
+            </para>
             </summary>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
             <param name="ct">Cancellation token</param>
@@ -2549,7 +2584,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.SetLeverageAsync(System.String,System.Int32,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Set initial leverage
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-initial-leverage-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-initial-leverage-trade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/leverage
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="leverage">Leverage</param>
@@ -2559,7 +2599,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.SetMarginTypeAsync(System.String,Aster.Net.Enums.MarginType,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Set margin type
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-margin-type-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#change-margin-type-trade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/marginType
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="marginType">Margin type</param>
@@ -2569,7 +2614,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.ModifyIsolatedMarginAsync(System.String,Aster.Net.Enums.MarginAdjustSide,System.Decimal,System.Nullable{Aster.Net.Enums.PositionSide},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Modify isolated margin
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#modify-isolated-position-margin-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#modify-isolated-position-margin-trade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/positionMargin
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="side">Adjust side</param>
@@ -2581,7 +2631,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetPositionMarginChangeHistoryAsync(System.String,System.Nullable{Aster.Net.Enums.MarginAdjustSide},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get position margin change history
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-position-margin-change-history-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-position-margin-change-history-trade" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/positionMargin/history
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="side">Filter by adjust side</param>
@@ -2594,7 +2649,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetIncomeHistoryAsync(System.String,System.Nullable{Aster.Net.Enums.IncomeType},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get income history
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-income-historyuser_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-income-historyuser_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/income
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="type">Filter by type</param>
@@ -2607,7 +2667,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetLeverageBracketsAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get leverage brackets
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#notional-and-leverage-brackets-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#notional-and-leverage-brackets-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/leverageBracket
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2616,7 +2681,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetPositionAdlQuantileEstimationAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get position ADL quantile estimations
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-adl-quantile-estimation-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-adl-quantile-estimation-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/adlQuantile
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2625,7 +2695,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.GetUserCommissionRateAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get user fee rates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#user-commission-rate-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#user-commission-rate-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/commissionRate
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2634,7 +2709,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.StartUserStreamAsync(System.Threading.CancellationToken)">
             <summary>
             Start a user stream. The resulting listen key can be used to subscribe to the user stream using the socket client. The stream will close after 60 minutes unless <see cref="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.KeepAliveUserStreamAsync(System.String,System.Threading.CancellationToken)">KeepAliveUserStreamAsync</see> is called.
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#start-user-data-stream-user_stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#start-user-data-stream-user_stream" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/listenKey
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
             <returns></returns>
@@ -2642,7 +2722,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.KeepAliveUserStreamAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Keep alive the user stream. This should be called every 30 minutes to prevent the user stream being stopped
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#keepalive-user-data-stream-user_stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#keepalive-user-data-stream-user_stream" /><br />
+            Endpoint:<br />
+            PUT /fapi/v1/listenKey
+            </para>
             </summary>
             <param name="listenKey">The listen key to keep alive</param>
             <param name="ct">Cancellation token</param>
@@ -2651,7 +2736,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.StopUserStreamAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Stop the user stream, no updates will be send anymore
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#close-user-data-stream-user_stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#close-user-data-stream-user_stream" /><br />
+            Endpoint:<br />
+            DELETE /fapi/v1/listenKey
+            </para>
             </summary>
             <param name="listenKey">The listen key to stop</param>
             <param name="ct">Cancellation token</param>
@@ -2665,21 +2755,36 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetServerTimeAsync(System.Threading.CancellationToken)">
             <summary>
             Get the current server time
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#check-server-time" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#check-server-time" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/time
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetExchangeInfoAsync(System.Threading.CancellationToken)">
             <summary>
             Get symbol and asset information
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#exchange-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#exchange-information" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/exchangeInfo
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetOrderBookAsync(System.String,System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get a snapshot of the current order book
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#order-book" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#order-book" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/depth
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="limit">Number of rows in the orderbook. 5, 10, 20, 50, 100, 500 or 1000</param>
@@ -2688,7 +2793,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetRecentTradesAsync(System.String,System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get list of the most recent trades
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#recent-trades-list" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#recent-trades-list" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/trades
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="limit">Number of rows to return, max 1000</param>
@@ -2697,7 +2807,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetTradeHistoryAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get trade history
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#old-trades-lookup-market_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#old-trades-lookup-market_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/historicalTrades
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="limit">Number of rows to return, max 1000</param>
@@ -2707,7 +2822,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetAggregatedTradeHistoryAsync(System.String,System.Nullable{System.Int64},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get aggregated trade history. Trades are aggregated if they're executed on the same time at the same price.
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#compressedaggregate-trades-list" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#compressedaggregate-trades-list" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/aggTrades
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="fromId">Return from this id</param>
@@ -2719,7 +2839,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetKlinesAsync(System.String,Aster.Net.Enums.KlineInterval,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get kline/candlestick data
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/klines
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="interval">Kline interval</param>
@@ -2731,7 +2856,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetIndexPriceKlinesAsync(System.String,Aster.Net.Enums.KlineInterval,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get index kline data
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/indexPriceKlines
+            </para>
             </summary>
             <param name="index">The index</param>
             <param name="interval">Kline interval</param>
@@ -2743,7 +2873,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetMarkPriceKlinesAsync(System.String,Aster.Net.Enums.KlineInterval,System.Nullable{System.Int32},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Threading.CancellationToken)">
             <summary>
             Get mark price kline data
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/markPriceKlines
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="interval">Kline interval</param>
@@ -2755,7 +2890,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetMarkPriceAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Get mark price for a symbol
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/premiumIndex
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="ct">Cancellation token</param>
@@ -2763,14 +2903,24 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetMarkPricesAsync(System.Threading.CancellationToken)">
             <summary>
             Get mark price for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/premiumIndex
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetFundingRatesAsync(System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get funding rate history
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/fundingRate
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="startTime">Filter by start time</param>
@@ -2781,14 +2931,24 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetFundingInfoAsync(System.Threading.CancellationToken)">
             <summary>
             Get funding rate configuration
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#get-funding-rate-history" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/fundingInfo
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetTickerAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Get price ticker info
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/ticker/24hr
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="ct">Cancellation token</param>
@@ -2796,14 +2956,24 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetTickersAsync(System.Threading.CancellationToken)">
             <summary>
             Get price ticker info
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#24hr-ticker-price-change-statistics" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/ticker/24hr
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetPriceAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Get last price
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/ticker/price
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="ct">Cancellation token</param>
@@ -2811,14 +2981,24 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetPricesAsync(System.Threading.CancellationToken)">
             <summary>
             Get last prices
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-price-ticker" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/ticker/price
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetBookTickerAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Get book ticker
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/ticker/bookTicker
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="ct">Cancellation token</param>
@@ -2826,7 +3006,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiExchangeData.GetBookTickersAsync(System.Threading.CancellationToken)">
             <summary>
             Get book tickers
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#symbol-order-book-ticker" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/ticker/bookTicker
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
@@ -2843,7 +3028,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.PlaceOrderAsync(System.String,Aster.Net.Enums.OrderSide,Aster.Net.Enums.OrderType,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{Aster.Net.Enums.PositionSide},System.Nullable{Aster.Net.Enums.TimeInForce},System.Nullable{System.Boolean},System.String,System.Nullable{System.Decimal},System.Nullable{System.Boolean},System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{Aster.Net.Enums.WorkingType},System.Nullable{System.Boolean},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Place a new order
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#new-order--trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#new-order--trade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/order
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="side">Order side</param>
@@ -2866,7 +3056,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.PlaceMultipleOrdersAsync(System.Collections.Generic.IEnumerable{Aster.Net.Objects.Models.AsterOrderRequest},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Place multiple new orders in a single call
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#place-multiple-orders--trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api-v3.md#place-multiple-orders--trade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/batchOrders
+            </para>
             </summary>
             <param name="orders">Orders to place</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2875,7 +3070,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.GetOrderAsync(System.String,System.Nullable{System.Int64},System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get order info by id or clientOrderId
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#query-order-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#query-order-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/order
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="orderId">Get by order id, either this or clientOrderId should be provided</param>
@@ -2886,7 +3086,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.CancelOrderAsync(System.String,System.Nullable{System.Int64},System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Cancel and order by id or clientOrderId
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-order-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-order-trade" /><br />
+            Endpoint:<br />
+            DELETE /fapi/v1/order
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="orderId">Get by order id, either this or clientOrderId should be provided</param>
@@ -2897,7 +3102,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.CancelAllOrdersAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Cancel all open orders for a symbol
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-all-open-orders-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#cancel-all-open-orders-trade" /><br />
+            Endpoint:<br />
+            DELETE /fapi/v1/allOpenOrders
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2916,7 +3126,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.CancelAllOrdersAfterTimeoutAsync(System.String,System.TimeSpan,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Cancel all open orders on a symbol when the timeout expires. Can be called on an interval to act as a dead man switch
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#auto-cancel-all-open-orders-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#auto-cancel-all-open-orders-trade" /><br />
+            Endpoint:<br />
+            POST /fapi/v1/countdownCancelAll
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="countDownTime">Timeout time</param>
@@ -2926,7 +3141,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.GetOpenOrdersAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get list of current open orders
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#current-all-open-orders-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#current-all-open-orders-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/openOrders
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2935,7 +3155,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.GetOrdersAsync(System.String,System.Nullable{System.Int64},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get list of all orders
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-orders-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-orders-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/allOrders
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="orderId">Return orders after this id</param>
@@ -2948,7 +3173,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.GetPositionsAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get positions
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-information-v2-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#position-information-v2-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v2/positionRisk
+            </para>
             </summary>
             <param name="symbol">Filter by symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -2957,7 +3187,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.GetUserTradesAsync(System.String,System.Nullable{System.Int64},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get user trade history
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-trade-list-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#account-trade-list-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/userTrades
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="fromId">Return results after this</param>
@@ -2970,7 +3205,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiTrading.GetForcedOrdersAsync(System.String,System.Nullable{Aster.Net.Enums.AutoCloseType},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get users forced orders
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#users-force-orders-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#users-force-orders-user_data" /><br />
+            Endpoint:<br />
+            GET /fapi/v1/forceOrders
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="closeType">Filter by close type</param>
@@ -2988,7 +3228,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToAggregatedTradeUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAggregatedTradeUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to aggregated trade updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@aggTrade
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -2998,7 +3243,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToAggregatedTradeUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAggregatedTradeUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to aggregated trade updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@aggTrade
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3009,7 +3259,12 @@
             <summary>
             Subscribe to the aggregated trades update stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#aggregate-trade-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@aggTrade
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3019,7 +3274,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMarkPriceUpdatesAsync(System.String,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarkPriceUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mark price updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@markPrice[@1s]
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="updateInterval">The interval for updates in milliseconds, either 1000 or 3000</param>
@@ -3030,7 +3290,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMarkPriceUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarkPriceUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mark price updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@markPrice[@1s]
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="updateInterval">The interval for updates in milliseconds, either 1000 or 3000</param>
@@ -3041,7 +3306,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMarkPriceUpdatesAsync(System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarkPriceUpdate[]}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mark price updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream-for-all-market" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#mark-price-stream-for-all-market" /><br />
+            Endpoint:<br />
+            !markPrice@arr[@1s]
+            </para>
             </summary>
             <param name="updateInterval">The interval for updates in milliseconds, either 1000 or 3000</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3051,7 +3321,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToKlineUpdatesAsync(System.String,Aster.Net.Enums.KlineInterval,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbol">The symbol</param>
             <param name="interval">Interval for the klines</param>
@@ -3062,7 +3337,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToKlineUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},Aster.Net.Enums.KlineInterval,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbols">The symbols</param>
             <param name="interval">Interval for the klines</param>
@@ -3073,7 +3353,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToKlineUpdatesAsync(System.String,System.Collections.Generic.IEnumerable{Aster.Net.Enums.KlineInterval},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbol">The symbol</param>
             <param name="intervals">Intervals for the klines</param>
@@ -3084,7 +3369,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToKlineUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{Aster.Net.Enums.KlineInterval},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#klinecandlestick-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbols">The symbols</param>
             <param name="intervals">Intervals for the klines</param>
@@ -3095,7 +3385,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMiniTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMiniTickUpdate[]}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mini price ticker updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-mini-tickers-stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-mini-tickers-stream" /><br />
+            Endpoint:<br />
+            !miniTicker@arr
+            </para>
             </summary>
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
@@ -3104,7 +3399,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMiniTickerUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMiniTickUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mini price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@miniTicker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3114,7 +3414,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToMiniTickerUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMiniTickUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mini price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@miniTicker
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3125,7 +3430,12 @@
             <summary>
             Subscribes to mini ticker updates stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-mini-ticker-stream" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@miniTicker
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3135,7 +3445,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate[]}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-tickers-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-tickers-streams" /><br />
+            Endpoint:<br />
+            !ticker@arr
+            </para>
             </summary>
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
@@ -3144,7 +3459,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToTickerUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@ticker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3154,7 +3474,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToTickerUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-ticker-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@ticker
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3164,7 +3489,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToBookTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterBookTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to book ticker updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-book-tickers-stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-book-tickers-stream" /><br />
+            Endpoint:<br />
+            !bookTicker
+            </para>
             </summary>
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
@@ -3173,7 +3503,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToBookTickerUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterBookTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to book ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@bookTicker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3183,7 +3518,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToBookTickerUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterBookTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to book ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@bookTicker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3194,7 +3534,12 @@
             <summary>
             Subscribe to the book ticker update stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#individual-symbol-book-ticker-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@bookTicker
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3204,7 +3549,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToLiquidationUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterLiquidationUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to liquidation updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-liquidation-order-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#all-market-liquidation-order-streams" /><br />
+            Endpoint:<br />
+            !forceOrder@arr
+            </para>
             </summary>
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
@@ -3213,7 +3563,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToLiquidationUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterLiquidationUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to liquidation updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@forceOrder
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3223,7 +3578,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToLiquidationUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterLiquidationUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to liquidation updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#liquidation-order-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@forceOrder
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3233,7 +3593,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToPartialOrderBookUpdatesAsync(System.String,System.Int32,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to snapshot order book updates for the top x rows
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -3245,7 +3610,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToPartialOrderBookUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Int32,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to snapshot order book updates for the top x rows
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -3258,7 +3628,12 @@
             <summary>
             Subscribes to the depth updates stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#partial-book-depth-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -3270,7 +3645,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToOrderBookUpdatesAsync(System.String,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to order book difference updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="updateInterval">Update interval in milliseconds, either 100, 250 or 500</param>
@@ -3281,7 +3661,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToOrderBookUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to order book difference updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="updateInterval">Update interval in milliseconds, either 100, 250 or 500</param>
@@ -3293,7 +3678,12 @@
             <summary>
             Subscribe to the depth update stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#diff-book-depth-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -3304,7 +3694,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterSocketClientFuturesApi.SubscribeToUserDataUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterConfigUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMarginUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSocketEvent}},System.Threading.CancellationToken)">
             <summary>
             Subscribes to the account update stream. Prior to using this, the <see cref="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.StartUserStreamAsync(System.Threading.CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#event-user-data-stream-expired" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#event-user-data-stream-expired" /><br />
+            Endpoint:<br />
+            &lt;listenKey&gt;
+            </para>
             </summary>
             <param name="listenKey">Listen key retrieved by the <see cref="M:Aster.Net.Interfaces.Clients.FuturesApi.IAsterRestClientFuturesApiAccount.StartUserStreamAsync(System.Threading.CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method</param>
             <param name="onConfigUpdate">The event handler for leverage changed update</param>
@@ -3447,7 +3842,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.GetUserCommissionRateAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get user fee rates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-symbol-fees" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-symbol-fees" /><br />
+            Endpoint:<br />
+            GET /api/v1/commissionRate
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -3456,7 +3856,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.TransferAsync(System.String,Aster.Net.Enums.TransferDirection,System.Decimal,System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Transfer between Spot and Futures account
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#perp-spot-transfer-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#perp-spot-transfer-trade" /><br />
+            Endpoint:<br />
+            POST /api/v1/asset/wallet/transfer
+            </para>
             </summary>
             <param name="asset">Asset to transfer</param>
             <param name="direction">Transfer direction</param>
@@ -3468,7 +3873,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.SendToAddressAsync(System.String,System.String,System.Decimal,System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Send to a different address
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#transfer-asset-to-other-address-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#transfer-asset-to-other-address-trade" /><br />
+            Endpoint:<br />
+            POST /api/v1/asset/sendToAddress
+            </para>
             </summary>
             <param name="asset">Asset to send</param>
             <param name="toAddress">Target EVM address</param>
@@ -3480,7 +3890,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.GetWithdrawFeeAsync(System.String,Aster.Net.Enums.NetworkType,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get withdrawal fee
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-withdraw-fee-none" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-withdraw-fee-none" /><br />
+            Endpoint:<br />
+            GET /api/v1/aster/withdraw/estimateFee
+            </para>
             </summary>
             <param name="asset">Asset to withdraw</param>
             <param name="network">Network type</param>
@@ -3490,7 +3905,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.GetAccountInfoAsync(System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get account info and balances
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-information-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-information-user_data" /><br />
+            Endpoint:<br />
+            GET /api/v1/account
+            </para>
             </summary>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
             <param name="ct">Cancellation token</param>
@@ -3498,7 +3918,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.StartUserStreamAsync(System.Threading.CancellationToken)">
             <summary>
             Start a user stream. The resulting listen key can be used to subscribe to the user stream using the socket client. The stream will close after 60 minutes unless <see cref="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.KeepAliveUserStreamAsync(System.String,System.Threading.CancellationToken)">KeepAliveUserStreamAsync</see> is called.
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#generate-listen-key-user_stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#generate-listen-key-user_stream" /><br />
+            Endpoint:<br />
+            POST /api/v1/listenKey
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
             <returns></returns>
@@ -3506,7 +3931,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.KeepAliveUserStreamAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Keep alive the user stream. This should be called every 30 minutes to prevent the user stream being stopped
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#extend-listen-key-validity-period-user_stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#extend-listen-key-validity-period-user_stream" /><br />
+            Endpoint:<br />
+            PUT /api/v1/listenKey
+            </para>
             </summary>
             <param name="listenKey">The listen key to keep alive</param>
             <param name="ct">Cancellation token</param>
@@ -3515,7 +3945,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.StopUserStreamAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Stop the user stream, no updates will be send anymore
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#close-listen-key-user_stream" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#close-listen-key-user_stream" /><br />
+            Endpoint:<br />
+            DELETE /api/v1/listenKey
+            </para>
             </summary>
             <param name="listenKey">The listen key to stop</param>
             <param name="ct">Cancellation token</param>
@@ -3529,21 +3964,36 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetServerTimeAsync(System.Threading.CancellationToken)">
             <summary>
             Get the current server time
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-server-time" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-server-time" /><br />
+            Endpoint:<br />
+            GET /api/v1/time
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetExchangeInfoAsync(System.Threading.CancellationToken)">
             <summary>
             Get exchange information
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#trading-specification-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#trading-specification-information" /><br />
+            Endpoint:<br />
+            GET /api/v1/exchangeInfo
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetOrderBookAsync(System.String,System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get order book snapshot
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#depth-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#depth-information" /><br />
+            Endpoint:<br />
+            GET /api/v1/depth
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="limit">Max number of results. 5, 10, 20, 50, 100, 500 or 1000</param>
@@ -3552,7 +4002,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetRecentTradesAsync(System.String,System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get recent trades for a symbol
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#recent-trades-list" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#recent-trades-list" /><br />
+            Endpoint:<br />
+            GET /api/v1/trades
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="limit">Max number of results. Max 1000</param>
@@ -3561,7 +4016,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetTradeHistoryAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get trade history
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /><br />
+            Endpoint:<br />
+            GET /api/v1/historicalTrades
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="fromId">Return results after this</param>
@@ -3571,7 +4031,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetAggregatedTradeHistoryAsync(System.String,System.Nullable{System.Int64},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get aggregated trade history
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /><br />
+            Endpoint:<br />
+            GET /api/v1/aggTrades
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="fromId">Return results after this</param>
@@ -3583,7 +4048,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetKlinesAsync(System.String,Aster.Net.Enums.KlineInterval,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Get kline/candlestick data
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-data" /><br />
+            Endpoint:<br />
+            GET /api/v1/klines
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="interval">Kline interval</param>
@@ -3595,7 +4065,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetTickerAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Get price ticker info
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /><br />
+            Endpoint:<br />
+            GET /api/v1/ticker/24hr
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="ct">Cancellation token</param>
@@ -3603,14 +4078,24 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetTickersAsync(System.Threading.CancellationToken)">
             <summary>
             Get price ticker info for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /><br />
+            Endpoint:<br />
+            GET /api/v1/ticker/24hr
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetPriceAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Get price info for a symbol
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /><br />
+            Endpoint:<br />
+            GET /api/v1/ticker/price
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="ct">Cancellation token</param>
@@ -3618,14 +4103,24 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetPricesAsync(System.Threading.CancellationToken)">
             <summary>
             Get price info for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /><br />
+            Endpoint:<br />
+            GET /api/v1/ticker/price
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetBookTickerAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Get book ticker
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /><br />
+            Endpoint:<br />
+            GET /api/v1/ticker/bookTicker
+            </para>
             </summary>
             <param name="symbol">The symbol, for example `ETHUSDT`</param>
             <param name="ct">Cancellation token</param>
@@ -3633,7 +4128,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiExchangeData.GetBookTickersAsync(System.Threading.CancellationToken)">
             <summary>
             Get book tickers
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /><br />
+            Endpoint:<br />
+            GET /api/v1/ticker/bookTicker
+            </para>
             </summary>
             <param name="ct">Cancellation token</param>
         </member>
@@ -3650,7 +4150,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiTrading.PlaceOrderAsync(System.String,Aster.Net.Enums.OrderSide,Aster.Net.Enums.OrderType,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.String,System.Nullable{System.Decimal},System.Nullable{Aster.Net.Enums.TimeInForce},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Threading.CancellationToken)">
             <summary>
             Place a new order
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#place-order-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#place-order-trade" /><br />
+            Endpoint:<br />
+            POST /api/v1/order
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="side">Order side</param>
@@ -3667,7 +4172,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiTrading.CancelOrderAsync(System.String,System.Nullable{System.Int64},System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Cancel an order
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-order-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-order-trade" /><br />
+            Endpoint:<br />
+            DELETE /api/v1/order
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="orderId">Cancel by order id</param>
@@ -3678,7 +4188,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiTrading.GetOrderAsync(System.String,System.Nullable{System.Int64},System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get info on an order
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-order-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-order-user_data" /><br />
+            Endpoint:<br />
+            GET /api/v1/order
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="orderId">Cancel by order id</param>
@@ -3689,7 +4204,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiTrading.GetOpenOrdersAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get current open order list
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-open-orders-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-open-orders-user_data" /><br />
+            Endpoint:<br />
+            GET /api/v1/openOrders
+            </para>
             </summary>
             <param name="symbol">Symbol name, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -3698,7 +4218,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiTrading.CancelAllOrdersAsync(System.String,System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Cancel all open orders for a symbol
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-all-open-orders-trade" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-all-open-orders-trade" /><br />
+            Endpoint:<br />
+            DELETE /api/v1/allOpenOrders
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -3707,7 +4232,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiTrading.GetOrdersAsync(System.String,System.Nullable{System.Int64},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get list of all orders
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-all-orders-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-all-orders-user_data" /><br />
+            Endpoint:<br />
+            GET /api/v1/allOrders
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="orderId">Return orders after this id</param>
@@ -3720,7 +4250,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiTrading.GetUserTradesAsync(System.String,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Int32},System.Nullable{System.Int64},System.Threading.CancellationToken)">
             <summary>
             Get user trades
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-trade-history-user_data" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-trade-history-user_data" /><br />
+            Endpoint:<br />
+            GET /api/v1/userTrades
+            </para>
             </summary>
             <param name="symbol">Symbol, for example `ETHUSDT`</param>
             <param name="orderId">Filter by order id</param>
@@ -3739,7 +4274,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToAggregatedTradeUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAggregatedTradeUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to aggregated trade updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@aggTrade
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3749,7 +4289,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToAggregatedTradeUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterAggregatedTradeUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to aggregated trade updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@aggTrade
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3760,7 +4305,12 @@
             <summary>
             Subscribe to the aggregated trades update stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flows" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flows" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@aggTrade
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3770,7 +4320,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToKlineUpdatesAsync(System.String,Aster.Net.Enums.KlineInterval,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbol">The symbol</param>
             <param name="interval">Interval for the klines</param>
@@ -3781,7 +4336,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToKlineUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},Aster.Net.Enums.KlineInterval,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbols">The symbols</param>
             <param name="interval">Interval for the klines</param>
@@ -3792,7 +4352,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToKlineUpdatesAsync(System.String,System.Collections.Generic.IEnumerable{Aster.Net.Enums.KlineInterval},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbol">The symbol</param>
             <param name="intervals">Intervals for the klines</param>
@@ -3803,7 +4368,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToKlineUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{Aster.Net.Enums.KlineInterval},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterKlineUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to kline/candlestick updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@kline_&lt;interval&gt;
+            </para>
             </summary>
             <param name="symbols">The symbols</param>
             <param name="intervals">Intervals for the klines</param>
@@ -3814,7 +4384,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToMiniTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMiniTickUpdate[]}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mini price ticker updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+            Endpoint:<br />
+            !miniTicker@arr
+            </para>
             </summary>
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
@@ -3823,7 +4398,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToMiniTickerUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMiniTickUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mini price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@miniTicker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3833,7 +4413,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToMiniTickerUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterMiniTickUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to mini price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@miniTicker
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3844,7 +4429,12 @@
             <summary>
             Subscribes to mini ticker updates stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@miniTicker
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3854,7 +4444,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate[]}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /><br />
+            Endpoint:<br />
+            !ticker@arr
+            </para>
             </summary>
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
@@ -3863,7 +4458,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToTickerUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@ticker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3873,7 +4473,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToTickerUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to price ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@ticker
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3883,7 +4488,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToBookTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterBookTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to book ticker updates for all symbols
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+            Endpoint:<br />
+            !bookTicker
+            </para>
             </summary>
             <param name="onMessage">The event handler for the received data</param>
             <param name="ct">Cancellation token for closing this subscription</param>
@@ -3892,7 +4502,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToBookTickerUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterBookTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to book ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@bookTicker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3902,7 +4517,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToBookTickerUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterBookTickerUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to book ticker updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@bookTicker
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3913,7 +4533,12 @@
             <summary>
             Subscribe to the book ticker update stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@bookTicker
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="onMessage">The event handler for the received data</param>
@@ -3923,7 +4548,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToPartialOrderBookUpdatesAsync(System.String,System.Int32,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to snapshot order book updates for the top x rows
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -3935,7 +4565,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToPartialOrderBookUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Int32,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to snapshot order book updates for the top x rows
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -3948,7 +4583,12 @@
             <summary>
             Subscribes to the depth updates for the provided symbol in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="levels">The amount of entries to be returned in the update, 5, 10 or 20</param>
@@ -3960,7 +4600,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToOrderBookUpdatesAsync(System.String,System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to order book difference updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbol">Symbol</param>
             <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -3971,7 +4616,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToOrderBookUpdatesAsync(System.Collections.Generic.IEnumerable{System.String},System.Nullable{System.Int32},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterOrderBookUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribe to order book difference updates
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols</param>
             <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -3983,7 +4633,12 @@
             <summary>
             Subscribe to the book ticker update stream in high-performance mode<br />
             More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /><br />
+            Endpoint:<br />
+            &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+            </para>
             </summary>
             <param name="symbols">Symbols to subscribe</param>
             <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -3994,7 +4649,12 @@
         <member name="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterSocketClientSpotApi.SubscribeToUserDataUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotAccountUpdate}},System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Aster.Net.Objects.Models.AsterSpotOrderUpdate}},System.Threading.CancellationToken)">
             <summary>
             Subscribes to the account update stream. Prior to using this, the <see cref="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.StartUserStreamAsync(System.Threading.CancellationToken)">restClient.SpotApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
-            <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#payload-account_update" /></para>
+            <para>
+            Docs:<br />
+            <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#payload-account_update" /><br />
+            Endpoint:<br />
+            &lt;listenKey&gt;
+            </para>
             </summary>
             <param name="listenKey">Listen key retrieved by the <see cref="M:Aster.Net.Interfaces.Clients.SpotApi.IAsterRestClientSpotApiAccount.StartUserStreamAsync(System.Threading.CancellationToken)">restClient.SpotApi.Account.StartUserStreamAsync</see> method</param>
             <param name="onAccountUpdate">The event handler for whenever an account update is received</param>

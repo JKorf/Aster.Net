@@ -18,7 +18,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to aggregated trade updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@aggTrade
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -28,7 +33,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to aggregated trade updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flow" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@aggTrade
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -38,7 +48,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <summary>
         /// Subscribe to the aggregated trades update stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flows" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#collection-transaction-flows" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@aggTrade
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -48,7 +63,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol</param>
         /// <param name="interval">Interval for the klines</param>
@@ -59,7 +79,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbols">The symbols</param>
         /// <param name="interval">Interval for the klines</param>
@@ -70,7 +95,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbol">The symbol</param>
         /// <param name="intervals">Intervals for the klines</param>
@@ -81,7 +111,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to kline/candlestick updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-streams" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@kline_&lt;interval&gt;
+        /// </para>
         /// </summary>
         /// <param name="symbols">The symbols</param>
         /// <param name="intervals">Intervals for the klines</param>
@@ -93,7 +128,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to mini price ticker updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// !miniTicker@arr
+        /// </para>
         /// </summary>
         /// <param name="onMessage">The event handler for the received data</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -102,7 +142,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to mini price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@miniTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -112,7 +157,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to mini price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@miniTicker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -122,7 +172,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <summary>
         /// Subscribes to mini ticker updates stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#simplified-ticker-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@miniTicker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -132,7 +187,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to price ticker updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /><br />
+        /// Endpoint:<br />
+        /// !ticker@arr
+        /// </para>
         /// </summary>
         /// <param name="onMessage">The event handler for the received data</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -141,7 +201,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@ticker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -151,7 +216,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to price ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#full-ticker-per-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@ticker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -161,7 +231,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to book ticker updates for all symbols
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// !bookTicker
+        /// </para>
         /// </summary>
         /// <param name="onMessage">The event handler for the received data</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -170,7 +245,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to book ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -180,7 +260,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to book ticker updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -190,7 +275,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <summary>
         /// Subscribe to the book ticker update stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#best-order-book-information-by-symbol" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@bookTicker
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="onMessage">The event handler for the received data</param>
@@ -200,7 +290,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to snapshot order book updates for the top x rows
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -212,7 +307,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to snapshot order book updates for the top x rows
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="levels">Number of rows, 5, 10 or 20</param>
@@ -224,7 +324,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <summary>
         /// Subscribes to the depth updates for the provided symbol in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#limited-depth-information" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth&lt;levels&gt;[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="levels">The amount of entries to be returned in the update, 5, 10 or 20</param>
@@ -236,7 +341,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to order book difference updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -247,7 +357,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to order book difference updates
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols</param>
         /// <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -259,7 +374,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <summary>
         /// Subscribe to the book ticker update stream in high-performance mode<br />
         /// More info about high-performance mode can be found here: <a href="https://cryptoexchange.jkorf.dev/client-libs/features/performance" />
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#incremental-depth-information" /><br />
+        /// Endpoint:<br />
+        /// &lt;symbol&gt;@depth[@&lt;updateInterval&gt;ms]
+        /// </para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe</param>
         /// <param name="updateInterval">Update interval in milliseconds, either 100 or 1000</param>
@@ -270,7 +390,12 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribes to the account update stream. Prior to using this, the <see cref="IAsterRestClientSpotApiAccount.StartUserStreamAsync(CancellationToken)">restClient.SpotApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
-        /// <para><a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#payload-account_update" /></para>
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#payload-account_update" /><br />
+        /// Endpoint:<br />
+        /// &lt;listenKey&gt;
+        /// </para>
         /// </summary>
         /// <param name="listenKey">Listen key retrieved by the <see cref="IAsterRestClientSpotApiAccount.StartUserStreamAsync(CancellationToken)">restClient.SpotApi.Account.StartUserStreamAsync</see> method</param>
         /// <param name="onAccountUpdate">The event handler for whenever an account update is received</param>
