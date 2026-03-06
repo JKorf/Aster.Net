@@ -21,8 +21,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// POST /fapi/v1/positionSide/dual
         /// </para>
         /// </summary>
-        /// <param name="dualPositionSide">True: Hedge mode, False: One-way mode</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="dualPositionSide">["<c>dualSidePosition</c>"] True: Hedge mode, False: One-way mode</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult> SetPositionModeAsync(bool dualPositionSide, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -35,7 +35,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v1/positionSide/dual
         /// </para>
         /// </summary>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterPositionMode>> GetPositionModeAsync(long? receiveWindow = null, CancellationToken ct = default);
 
@@ -48,8 +48,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// POST /fapi/v1/multiAssetsMargin
         /// </para>
         /// </summary>
-        /// <param name="multiAssetMargin">Multi asset mode margin enabled or not</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="multiAssetMargin">["<c>multiAssetsMargin</c>"] Multi asset mode margin enabled or not</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult> SetMultiAssetModeAsync(bool multiAssetMargin, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -62,7 +62,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v1/multiAssetsMargin
         /// </para>
         /// </summary>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterMultiAssetMode>> GetMultiAssetModeAsync(long? receiveWindow = null, CancellationToken ct = default);
 
@@ -75,11 +75,11 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// POST /fapi/v1/asset/wallet/transfer
         /// </para>
         /// </summary>
-        /// <param name="asset">Asset to transfer</param>
-        /// <param name="direction">Transfer direction</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="clientOrderId">Client defined id</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="asset">["<c>asset</c>"] Asset to transfer</param>
+        /// <param name="direction">["<c>kindType</c>"] Transfer direction</param>
+        /// <param name="quantity">["<c>amount</c>"] Quantity</param>
+        /// <param name="clientOrderId">["<c>clientTranId</c>"] Client defined id</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterTransferResult>> TransferAsync(string asset, TransferDirection direction, decimal quantity, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -92,7 +92,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v2/balance
         /// </para>
         /// </summary>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterBalance[]>> GetBalancesAsync(long? receiveWindow = null, CancellationToken ct = default);
 
@@ -105,7 +105,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v4/account
         /// </para>
         /// </summary>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterAccountInfo>> GetAccountInfoAsync(long? receiveWindow = null, CancellationToken ct = default);
 
@@ -118,9 +118,9 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// POST /fapi/v1/leverage
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="leverage">Leverage</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="leverage">["<c>leverage</c>"] Leverage</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterLeverage>> SetLeverageAsync(string symbol, int leverage, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -133,9 +133,9 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// POST /fapi/v1/marginType
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="marginType">Margin type</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="marginType">["<c>marginType</c>"] Margin type</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult> SetMarginTypeAsync(string symbol, MarginType marginType, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -148,11 +148,11 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// POST /fapi/v1/positionMargin
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="side">Adjust side</param>
-        /// <param name="quantity">Quantity to add or remove</param>
-        /// <param name="positionSide">Position side</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="side">["<c>type</c>"] Adjust side</param>
+        /// <param name="quantity">["<c>quantity</c>"] Quantity to add or remove</param>
+        /// <param name="positionSide">["<c>positionSide</c>"] Position side</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult> ModifyIsolatedMarginAsync(string symbol, MarginAdjustSide side, decimal quantity, PositionSide? positionSide = null, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -165,12 +165,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v1/positionMargin/history
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="side">Filter by adjust side</param>
-        /// <param name="startTime">Filter by start time</param>
-        /// <param name="endTime">Filter by end time</param>
-        /// <param name="limit">Max number of results</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="side">["<c>type</c>"] Filter by adjust side</param>
+        /// <param name="startTime">["<c>startTime</c>"] Filter by start time</param>
+        /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
+        /// <param name="limit">["<c>limit</c>"] Max number of results</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterMarginChange[]>> GetPositionMarginChangeHistoryAsync(string symbol, MarginAdjustSide? side = null,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -184,12 +184,12 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v1/income
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="type">Filter by type</param>
-        /// <param name="startTime">Filter by start time</param>
-        /// <param name="endTime">Filter by end time</param>
-        /// <param name="limit">Max number of results, max 1000</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="type">["<c>type</c>"] Filter by type</param>
+        /// <param name="startTime">["<c>startTime</c>"] Filter by start time</param>
+        /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
+        /// <param name="limit">["<c>limit</c>"] Max number of results, max 1000</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterIncome[]>> GetIncomeHistoryAsync(string? symbol = null, IncomeType? type = null,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default);
@@ -203,8 +203,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v1/leverageBracket
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterSymbolBracket[]>> GetLeverageBracketsAsync(string symbol, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -217,8 +217,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v1/adlQuantile
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterQuantileEstimation[]>> GetPositionAdlQuantileEstimationAsync(string? symbol = null, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -231,8 +231,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// GET /fapi/v1/commissionRate
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterUserCommission>> GetUserCommissionRateAsync(string symbol, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -258,7 +258,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// PUT /fapi/v1/listenKey
         /// </para>
         /// </summary>
-        /// <param name="listenKey">The listen key to keep alive</param>
+        /// <param name="listenKey">["<c>listenKey</c>"] The listen key to keep alive</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
         Task<WebCallResult> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default);
@@ -272,7 +272,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// DELETE /fapi/v1/listenKey
         /// </para>
         /// </summary>
-        /// <param name="listenKey">The listen key to stop</param>
+        /// <param name="listenKey">["<c>listenKey</c>"] The listen key to stop</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
         Task<WebCallResult> StopUserStreamAsync(string listenKey, CancellationToken ct = default);

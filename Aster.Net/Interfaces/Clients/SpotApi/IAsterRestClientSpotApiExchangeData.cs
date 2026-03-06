@@ -45,8 +45,8 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/depth
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
-        /// <param name="limit">Max number of results. 5, 10, 20, 50, 100, 500 or 1000</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
+        /// <param name="limit">["<c>limit</c>"] Max number of results. 5, 10, 20, 50, 100, 500 or 1000</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
@@ -59,8 +59,8 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/trades
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
-        /// <param name="limit">Max number of results. Max 1000</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
+        /// <param name="limit">["<c>limit</c>"] Max number of results. Max 1000</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterSpotRecentTrade[]>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
@@ -73,9 +73,9 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/historicalTrades
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
-        /// <param name="fromId">Return results after this</param>
-        /// <param name="limit">Max number of results. Max 1000</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
+        /// <param name="fromId">["<c>fromId</c>"] Return results after this</param>
+        /// <param name="limit">["<c>limit</c>"] Max number of results. Max 1000</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterSpotRecentTrade[]>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null, CancellationToken ct = default);
 
@@ -88,11 +88,11 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/aggTrades
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
-        /// <param name="fromId">Return results after this</param>
-        /// <param name="startTime">Filter by start time</param>
-        /// <param name="endTime">Filter by end time</param>
-        /// <param name="limit">Max number of results. Max 1000</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
+        /// <param name="fromId">["<c>fromId</c>"] Return results after this</param>
+        /// <param name="startTime">["<c>startTime</c>"] Filter by start time</param>
+        /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
+        /// <param name="limit">["<c>limit</c>"] Max number of results. Max 1000</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterAggregateTrade[]>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
@@ -106,11 +106,11 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/klines
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
-        /// <param name="interval">Kline interval</param>
-        /// <param name="startTime">Filter by start time</param>
-        /// <param name="endTime">Filter by end time</param>
-        /// <param name="limit">Max number of results. Max 1500</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
+        /// <param name="interval">["<c>interval</c>"] Kline interval</param>
+        /// <param name="startTime">["<c>startTime</c>"] Filter by start time</param>
+        /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
+        /// <param name="limit">["<c>limit</c>"] Max number of results. Max 1500</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterKline[]>> GetKlinesAsync(string symbol, KlineInterval interval,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
@@ -124,7 +124,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/ticker/24hr
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterSpotTicker>> GetTickerAsync(string symbol, CancellationToken ct = default);
 
@@ -149,7 +149,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/ticker/price
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol name, for example `ETHUSDT`</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterPrice>> GetPriceAsync(string symbol, CancellationToken ct = default);
 
@@ -174,7 +174,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/ticker/bookTicker
         /// </para>
         /// </summary>
-        /// <param name="symbol">The symbol, for example `ETHUSDT`</param>
+        /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterBookTicker>> GetBookTickerAsync(string symbol, CancellationToken ct = default);
 

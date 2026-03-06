@@ -20,8 +20,8 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/commissionRate
         /// </para>
         /// </summary>
-        /// <param name="symbol">Symbol, for example `ETHUSDT`</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterUserCommission>> GetUserCommissionRateAsync(string symbol, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -34,11 +34,11 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// POST /api/v1/asset/wallet/transfer
         /// </para>
         /// </summary>
-        /// <param name="asset">Asset to transfer</param>
-        /// <param name="direction">Transfer direction</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="clientOrderId">Client defined id</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="asset">["<c>asset</c>"] Asset to transfer</param>
+        /// <param name="direction">["<c>kindType</c>"] Transfer direction</param>
+        /// <param name="quantity">["<c>amount</c>"] Quantity</param>
+        /// <param name="clientOrderId">["<c>clientTranId</c>"] Client defined id</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterTransferResult>> TransferAsync(string asset, TransferDirection direction, decimal quantity, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -51,11 +51,11 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// POST /api/v1/asset/sendToAddress
         /// </para>
         /// </summary>
-        /// <param name="asset">Asset to send</param>
-        /// <param name="toAddress">Target EVM address</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="clientOrderId">Client defined id, min 20 characters</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="asset">["<c>asset</c>"] Asset to send</param>
+        /// <param name="toAddress">["<c>toAddress</c>"] Target EVM address</param>
+        /// <param name="quantity">["<c>amount</c>"] Quantity</param>
+        /// <param name="clientOrderId">["<c>clientTranId</c>"] Client defined id, min 20 characters</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterTransferResult>> SendToAddressAsync(string asset, string toAddress, decimal quantity, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -68,9 +68,9 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/aster/withdraw/estimateFee
         /// </para>
         /// </summary>
-        /// <param name="asset">Asset to withdraw</param>
-        /// <param name="network">Network type</param>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="asset">["<c>asset</c>"] Asset to withdraw</param>
+        /// <param name="network">["<c>chainId</c>"] Network type</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterWithdrawFee>> GetWithdrawFeeAsync(string asset, NetworkType network, long? receiveWindow = null, CancellationToken ct = default);
 
@@ -83,7 +83,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// GET /api/v1/account
         /// </para>
         /// </summary>
-        /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterSpotAccountInfo>> GetAccountInfoAsync(long? receiveWindow = null, CancellationToken ct = default);
 
@@ -109,7 +109,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// PUT /api/v1/listenKey
         /// </para>
         /// </summary>
-        /// <param name="listenKey">The listen key to keep alive</param>
+        /// <param name="listenKey">["<c>listenKey</c>"] The listen key to keep alive</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
         Task<WebCallResult> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default);
@@ -123,7 +123,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// DELETE /api/v1/listenKey
         /// </para>
         /// </summary>
-        /// <param name="listenKey">The listen key to stop</param>
+        /// <param name="listenKey">["<c>listenKey</c>"] The listen key to stop</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
         Task<WebCallResult> StopUserStreamAsync(string listenKey, CancellationToken ct = default);
