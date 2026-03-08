@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System;
 using System.Text.Json.Serialization;
 
@@ -10,42 +10,42 @@ namespace Aster.Net.Objects.Models
     public record AsterIncome
     {
         /// <summary>
-        /// Symbol name
+        /// ["<c>symbol</c>"] Symbol name
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// Asset name
+        /// ["<c>asset</c>"] Asset name
         /// </summary>
         [JsonPropertyName("asset")]
         public string Asset { get; set; } = string.Empty;
         /// <summary>
-        /// Income type
+        /// ["<c>incomeType</c>"] Income type
         /// </summary>
         [JsonPropertyName("incomeType")]
         public IncomeType Type { get; set; }
         /// <summary>
-        /// Info
+        /// ["<c>info</c>"] Info
         /// </summary>
         [JsonPropertyName("info")]
         public string Info { get; set; } = string.Empty;
         /// <summary>
-        /// Income
+        /// ["<c>income</c>"] Income
         /// </summary>
         [JsonPropertyName("income")]
         public decimal Income { get; set; }
         /// <summary>
-        /// Timestamp
+        /// ["<c>time</c>"] Timestamp
         /// </summary>
         [JsonPropertyName("time")]
         public DateTime Timestamp { get; set; }
         /// <summary>
-        /// Transaction id
+        /// ["<c>tranId</c>"] Transaction id
         /// </summary>
         [JsonPropertyName("tranId")]
         public long TransactionId { get; set; }
         /// <summary>
-        /// Trade id
+        /// ["<c>tradeId</c>"] Trade id
         /// </summary>
         [JsonPropertyName("tradeId")]
         public string TradeId { get; set; } = string.Empty;

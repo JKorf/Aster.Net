@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,12 +8,12 @@ namespace Aster.Net.Objects.Models
     public record AsterQuantileEstimation
     {
         /// <summary>
-        /// The symbol
+        /// ["<c>symbol</c>"] The symbol
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// Quantile
+        /// ["<c>adlQuantile</c>"] Quantile
         /// </summary>
         [JsonPropertyName("adlQuantile")]
         public AsterAdlQuantile? AdlQuantile { get; set; }
@@ -25,22 +25,22 @@ namespace Aster.Net.Objects.Models
     public record AsterAdlQuantile
     {
         /// <summary>
-        /// Long position
+        /// ["<c>LONG</c>"] Long position
         /// </summary>
         [JsonPropertyName("LONG")]
         public int Long { get; set; }
         /// <summary>
-        /// Short position
+        /// ["<c>SHORT</c>"] Short position
         /// </summary>
         [JsonPropertyName("SHORT")]
         public int Short { get; set; }
         /// <summary>
-        /// Hedge
+        /// ["<c>HEDGE</c>"] Hedge
         /// </summary>
         [JsonPropertyName("HEDGE")]
         public int Hedge { get; set; }
         /// <summary>
-        /// Hedge
+        /// ["<c>BOTH</c>"] Hedge
         /// </summary>
         [JsonPropertyName("BOTH")]
         public int Both { get; set; }

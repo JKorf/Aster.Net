@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,7 +8,7 @@ namespace Aster.Net.Objects.Models
     public record AsterPositionMode
     {
         /// <summary>
-        /// True: Hedge mode, False: One-way mode
+        /// ["<c>dualSidePosition</c>"] True: Hedge mode, False: One-way mode
         /// </summary>
         [JsonPropertyName("dualSidePosition")]
         public bool DualPositionMode { get; set; }

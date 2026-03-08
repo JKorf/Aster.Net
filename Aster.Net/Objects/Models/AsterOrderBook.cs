@@ -1,4 +1,4 @@
-﻿using CryptoExchange.Net.Converters;
+using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Interfaces;
 using System;
@@ -12,37 +12,37 @@ namespace Aster.Net.Objects.Models
     public record AsterOrderBook
     {
         /// <summary>
-        /// The symbol of the order book 
+        /// ["<c>s</c>"] The symbol of the order book 
         /// </summary>
         [JsonPropertyName("s")]
         public string Symbol { get; set; } = string.Empty;
 
         /// <summary>
-        /// The ID of the last update
+        /// ["<c>lastUpdateId</c>"] The ID of the last update
         /// </summary>
         [JsonPropertyName("lastUpdateId")]
         public long LastUpdateId { get; set; }
 
         /// <summary>
-        /// The list of bids
+        /// ["<c>bids</c>"] The list of bids
         /// </summary>
         [JsonPropertyName("bids")]
         public AsterOrderBookEntry[] Bids { get; set; } = Array.Empty<AsterOrderBookEntry>();
 
         /// <summary>
-        /// The list of asks
+        /// ["<c>asks</c>"] The list of asks
         /// </summary>
         [JsonPropertyName("asks")]
         public AsterOrderBookEntry[] Asks { get; set; } = Array.Empty<AsterOrderBookEntry>();
 
         /// <summary>
-        /// The symbol of the order book 
+        /// ["<c>E</c>"] The symbol of the order book 
         /// </summary>
         [JsonPropertyName("E")]
         public DateTime MessageTime { get; set; }
 
         /// <summary>
-        /// The ID of the last update
+        /// ["<c>T</c>"] The ID of the last update
         /// </summary>
         [JsonPropertyName("T")]
         public DateTime TransactionTime { get; set; }

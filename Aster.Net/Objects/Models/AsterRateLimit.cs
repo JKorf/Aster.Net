@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,22 +9,22 @@ namespace Aster.Net.Objects.Models
     public record AsterRateLimit
     {
         /// <summary>
-        /// The interval the rate limit uses to count
+        /// ["<c>interval</c>"] The interval the rate limit uses to count
         /// </summary>
         [JsonPropertyName("interval")]
         public RateLimitInterval Interval { get; set; }
         /// <summary>
-        /// The type the rate limit applies to
+        /// ["<c>rateLimitType</c>"] The type the rate limit applies to
         /// </summary>
         [JsonPropertyName("rateLimitType")]
         public RateLimitType Type { get; set; }
         /// <summary>
-        /// The amount of calls the limit is
+        /// ["<c>intervalNum</c>"] The amount of calls the limit is
         /// </summary>
         [JsonPropertyName("intervalNum")]
         public int IntervalNumber { get; set; }
         /// <summary>
-        /// The amount of calls the limit is
+        /// ["<c>limit</c>"] The amount of calls the limit is
         /// </summary>
         [JsonPropertyName("limit")]
         public int Limit { get; set; }

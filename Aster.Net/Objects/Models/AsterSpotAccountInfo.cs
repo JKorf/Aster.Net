@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,37 +9,37 @@ namespace Aster.Net.Objects.Models
     public record AsterSpotAccountInfo
     {
         /// <summary>
-        /// Fee tier
+        /// ["<c>feeTier</c>"] Fee tier
         /// </summary>
         [JsonPropertyName("feeTier")]
         public int FeeTier { get; set; }
         /// <summary>
-        /// Can trade
+        /// ["<c>canTrade</c>"] Can trade
         /// </summary>
         [JsonPropertyName("canTrade")]
         public bool CanTrade { get; set; }
         /// <summary>
-        /// Can deposit
+        /// ["<c>canDeposit</c>"] Can deposit
         /// </summary>
         [JsonPropertyName("canDeposit")]
         public bool CanDeposit { get; set; }
         /// <summary>
-        /// Can burn asset
+        /// ["<c>canBurnAsset</c>"] Can burn asset
         /// </summary>
         [JsonPropertyName("canBurnAsset")]
         public bool CanBurnAsset { get; set; }
         /// <summary>
-        /// Can withdraw
+        /// ["<c>canWithdraw</c>"] Can withdraw
         /// </summary>
         [JsonPropertyName("canWithdraw")]
         public bool CanWithdraw { get; set; }
         /// <summary>
-        /// Update time
+        /// ["<c>updateTime</c>"] Update time
         /// </summary>
         [JsonPropertyName("updateTime")]
         public DateTime? UpdateTime { get; set; }
         /// <summary>
-        /// Balances
+        /// ["<c>balances</c>"] Balances
         /// </summary>
         [JsonPropertyName("balances")]
         public AsterSpotBalance[] Balances { get; set; } = Array.Empty<AsterSpotBalance>();
@@ -51,17 +51,17 @@ namespace Aster.Net.Objects.Models
     public record AsterSpotBalance
     {
         /// <summary>
-        /// Asset
+        /// ["<c>asset</c>"] Asset
         /// </summary>
         [JsonPropertyName("asset")]
         public string Asset { get; set; } = string.Empty;
         /// <summary>
-        /// Free
+        /// ["<c>free</c>"] Free
         /// </summary>
         [JsonPropertyName("free")]
         public decimal Free { get; set; }
         /// <summary>
-        /// Locked
+        /// ["<c>locked</c>"] Locked
         /// </summary>
         [JsonPropertyName("locked")]
         public decimal Locked { get; set; }       

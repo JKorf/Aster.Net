@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,19 +9,19 @@ namespace Aster.Net.Objects.Models
     public record AsterConfigUpdate : AsterSocketEvent
     {
         /// <summary>
-        /// Leverage Update data
+        /// ["<c>ac</c>"] Leverage Update data
         /// </summary>
         [JsonPropertyName("ac")]
         public AsterLeverageUpdateData? LeverageUpdateData { get; set; }
 
         /// <summary>
-        /// Position mode Update data
+        /// ["<c>ai</c>"] Position mode Update data
         /// </summary>
         [JsonPropertyName("ai")]
         public AsterConfigUpdateData? ConfigUpdateData { get; set; }
 
         /// <summary>
-        /// Transaction time
+        /// ["<c>T</c>"] Transaction time
         /// </summary>
         [JsonPropertyName("T")]
         public DateTime TransactionTime { get; set; }
@@ -37,13 +37,13 @@ namespace Aster.Net.Objects.Models
     public record AsterLeverageUpdateData
     {
         /// <summary>
-        /// The symbol this balance is for
+        /// ["<c>s</c>"] The symbol this balance is for
         /// </summary>
         [JsonPropertyName("s")]
         public string? Symbol { get; set; }
 
         /// <summary>
-        /// The symbol this leverage is for
+        /// ["<c>l</c>"] The symbol this leverage is for
         /// </summary>
         [JsonPropertyName("l")]
         public int Leverage { get; set; }
@@ -55,7 +55,7 @@ namespace Aster.Net.Objects.Models
     public record AsterConfigUpdateData
     {
         /// <summary>
-        /// Multi-Assets Mode
+        /// ["<c>j</c>"] Multi-Assets Mode
         /// </summary>
         [JsonPropertyName("j")]
         public bool MultiAssetMode { get; set; }

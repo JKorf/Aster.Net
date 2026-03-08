@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,12 +9,12 @@ namespace Aster.Net.Objects.Models
     public record AsterSocketEvent
     {
         /// <summary>
-        /// The type of the event
+        /// ["<c>e</c>"] The type of the event
         /// </summary>
         [JsonPropertyName("e")]
         public string Event { get; set; } = string.Empty;
         /// <summary>
-        /// The time the event happened
+        /// ["<c>E</c>"] The time the event happened
         /// </summary>
         [JsonPropertyName("E")]
         public DateTime EventTime { get; set; }

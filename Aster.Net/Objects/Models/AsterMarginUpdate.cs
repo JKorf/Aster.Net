@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System;
 using System.Text.Json.Serialization;
 
@@ -11,12 +11,12 @@ namespace Aster.Net.Objects.Models
     {
 
         /// <summary>
-        /// Cross Wallet Balance. Only pushed with crossed position margin call
+        /// ["<c>cw</c>"] Cross Wallet Balance. Only pushed with crossed position margin call
         /// </summary>
         [JsonPropertyName("cw")]
         public decimal? CrossWalletBalance { get; set; }
         /// <summary>
-        /// Positions
+        /// ["<c>p</c>"] Positions
         /// </summary>
         [JsonPropertyName("p")]
         public AsterMarginPosition[] Positions { get; set; } = Array.Empty<AsterMarginPosition>();
@@ -33,49 +33,49 @@ namespace Aster.Net.Objects.Models
     public record AsterMarginPosition
     {
         /// <summary>
-        /// Symbol
+        /// ["<c>s</c>"] Symbol
         /// </summary>
         [JsonPropertyName("s")]
         public string Symbol { get; set; } = string.Empty;
 
         /// <summary>
-        /// Position Side
+        /// ["<c>ps</c>"] Position Side
         /// </summary>
         [JsonPropertyName("ps")]
         public PositionSide PositionSide { get; set; }
 
         /// <summary>
-        /// Position quantity
+        /// ["<c>pa</c>"] Position quantity
         /// </summary>
         [JsonPropertyName("pa")]
         public decimal PositionQuantity { get; set; }
 
         /// <summary>
-        /// Margin type
+        /// ["<c>mt</c>"] Margin type
         /// </summary>
         [JsonPropertyName("mt")]
         public MarginType MarginType { get; set; }
 
         /// <summary>
-        /// Isolated Wallet (if isolated position)
+        /// ["<c>iw</c>"] Isolated Wallet (if isolated position)
         /// </summary>
         [JsonPropertyName("iw")]
         public decimal IsolatedWallet { get; set; }
 
         /// <summary>
-        /// Mark Price
+        /// ["<c>mp</c>"] Mark Price
         /// </summary>
         [JsonPropertyName("mp")]
         public decimal MarkPrice { get; set; }
 
         /// <summary>
-        /// Unrealized PnL
+        /// ["<c>up</c>"] Unrealized PnL
         /// </summary>
         [JsonPropertyName("up")]
         public decimal UnrealizedPnl { get; set; }
 
         /// <summary>
-        /// Maintenance Margin Required
+        /// ["<c>mm</c>"] Maintenance Margin Required
         /// </summary>
         [JsonPropertyName("mm")]
         public decimal MaintenanceMargin { get; set; }

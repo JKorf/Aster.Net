@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System;
 using System.Text.Json.Serialization;
 
@@ -16,67 +16,67 @@ namespace Aster.Net.Objects.Models
     public record AsterLiquidationUpdate
     {
         /// <summary>
-        /// Symbol
+        /// ["<c>s</c>"] Symbol
         /// </summary>
         [JsonPropertyName("s")]
         public string Symbol { get; set; } = string.Empty;
 
         /// <summary>
-        /// Liquidation Sided
+        /// ["<c>S</c>"] Liquidation Sided
         /// </summary>
         [JsonPropertyName("S")]
         public OrderSide Side { get; set; }
 
         /// <summary>
-        /// Liquidation order type
+        /// ["<c>o</c>"] Liquidation order type
         /// </summary>
         [JsonPropertyName("o")]
         public OrderType Type { get; set; }
 
         /// <summary>
-        /// Liquidation Time in Force
+        /// ["<c>f</c>"] Liquidation Time in Force
         /// </summary>
         [JsonPropertyName("f")]
         public TimeInForce TimeInForce { get; set; }
 
         /// <summary>
-        /// Liquidation Original Quantity
+        /// ["<c>q</c>"] Liquidation Original Quantity
         /// </summary>
         [JsonPropertyName("q")]
         public decimal Quantity { get; set; }
 
         /// <summary>
-        /// Liquidation order price
+        /// ["<c>p</c>"] Liquidation order price
         /// </summary>
         [JsonPropertyName("p")]
         public decimal Price { get; set; }
 
         /// <summary>
-        /// Liquidation Average Price
+        /// ["<c>ap</c>"] Liquidation Average Price
         /// </summary>
         [JsonPropertyName("ap")]
         public decimal AveragePrice { get; set; }
 
         /// <summary>
-        /// Liquidation Order Status
+        /// ["<c>X</c>"] Liquidation Order Status
         /// </summary>
         [JsonPropertyName("X")]
         public OrderStatus Status { get; set; }
 
         /// <summary>
-        /// Liquidation Last Filled Quantity
+        /// ["<c>l</c>"] Liquidation Last Filled Quantity
         /// </summary>
         [JsonPropertyName("l")]
         public decimal LastQuantityFilled { get; set; }
 
         /// <summary>
-        /// Liquidation Accumulated fill quantity
+        /// ["<c>z</c>"] Liquidation Accumulated fill quantity
         /// </summary>
         [JsonPropertyName("z")]
         public decimal QuantityFilled { get; set; }
 
         /// <summary>
-        /// Liquidation Trade Time
+        /// ["<c>T</c>"] Liquidation Trade Time
         /// </summary>
         [JsonPropertyName("T")]
         public DateTime Timestamp { get; set; }

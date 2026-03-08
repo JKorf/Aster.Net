@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,17 +8,17 @@ namespace Aster.Net.Objects.Models
     public record AsterLeverage
     {
         /// <summary>
-        /// Symbol name
+        /// ["<c>symbol</c>"] Symbol name
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// Max notional value
+        /// ["<c>maxNotionalValue</c>"] Max notional value
         /// </summary>
         [JsonPropertyName("maxNotionalValue")]
         public decimal MaxNotionalValue { get; set; }
         /// <summary>
-        /// Leverage
+        /// ["<c>leverage</c>"] Leverage
         /// </summary>
         [JsonPropertyName("leverage")]
         public int Leverage { get; set; }

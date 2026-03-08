@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,13 +9,13 @@ namespace Aster.Net.Objects.Models
     public record AsterSymbolBracket
     {
         /// <summary>
-        /// Symbol or pair
+        /// ["<c>symbol</c>"] Symbol or pair
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
 
         /// <summary>
-        /// Brackets
+        /// ["<c>brackets</c>"] Brackets
         /// </summary>
         [JsonPropertyName("brackets")]
         public AssetLeverageBracket[] Brackets { get; set; } = Array.Empty<AssetLeverageBracket>();
@@ -27,37 +27,37 @@ namespace Aster.Net.Objects.Models
     public record AssetLeverageBracket
     {
         /// <summary>
-        /// Bracket
+        /// ["<c>bracket</c>"] Bracket
         /// </summary>
         [JsonPropertyName("bracket")]
         public int Bracket { get; set; }
 
         /// <summary>
-        /// Max initial leverage for this bracket
+        /// ["<c>initialLeverage</c>"] Max initial leverage for this bracket
         /// </summary>
         [JsonPropertyName("initialLeverage")]
         public int InitialLeverage { get; set; }
 
         /// <summary>
-        /// Cap of this bracket
+        /// ["<c>notionalCap</c>"] Cap of this bracket
         /// </summary>
         [JsonPropertyName("notionalCap")]
         public long Cap { get; set; }
 
         /// <summary>
-        /// Floor of this bracket
+        /// ["<c>notionalFloor</c>"] Floor of this bracket
         /// </summary>
         [JsonPropertyName("notionalFloor")]
         public long Floor { get; set; }
 
         /// <summary>
-        /// Maintenance ratio for this bracket
+        /// ["<c>maintMarginRatio</c>"] Maintenance ratio for this bracket
         /// </summary>
         [JsonPropertyName("maintMarginRatio")]
         public decimal MaintenanceMarginRatio { get; set; }
 
         /// <summary>
-        /// Auxiliary number for quick calculation 
+        /// ["<c>cum</c>"] Auxiliary number for quick calculation 
         /// </summary>
         [JsonPropertyName("cum")]
         public decimal MaintAmount { get; set; }

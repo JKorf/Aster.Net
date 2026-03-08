@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,12 +8,12 @@ namespace Aster.Net.Objects.Models
     public record AsterCountDownResult
     {
         /// <summary>
-        /// Symbol name
+        /// ["<c>symbol</c>"] Symbol name
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// Count down timer in seconds
+        /// ["<c>countdownTime</c>"] Count down timer in seconds
         /// </summary>
         [JsonPropertyName("countdownTime")]
         public long CountdownTimer { get; set; }

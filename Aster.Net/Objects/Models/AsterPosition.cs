@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System;
 using System.Text.Json.Serialization;
 
@@ -10,22 +10,22 @@ namespace Aster.Net.Objects.Models
     public record AsterPosition
     {
         /// <summary>
-        /// Symbol
+        /// ["<c>symbol</c>"] Symbol
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// Position side
+        /// ["<c>positionSide</c>"] Position side
         /// </summary>
         [JsonPropertyName("positionSide")]
         public PositionSide PositionSide { get; set; }
         /// <summary>
-        /// Position amount
+        /// ["<c>positionAmt</c>"] Position amount
         /// </summary>
         [JsonPropertyName("positionAmt")]
         public decimal PositionAmount { get; set; }
         /// <summary>
-        /// Unrealized profit
+        /// ["<c>unrealizedProfit</c>"] Unrealized profit
         /// </summary>
         [JsonPropertyName("unrealizedProfit")]
         public decimal UnrealizedProfit { get; set; }
@@ -35,77 +35,77 @@ namespace Aster.Net.Objects.Models
             set => UnrealizedProfit = value;
         }
         /// <summary>
-        /// Is isolated margin
+        /// ["<c>isolated</c>"] Is isolated margin
         /// </summary>
         [JsonPropertyName("isolated")]
         public bool Isolated { get; set; }
         /// <summary>
-        /// Initial margin
+        /// ["<c>initialMargin</c>"] Initial margin
         /// </summary>
         [JsonPropertyName("initialMargin")]
         public decimal InitialMargin { get; set; }
         /// <summary>
-        /// Maintenance margin
+        /// ["<c>maintMargin</c>"] Maintenance margin
         /// </summary>
         [JsonPropertyName("maintMargin")]
         public decimal MaintenanceMargin { get; set; }
         /// <summary>
-        /// Position initial margin
+        /// ["<c>positionInitialMargin</c>"] Position initial margin
         /// </summary>
         [JsonPropertyName("positionInitialMargin")]
         public decimal PositionInitialMargin { get; set; }
         /// <summary>
-        /// Open order initial margin
+        /// ["<c>openOrderInitialMargin</c>"] Open order initial margin
         /// </summary>
         [JsonPropertyName("openOrderInitialMargin")]
         public decimal OpenOrderInitialMargin { get; set; }
         /// <summary>
-        /// Leverage
+        /// ["<c>leverage</c>"] Leverage
         /// </summary>
         [JsonPropertyName("leverage")]
         public decimal Leverage { get; set; }
         /// <summary>
-        /// Average entry price
+        /// ["<c>entryPrice</c>"] Average entry price
         /// </summary>
         [JsonPropertyName("entryPrice")]
         public decimal? AverageEntryPrice { get; set; }
         /// <summary>
-        /// Liquidation price
+        /// ["<c>liquidationPrice</c>"] Liquidation price
         /// </summary>
         [JsonPropertyName("liquidationPrice")]
         public decimal? LiquidationPrice { get; set; }
         /// <summary>
-        /// Isolated margin
+        /// ["<c>isolatedMargin</c>"] Isolated margin
         /// </summary>
         [JsonPropertyName("isolatedMargin")]
         public decimal? IsolatedMargin { get; set; }
         /// <summary>
-        /// Maximum available notional with current leverage
+        /// ["<c>maxNotional</c>"] Maximum available notional with current leverage
         /// </summary>
         [JsonPropertyName("maxNotional")]
         public decimal? MaxAvailableNotional { get; set; }
         /// <summary>
-        /// Mark price
+        /// ["<c>markPrice</c>"] Mark price
         /// </summary>
         [JsonPropertyName("markPrice")]
         public decimal? MarkPrice { get; set; }
         /// <summary>
-        /// Max notional value
+        /// ["<c>maxNotionalValue</c>"] Max notional value
         /// </summary>
         [JsonPropertyName("maxNotionalValue")]
         public decimal? MaxNotionalValue { get; set; }
         /// <summary>
-        /// Margin type
+        /// ["<c>marginType</c>"] Margin type
         /// </summary>
         [JsonPropertyName("marginType")]
         public MarginType? MarginType { get; set; }
         /// <summary>
-        /// Is auto-add margin
+        /// ["<c>isAutoAddMargin</c>"] Is auto-add margin
         /// </summary>
         [JsonPropertyName("isAutoAddMargin")]
         public bool IsAutoAddMargin { get; set; }
         /// <summary>
-        /// Update time
+        /// ["<c>updateTime</c>"] Update time
         /// </summary>
         [JsonPropertyName("updateTime")]
         public DateTime? UpdateTime { get; set; }

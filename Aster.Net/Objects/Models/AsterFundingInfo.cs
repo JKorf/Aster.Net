@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,32 +9,32 @@ namespace Aster.Net.Objects.Models
     public record AsterFundingInfo
     {
         /// <summary>
-        /// The symbol the information is about
+        /// ["<c>symbol</c>"] The symbol the information is about
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// Funding rate cap
+        /// ["<c>fundingFeeCap</c>"] Funding rate cap
         /// </summary>
         [JsonPropertyName("fundingFeeCap")]
         public decimal? FundingFeeCap { get; set; }
         /// <summary>
-        /// Funding rate floor
+        /// ["<c>fundingFeeFloor</c>"] Funding rate floor
         /// </summary>
         [JsonPropertyName("fundingFeeFloor")]
         public decimal? FundingFeeFloor { get; set; }
         /// <summary>
-        /// Funding interval in hours
+        /// ["<c>fundingIntervalHours</c>"] Funding interval in hours
         /// </summary>
         [JsonPropertyName("fundingIntervalHours")]
         public int? FundingIntervalHours { get; set; }
         /// <summary>
-        /// Time
+        /// ["<c>time</c>"] Time
         /// </summary>
         [JsonPropertyName("time")]
         public DateTime Timestamp { get; set; }
         /// <summary>
-        /// Interest rate
+        /// ["<c>interestRate</c>"] Interest rate
         /// </summary>
         [JsonPropertyName("interestRate")]
         public decimal InterestRate { get; set; }

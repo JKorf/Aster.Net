@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,37 +9,37 @@ namespace Aster.Net.Objects.Models
     public record AsterOrderBookUpdate : AsterSocketEvent
     {
         /// <summary>
-        /// The symbol of the order book
+        /// ["<c>s</c>"] The symbol of the order book
         /// </summary>
         [JsonPropertyName("s")]
         public string Symbol { get; set; } = string.Empty;
 
         /// <summary>
-        /// The time the event happened
+        /// ["<c>T</c>"] The time the event happened
         /// </summary>
         [JsonPropertyName("T")]
         public DateTime TransactionTime { get; set; }
 
         /// <summary>
-        /// The ID of the first update
+        /// ["<c>U</c>"] The ID of the first update
         /// </summary>
         [JsonPropertyName("U")]
         public long? FirstUpdateId { get; set; }
 
         /// <summary>
-        /// The ID of the last update
+        /// ["<c>u</c>"] The ID of the last update
         /// </summary>
         [JsonPropertyName("u")]
         public long LastUpdateId { get; set; }
 
         /// <summary>
-        /// The ID of the last update Id in last stream
+        /// ["<c>pu</c>"] The ID of the last update Id in last stream
         /// </summary>
         [JsonPropertyName("pu")]
         public long LastUpdateIdStream { get; set; }
 
         /// <summary>
-        /// The list of bids
+        /// ["<c>b</c>"] The list of bids
         /// </summary>
         [JsonPropertyName("b")]
         public AsterOrderBookEntry[] Bids { get; set; } = Array.Empty<AsterOrderBookEntry>();
@@ -50,7 +50,7 @@ namespace Aster.Net.Objects.Models
         }
 
         /// <summary>
-        /// The list of asks
+        /// ["<c>a</c>"] The list of asks
         /// </summary>
         [JsonPropertyName("a")]
         public AsterOrderBookEntry[] Asks { get; set; } = Array.Empty<AsterOrderBookEntry>();

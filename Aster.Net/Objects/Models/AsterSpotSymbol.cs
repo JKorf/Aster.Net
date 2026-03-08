@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -11,57 +11,57 @@ namespace Aster.Net.Objects.Models
     public record AsterSpotSymbol
     {
         /// <summary>
-        /// Filters for order on this symbol
+        /// ["<c>filters</c>"] Filters for order on this symbol
         /// </summary>
         [JsonPropertyName("filters")]
         public AsterSymbolFilter[] Filters { get; set; } = Array.Empty<AsterSymbolFilter>();
         /// <summary>
-        /// The price Precision
+        /// ["<c>pricePrecision</c>"] The price Precision
         /// </summary>
         [JsonPropertyName("pricePrecision")]
         public int PricePrecision { get; set; }
         /// <summary>
-        /// The quantity precision
+        /// ["<c>quantityPrecision</c>"] The quantity precision
         /// </summary>
         [JsonPropertyName("quantityPrecision")]
         public int QuantityPrecision { get; set; }
         /// <summary>
-        /// The base asset
+        /// ["<c>baseAsset</c>"] The base asset
         /// </summary>
         [JsonPropertyName("baseAsset")]
         public string BaseAsset { get; set; } = string.Empty;
         /// <summary>
-        /// The quote asset
+        /// ["<c>quoteAsset</c>"] The quote asset
         /// </summary>
         [JsonPropertyName("quoteAsset")]
         public string QuoteAsset { get; set; } = string.Empty;
         /// <summary>
-        /// The precision of the base asset
+        /// ["<c>baseAssetPrecision</c>"] The precision of the base asset
         /// </summary>
         [JsonPropertyName("baseAssetPrecision")]
         public int BaseAssetPrecision { get; set; }
         /// <summary>
-        /// The precision of the quote asset
+        /// ["<c>quotePrecision</c>"] The precision of the quote asset
         /// </summary>
         [JsonPropertyName("quotePrecision")]
         public int QuoteAssetPrecision { get; set; }
         /// <summary>
-        /// Allowed order types
+        /// ["<c>orderTypes</c>"] Allowed order types
         /// </summary>
         [JsonPropertyName("orderTypes")]
         public OrderType[] OrderTypes { get; set; } = Array.Empty<OrderType>();
         /// <summary>
-        /// The symbol
+        /// ["<c>symbol</c>"] The symbol
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Name { get; set; } = string.Empty;
         /// <summary>
-        /// OCO order allowed
+        /// ["<c>ocoAllowed</c>"] OCO order allowed
         /// </summary>
         [JsonPropertyName("ocoAllowed")]
         public bool OcoAllowed { get; set; }
         /// <summary>
-        /// Allowed order time in force
+        /// ["<c>timeInForce</c>"] Allowed order time in force
         /// </summary>
         [JsonPropertyName("timeInForce")]
         public TimeInForce[] TimeInForce { get; set; } = Array.Empty<TimeInForce>();
@@ -112,7 +112,7 @@ namespace Aster.Net.Objects.Models
         [JsonIgnore]
         public AsterSymbolMaxNotionalFilter? MaxNotionalFilter => Filters.OfType<AsterSymbolMaxNotionalFilter>().FirstOrDefault();
         /// <summary>
-        /// The status of the symbol
+        /// ["<c>status</c>"] The status of the symbol
         /// </summary>
         [JsonPropertyName("status")]
         public SymbolStatus Status { get; set; }

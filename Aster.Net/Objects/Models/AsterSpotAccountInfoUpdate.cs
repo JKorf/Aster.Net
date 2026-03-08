@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -14,17 +14,17 @@ namespace Aster.Net.Objects.Models
         [JsonIgnore]
         public string ListenKey { get; set; } = string.Empty;
         /// <summary>
-        /// Update reason
+        /// ["<c>m</c>"] Update reason
         /// </summary>
         [JsonPropertyName("m")]
         public string UpdateReason { get; set; } = string.Empty;
         /// <summary>
-        /// Update time
+        /// ["<c>T</c>"] Update time
         /// </summary>
         [JsonPropertyName("T")]
         public DateTime Timestamp { get; set; }
         /// <summary>
-        /// Balances
+        /// ["<c>B</c>"] Balances
         /// </summary>
         [JsonPropertyName("B")]
         public AsterSpotBalanceUpdate[] Balances { get; set; } = Array.Empty<AsterSpotBalanceUpdate>();
@@ -36,17 +36,17 @@ namespace Aster.Net.Objects.Models
     public record AsterSpotBalanceUpdate
     {
         /// <summary>
-        /// Asset
+        /// ["<c>a</c>"] Asset
         /// </summary>
         [JsonPropertyName("a")]
         public string Asset { get; set; } = string.Empty;
         /// <summary>
-        /// Free
+        /// ["<c>f</c>"] Free
         /// </summary>
         [JsonPropertyName("f")]
         public decimal Free { get; set; }
         /// <summary>
-        /// Locked
+        /// ["<c>l</c>"] Locked
         /// </summary>
         [JsonPropertyName("l")]
         public decimal Locked { get; set; }       

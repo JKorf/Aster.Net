@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,17 +8,17 @@ namespace Aster.Net.Objects.Models
     public record AsterWithdrawFee
     {
         /// <summary>
-        /// Token price
+        /// ["<c>tokenPrice</c>"] Token price
         /// </summary>
         [JsonPropertyName("tokenPrice")]
         public decimal TokenPrice { get; set; }
         /// <summary>
-        /// Gas cost
+        /// ["<c>gasCost</c>"] Gas cost
         /// </summary>
         [JsonPropertyName("gasCost")]
         public decimal GasCost { get; set; }
         /// <summary>
-        /// USD gas value
+        /// ["<c>gasUsdValue</c>"] USD gas value
         /// </summary>
         [JsonPropertyName("gasUsdValue")]
         public decimal GasUsdValue { get; set; }

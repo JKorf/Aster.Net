@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,54 +9,54 @@ namespace Aster.Net.Objects.Models
     public record AsterBalance
     {
         /// <summary>
-        /// Account alias
+        /// ["<c>accountAlias</c>"] Account alias
         /// </summary>
         [JsonPropertyName("accountAlias")]
         public string AccountAlias { get; set; } = string.Empty;
 
         /// <summary>
-        /// The asset this balance is for
+        /// ["<c>asset</c>"] The asset this balance is for
         /// </summary>
         [JsonPropertyName("asset")]
         public string Asset { get; set; } = string.Empty;
 
         /// <summary>
-        /// The total balance of this asset
+        /// ["<c>balance</c>"] The total balance of this asset
         /// </summary>
         [JsonPropertyName("balance")]
         public decimal WalletBalance { get; set; }
 
         /// <summary>
-        /// Crossed wallet balance
+        /// ["<c>crossWalletBalance</c>"] Crossed wallet balance
         /// </summary>
         [JsonPropertyName("crossWalletBalance")]
         public decimal CrossWalletBalance { get; set; }
 
         /// <summary>
-        /// Unrealized profit of crossed positions
+        /// ["<c>crossUnPnl</c>"] Unrealized profit of crossed positions
         /// </summary>
         [JsonPropertyName("crossUnPnl")]
         public decimal? CrossUnrealizedPnl { get; set; }
 
         /// <summary>
-        /// Available balance
+        /// ["<c>availableBalance</c>"] Available balance
         /// </summary>
         [JsonPropertyName("availableBalance")]
         public decimal AvailableBalance { get; set; }
 
         /// <summary>
-        /// Maximum quantity for transfer out
+        /// ["<c>maxWithdrawAmount</c>"] Maximum quantity for transfer out
         /// </summary>
         [JsonPropertyName("maxWithdrawAmount")]
         public decimal MaxWithdrawQuantity { get; set; }
 
         /// <summary>
-        /// Whether the asset can be used as margin in Multi-Assets mode
+        /// ["<c>marginAvailable</c>"] Whether the asset can be used as margin in Multi-Assets mode
         /// </summary>
         [JsonPropertyName("marginAvailable")]
         public bool? MarginAvailable { get; set; }
         /// <summary>
-        /// Last update time
+        /// ["<c>updateTime</c>"] Last update time
         /// </summary>
         [JsonPropertyName("updateTime")]
         public DateTime UpdateTime { get; set; }

@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,12 +8,12 @@ namespace Aster.Net.Objects.Models
     public record AsterOrderResult : AsterOrder
     {
         /// <summary>
-        /// Code
+        /// ["<c>code</c>"] Code
         /// </summary>
         [JsonPropertyName("code")]
         public int Code { get; set; }
         /// <summary>
-        /// Message
+        /// ["<c>msg</c>"] Message
         /// </summary>
         [JsonPropertyName("msg")]
         public string? Message { get; set; }

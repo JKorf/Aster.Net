@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System;
 using System.Text.Json.Serialization;
 
@@ -10,63 +10,63 @@ namespace Aster.Net.Objects.Models
     public record AsterSpotUserTrade
     {
         /// <summary>
-        /// The symbol
+        /// ["<c>symbol</c>"] The symbol
         /// </summary>
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// Is buyer
+        /// ["<c>buyer</c>"] Is buyer
         /// </summary>
         [JsonPropertyName("buyer")]
         public bool Buyer { get; set; }
         /// <summary>
-        /// Paid fee
+        /// ["<c>commission</c>"] Paid fee
         /// </summary>
         [JsonPropertyName("commission")]
         public decimal Fee { get; set; }
 
         /// <summary>
-        /// Asset the fee is paid in
+        /// ["<c>commissionAsset</c>"] Asset the fee is paid in
         /// </summary>
         [JsonPropertyName("commissionAsset")]
         public string FeeAsset { get; set; } = string.Empty;
         /// <summary>
-        /// Trade id
+        /// ["<c>id</c>"] Trade id
         /// </summary>
         [JsonPropertyName("id")]
         public long Id { get; set; }
         /// <summary>
-        /// Is maker
+        /// ["<c>maker</c>"] Is maker
         /// </summary>
         [JsonPropertyName("maker")]
         public bool Maker { get; set; }
         /// <summary>
-        /// Order id
+        /// ["<c>orderId</c>"] Order id
         /// </summary>
         [JsonPropertyName("orderId")]
         public long OrderId { get; set; }
         /// <summary>
-        /// Price
+        /// ["<c>price</c>"] Price
         /// </summary>
         [JsonPropertyName("price")]
         public decimal Price { get; set; }
         /// <summary>
-        /// Quantity
+        /// ["<c>qty</c>"] Quantity
         /// </summary>
         [JsonPropertyName("qty")]
         public decimal Quantity { get; set; }
         /// <summary>
-        /// Order side
+        /// ["<c>side</c>"] Order side
         /// </summary>
         [JsonPropertyName("side")]
         public OrderSide Side { get; set; }
         /// <summary>
-        /// Timestamp
+        /// ["<c>time</c>"] Timestamp
         /// </summary>
         [JsonPropertyName("time")]
         public DateTime Timestamp { get; set; }
         /// <summary>
-        /// Quote quantity
+        /// ["<c>quoteQty</c>"] Quote quantity
         /// </summary>
         [JsonPropertyName("quoteQty")]
         public decimal QuoteQuantity { get; set; }

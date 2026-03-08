@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,7 +8,7 @@ namespace Aster.Net.Objects.Models
     public record AsterMultiAssetMode
     {
         /// <summary>
-        /// Multi asset mode enabled
+        /// ["<c>multiAssetsMargin</c>"] Multi asset mode enabled
         /// </summary>
         [JsonPropertyName("multiAssetsMargin")]
         public bool MultiAssetMode { get; set; }

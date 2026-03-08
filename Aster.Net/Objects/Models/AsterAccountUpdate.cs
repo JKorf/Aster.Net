@@ -1,4 +1,4 @@
-﻿using Aster.Net.Enums;
+using Aster.Net.Enums;
 using System;
 using System.Text.Json.Serialization;
 
@@ -10,12 +10,12 @@ namespace Aster.Net.Objects.Models
     public record AsterAccountUpdate : AsterSocketEvent
     {
         /// <summary>
-        /// The update data
+        /// ["<c>a</c>"] The update data
         /// </summary>
         [JsonPropertyName("a")]
         public AsterAccountUpdateData UpdateData { get; set; } = new AsterAccountUpdateData();
         /// <summary>
-        /// Transaction time
+        /// ["<c>T</c>"] Transaction time
         /// </summary>
         [JsonPropertyName("T")]
         public DateTime TransactionTime { get; set; }
@@ -32,19 +32,19 @@ namespace Aster.Net.Objects.Models
     public record AsterAccountUpdateData
     {
         /// <summary>
-        /// Account update reason type
+        /// ["<c>m</c>"] Account update reason type
         /// </summary>
         [JsonPropertyName("m")]
         public AccountUpdateReason Reason { get; set; }
 
         /// <summary>
-        /// Balances
+        /// ["<c>B</c>"] Balances
         /// </summary>
         [JsonPropertyName("B")]
         public AsterBalanceUpdate[] Balances { get; set; } = Array.Empty<AsterBalanceUpdate>();
 
         /// <summary>
-        /// Positions
+        /// ["<c>P</c>"] Positions
         /// </summary>
         [JsonPropertyName("P")]
         public AsterPositionUpdate[] Positions { get; set; } = Array.Empty<AsterPositionUpdate>();
@@ -56,22 +56,22 @@ namespace Aster.Net.Objects.Models
     public record AsterBalanceUpdate
     {
         /// <summary>
-        /// The asset this balance is for
+        /// ["<c>a</c>"] The asset this balance is for
         /// </summary>
         [JsonPropertyName("a")]
         public string Asset { get; set; } = string.Empty;
         /// <summary>
-        /// The quantity that isn't locked in a trade
+        /// ["<c>wb</c>"] The quantity that isn't locked in a trade
         /// </summary>
         [JsonPropertyName("wb")]
         public decimal WalletBalance { get; set; }
         /// <summary>
-        /// The quantity that is locked in a trade
+        /// ["<c>cw</c>"] The quantity that is locked in a trade
         /// </summary>
         [JsonPropertyName("cw")]
         public decimal CrossWalletBalance { get; set; }
         /// <summary>
-        /// The balance change except PnL and commission
+        /// ["<c>bc</c>"] The balance change except PnL and commission
         /// </summary>
         [JsonPropertyName("bc")]
         public decimal BalanceChange { get; set; }
@@ -83,50 +83,50 @@ namespace Aster.Net.Objects.Models
     public record AsterPositionUpdate
     {
         /// <summary>
-        /// The symbol this balance is for
+        /// ["<c>s</c>"] The symbol this balance is for
         /// </summary>
         [JsonPropertyName("s")]
         public string Symbol { get; set; } = string.Empty;
         /// <summary>
-        /// The quantity of the position
+        /// ["<c>pa</c>"] The quantity of the position
         /// </summary>
         [JsonPropertyName("pa")]
         public decimal Quantity { get; set; }
         /// <summary>
-        /// The entry price
+        /// ["<c>ep</c>"] The entry price
         /// </summary>
         [JsonPropertyName("ep")]
         public decimal EntryPrice { get; set; }
         /// <summary>
-        /// The break even price
+        /// ["<c>bep</c>"] The break even price
         /// </summary>
         [JsonPropertyName("bep")]
         public decimal BreakEvenPrice { get; set; }
         /// <summary>
-        /// The accumulated realized PnL
+        /// ["<c>cr</c>"] The accumulated realized PnL
         /// </summary>
         [JsonPropertyName("cr")]
         public decimal RealizedPnl { get; set; }
         /// <summary>
-        /// The Unrealized PnL
+        /// ["<c>up</c>"] The Unrealized PnL
         /// </summary>
         [JsonPropertyName("up")]
         public decimal UnrealizedPnl { get; set; }
 
         /// <summary>
-        /// The margin type
+        /// ["<c>mt</c>"] The margin type
         /// </summary>
         [JsonPropertyName("mt")]
         public MarginType MarginType { get; set; }
 
         /// <summary>
-        /// The isolated wallet (if isolated position)
+        /// ["<c>iw</c>"] The isolated wallet (if isolated position)
         /// </summary>
         [JsonPropertyName("iw")]
         public decimal IsolatedMargin { get; set; }
 
         /// <summary>
-        /// Position Side
+        /// ["<c>ps</c>"] Position Side
         /// </summary>
         [JsonPropertyName("ps")]
         public PositionSide PositionSide { get; set; }

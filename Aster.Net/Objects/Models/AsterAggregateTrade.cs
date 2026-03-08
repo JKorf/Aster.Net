@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -9,37 +9,37 @@ namespace Aster.Net.Objects.Models
     public record AsterAggregateTrade
     {
         /// <summary>
-        /// The id of this aggregation
+        /// ["<c>a</c>"] The id of this aggregation
         /// </summary>
         [JsonPropertyName("a")]
         public long Id { get; set; }
         /// <summary>
-        /// The price of trades in this aggregation
+        /// ["<c>p</c>"] The price of trades in this aggregation
         /// </summary>
         [JsonPropertyName("p")]
         public decimal Price { get; set; }
         /// <summary>
-        /// The total quantity of trades in the aggregation
+        /// ["<c>q</c>"] The total quantity of trades in the aggregation
         /// </summary>
         [JsonPropertyName("q")]
         public decimal Quantity { get; set; }
         /// <summary>
-        /// The first trade id in this aggregation
+        /// ["<c>f</c>"] The first trade id in this aggregation
         /// </summary>
         [JsonPropertyName("f")]
         public long FirstTradeId { get; set; }
         /// <summary>
-        /// The last trade id in this aggregation
+        /// ["<c>l</c>"] The last trade id in this aggregation
         /// </summary>
         [JsonPropertyName("l")]
         public long LastTradeId { get; set; }
         /// <summary>
-        /// The timestamp of the trades
+        /// ["<c>T</c>"] The timestamp of the trades
         /// </summary>
         [JsonPropertyName("T")]
         public DateTime TradeTime { get; set; }
         /// <summary>
-        /// Whether the buyer was the maker
+        /// ["<c>m</c>"] Whether the buyer was the maker
         /// </summary>
         [JsonPropertyName("m")]
         public bool BuyerIsMaker { get; set; }

@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
 {
@@ -8,22 +8,22 @@ namespace Aster.Net.Objects.Models
     public record AsterSpotTicker : AsterTicker
     {
         /// <summary>
-        /// The current best bid price
+        /// ["<c>bidPrice</c>"] The current best bid price
         /// </summary>
         [JsonPropertyName("bidPrice")]
         public decimal BestBidPrice { get; set; }
         /// <summary>
-        /// The current best bid quantity
+        /// ["<c>bidQty</c>"] The current best bid quantity
         /// </summary>
         [JsonPropertyName("bidQty")]
         public decimal BestBidQuantity { get; set; }
         /// <summary>
-        /// The current best ask price
+        /// ["<c>askPrice</c>"] The current best ask price
         /// </summary>
         [JsonPropertyName("askPrice")]
         public decimal BestAskPrice { get; set; }
         /// <summary>
-        /// The current best ask quantity
+        /// ["<c>askQty</c>"] The current best ask quantity
         /// </summary>
         [JsonPropertyName("askQty")]
         public decimal BestAskQuantity { get; set; }

@@ -1,4 +1,4 @@
-﻿using Aster.Net.Converters;
+using Aster.Net.Converters;
 using Aster.Net.Enums;
 using System.Text.Json.Serialization;
 
@@ -11,7 +11,7 @@ namespace Aster.Net.Objects
     public record AsterSymbolFilter
     {
         /// <summary>
-        /// The type of this filter
+        /// ["<c>filterType</c>"] The type of this filter
         /// </summary>
         [JsonPropertyName("filterType")]
         public SymbolFilterType FilterType { get; set; }
