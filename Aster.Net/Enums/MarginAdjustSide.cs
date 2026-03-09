@@ -11,12 +11,12 @@ namespace Aster.Net.Enums
     public enum MarginAdjustSide
     {
         /// <summary>
-        /// Add
+        /// ["<c>1</c>"] Add
         /// </summary>
         [Map("1")]
         Add,
         /// <summary>
-        /// Remove
+        /// ["<c>2</c>"] Remove
         /// </summary>
         [Map("2")]
         Remove

@@ -11,27 +11,27 @@ namespace Aster.Net.Enums
     public enum ExecutionType
     {
         /// <summary>
-        /// New
+        /// ["<c>NEW</c>"] New
         /// </summary>
         [Map("NEW")]
         New,
         /// <summary>
-        /// Canceled
+        /// ["<c>CANCELED</c>"] Canceled
         /// </summary>
         [Map("CANCELED")]
         Canceled,
         /// <summary>
-        /// Liquidation
+        /// ["<c>CALCULATED</c>"] Liquidation
         /// </summary>
         [Map("CALCULATED")]
         Liquidation,
         /// <summary>
-        /// Expired
+        /// ["<c>EXPIRED</c>"] Expired
         /// </summary>
         [Map("EXPIRED")]
         Expired,
         /// <summary>
-        /// Trade
+        /// ["<c>Trade</c>"] Trade
         /// </summary>
         [Map("Trade")]
         Trade

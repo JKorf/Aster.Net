@@ -11,12 +11,12 @@ namespace Aster.Net.Enums
     public enum AutoCloseType
     {
         /// <summary>
-        /// Liquidation order
+        /// ["<c>LIQUIDATION</c>"] Liquidation order
         /// </summary>
         [Map("LIQUIDATION")]
         Liquidation,
         /// <summary>
-        /// Auto deleverage order
+        /// ["<c>ADL</c>"] Auto deleverage order
         /// </summary>
         [Map("ADL")]
         Adl

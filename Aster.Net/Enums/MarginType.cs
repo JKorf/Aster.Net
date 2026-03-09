@@ -11,12 +11,12 @@ namespace Aster.Net.Enums
     public enum MarginType
     {
         /// <summary>
-        /// Cross margin
+        /// ["<c>CROSSED</c>"] Cross margin
         /// </summary>
         [Map("CROSSED")]
         Cross,
         /// <summary>
-        /// Isolated margin
+        /// ["<c>ISOLATED</c>"] Isolated margin
         /// </summary>
         [Map("ISOLATED")]
         Isolated

@@ -11,17 +11,17 @@ namespace Aster.Net.Enums
     public enum NetworkType
     {
         /// <summary>
-        /// Ethereum
+        /// ["<c>1</c>"] Ethereum
         /// </summary>
         [Map("1")]
         Ethereum,
         /// <summary>
-        /// Binance chain
+        /// ["<c>56</c>"] Binance chain
         /// </summary>
         [Map("56")]
         BSC,
         /// <summary>
-        /// Arbitrum
+        /// ["<c>42161</c>"] Arbitrum
         /// </summary>
         [Map("42161")]
         Arbi,

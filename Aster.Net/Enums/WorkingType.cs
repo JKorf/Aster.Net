@@ -11,12 +11,12 @@ namespace Aster.Net.Enums
     public enum WorkingType
     {
         /// <summary>
-        /// Mark price
+        /// ["<c>MARK_PRICE</c>"] Mark price
         /// </summary>
         [Map("MARK_PRICE")]
         MarkPrice,
         /// <summary>
-        /// Contract price
+        /// ["<c>CONTRACT_PRICE</c>"] Contract price
         /// </summary>
         [Map("CONTRACT_PRICE")]
         ContractPrice

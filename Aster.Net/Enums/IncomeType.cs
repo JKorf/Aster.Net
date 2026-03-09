@@ -11,47 +11,47 @@ namespace Aster.Net.Enums
     public enum IncomeType
     {
         /// <summary>
-        /// Transfer
+        /// ["<c>TRANSFER</c>"] Transfer
         /// </summary>
         [Map("TRANSFER")]
         Transfer,
         /// <summary>
-        /// Welcome bonus
+        /// ["<c>WELCOME_BONUS</c>"] Welcome bonus
         /// </summary>
         [Map("WELCOME_BONUS")]
         WelcomeBonus,
         /// <summary>
-        /// Realized profit and loss
+        /// ["<c>REALIZED_PNL</c>"] Realized profit and loss
         /// </summary>
         [Map("REALIZED_PNL")]
         RealizedPnl,
         /// <summary>
-        /// Funding fee
+        /// ["<c>FUNDING_FEE</c>"] Funding fee
         /// </summary>
         [Map("FUNDING_FEE")]
         FundingFee,
         /// <summary>
-        /// Commission
+        /// ["<c>COMMISSION</c>"] Commission
         /// </summary>
         [Map("COMMISSION")]
         Commission,
         /// <summary>
-        /// Insurance clear
+        /// ["<c>INSURANCE_CLEAR</c>"] Insurance clear
         /// </summary>
         [Map("INSURANCE_CLEAR")]
         InsuranceClear,
         /// <summary>
-        /// Market merchant return reward
+        /// ["<c>MARKET_MERCHANT_RETURN_REWARD</c>"] Market merchant return reward
         /// </summary>
         [Map("MARKET_MERCHANT_RETURN_REWARD")]
         MarketMerchantReturnReward,
         /// <summary>
-        /// Transfer future to spot account
+        /// ["<c>TRANSFER_FUTURE_TO_SPOT</c>"] Transfer future to spot account
         /// </summary>
         [Map("TRANSFER_FUTURE_TO_SPOT")]
         TransferFutureToSpotAccount,
         /// <summary>
-        /// Transfer spot to future account
+        /// ["<c>TRANSFER_SPOT_TO_FUTURE</c>"] Transfer spot to future account
         /// </summary>
         [Map("TRANSFER_SPOT_TO_FUTURE")]
         TransfereSpotToFuturesAccount,

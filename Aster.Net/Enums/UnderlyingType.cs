@@ -11,17 +11,17 @@ namespace Aster.Net.Enums
     public enum UnderlyingType
     {
         /// <summary>
-        /// Coin
+        /// ["<c>COIN</c>"] Coin
         /// </summary>
         [Map("COIN")]
         Coin,
         /// <summary>
-        /// Index
+        /// ["<c>INDEX</c>"] Index
         /// </summary>
         [Map("INDEX")]
         Index,
         /// <summary>
-        /// Pre-market
+        /// ["<c>PREMARKET</c>"] Pre-market
         /// </summary>
         [Map("PREMARKET")]
         PreMarket

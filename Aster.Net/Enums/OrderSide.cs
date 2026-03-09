@@ -11,12 +11,12 @@ namespace Aster.Net.Enums
     public enum OrderSide
     {
         /// <summary>
-        /// Buy order
+        /// ["<c>BUY</c>"] Buy order
         /// </summary>
         [Map("BUY")]
         Buy,
         /// <summary>
-        /// Sell order
+        /// ["<c>SELL</c>"] Sell order
         /// </summary>
         [Map("SELL")]
         Sell

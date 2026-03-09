@@ -11,77 +11,77 @@ namespace Aster.Net.Enums
     public enum AccountUpdateReason
     {
         /// <summary>
-        /// Deposit
+        /// ["<c>DEPOSIT</c>"] Deposit
         /// </summary>
         [Map("DEPOSIT")]
         Deposit,
         /// <summary>
-        /// Withdraw
+        /// ["<c>WITHDRAW</c>"] Withdraw
         /// </summary>
         [Map("WITHDRAW")]
         Withdraw,
         /// <summary>
-        /// Order
+        /// ["<c>ORDER</c>"] Order
         /// </summary>
         [Map("ORDER")]
         Order,
         /// <summary>
-        /// Funding fee
+        /// ["<c>FUNDING_FEE</c>"] Funding fee
         /// </summary>
         [Map("FUNDING_FEE")]
         FundingFee,
         /// <summary>
-        /// Withdraw reject
+        /// ["<c>WITHDRAW_REJECT</c>"] Withdraw reject
         /// </summary>
         [Map("WITHDRAW_REJECT")]
         WithdrawReject,
         /// <summary>
-        /// Adjustment
+        /// ["<c>ADJUSTMENT</c>"] Adjustment
         /// </summary>
         [Map("ADJUSTMENT")]
         Adjustment,
         /// <summary>
-        /// Insurance clear
+        /// ["<c>INSURANCE_CLEAR</c>"] Insurance clear
         /// </summary>
         [Map("INSURANCE_CLEAR")]
         InsuranceClear,
         /// <summary>
-        /// Admin deposit
+        /// ["<c>ADMIN_DEPOSIT</c>"] Admin deposit
         /// </summary>
         [Map("ADMIN_DEPOSIT")]
         AdminDeposit,
         /// <summary>
-        /// Admin withdraw
+        /// ["<c>ADMIN_WITHDRAW</c>"] Admin withdraw
         /// </summary>
         [Map("ADMIN_WITHDRAW")]
         AdminWithdraw,
         /// <summary>
-        /// Margin transfer
+        /// ["<c>MARGIN_TRANSFER</c>"] Margin transfer
         /// </summary>
         [Map("MARGIN_TRANSFER")]
         MarginTransfer,
         /// <summary>
-        /// Margin type change
+        /// ["<c>MARGIN_TYPE_CHANGE</c>"] Margin type change
         /// </summary>
         [Map("MARGIN_TYPE_CHANGE")]
         MarginTypeChange,
         /// <summary>
-        /// Asset transfer
+        /// ["<c>ASSET_TRANSFER</c>"] Asset transfer
         /// </summary>
         [Map("ASSET_TRANSFER")]
         AssetTransfer,
         /// <summary>
-        /// Options premium fee
+        /// ["<c>OPTIONS_PREMIUM_FEE</c>"] Options premium fee
         /// </summary>
         [Map("OPTIONS_PREMIUM_FEE")]
         OptionsPremiumFee,
         /// <summary>
-        /// Options settle profit
+        /// ["<c>OPTIONS_SETTLE_PROFIT</c>"] Options settle profit
         /// </summary>
         [Map("OPTIONS_SETTLE_PROFIT")]
         OptionsSettleProfit,
         /// <summary>
-        /// Auto exchange
+        /// ["<c>AUTO_EXCHANGE</c>"] Auto exchange
         /// </summary>
         [Map("AUTO_EXCHANGE")]
         AutoExchange,

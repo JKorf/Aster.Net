@@ -11,17 +11,17 @@ namespace Aster.Net.Enums
     public enum PositionSide
     {
         /// <summary>
-        /// One way mode
+        /// ["<c>BOTH</c>"] One way mode
         /// </summary>
         [Map("BOTH")]
         Both,
         /// <summary>
-        /// Long
+        /// ["<c>LONG</c>"] Long
         /// </summary>
         [Map("LONG")]
         Long,
         /// <summary>
-        /// Short
+        /// ["<c>SHORT</c>"] Short
         /// </summary>
         [Map("SHORT")]
         Short

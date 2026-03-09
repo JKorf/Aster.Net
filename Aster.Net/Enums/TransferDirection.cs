@@ -11,12 +11,12 @@ namespace Aster.Net.Enums
     public enum TransferDirection
     {
         /// <summary>
-        /// Futures to spot
+        /// ["<c>FUTURE_SPOT</c>"] Futures to spot
         /// </summary>
         [Map("FUTURE_SPOT")]
         FuturesToSpot,
         /// <summary>
-        /// Spot to futures
+        /// ["<c>SPOT_FUTURE</c>"] Spot to futures
         /// </summary>
         [Map("SPOT_FUTURE")]
         SpotToFutures
