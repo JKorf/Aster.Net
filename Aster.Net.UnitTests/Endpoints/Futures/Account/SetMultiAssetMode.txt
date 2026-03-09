@@ -1,5 +1,5 @@
 POST
-/fapi/v1/multiAssetsMargin
+/fapi/v3/multiAssetsMargin
 true
 {
 	"code": 200,

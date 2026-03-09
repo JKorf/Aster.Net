@@ -1,5 +1,5 @@
 GET
-/fapi/v1/klines
+/fapi/v3/klines
 false
 [
   [

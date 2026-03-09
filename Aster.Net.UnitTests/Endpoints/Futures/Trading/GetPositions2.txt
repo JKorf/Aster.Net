@@ -1,5 +1,5 @@
 GET
-/fapi/v2/positionRisk
+/fapi/v3/positionRisk
 true
 [
   	{

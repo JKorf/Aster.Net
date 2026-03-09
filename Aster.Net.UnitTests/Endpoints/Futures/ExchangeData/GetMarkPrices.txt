@@ -1,5 +1,5 @@
 GET
-/fapi/v1/premiumIndex
+/fapi/v3/premiumIndex
 false
 [
 	{

@@ -1,5 +1,5 @@
 GET
-/fapi/v1/adlQuantile
+/fapi/v3/adlQuantile
 true
 [
 	{

@@ -1,5 +1,5 @@
 GET
-/fapi/v4/account
+/fapi/v3/account
 true
 {
    "feeTier": 0, 

@@ -73,7 +73,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("newOrderRespType", "RESULT");
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v1/order", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterOrder>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -122,7 +122,7 @@ namespace Aster.Net.Clients.FuturesApi
             
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v1/batchOrders", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/batchOrders", AsterExchange.RateLimiter.RestIp, 5, true);
             var response = await _baseClient.SendAsync<AsterOrderResult[]>(request, parameters, ct).ConfigureAwait(false);
             if (!response.Success)
                 return response.As<CallResult<AsterOrder>[]>(default);
@@ -161,7 +161,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("origClientOrderId", clientOrderId);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v1/order", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterOrder>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -185,7 +185,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("origClientOrderId", clientOrderId);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v1/order", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterOrder>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -205,7 +205,7 @@ namespace Aster.Net.Clients.FuturesApi
             };
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v1/allOpenOrders", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/allOpenOrders", AsterExchange.RateLimiter.RestIp, 1, true);
             var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
             if (!result)
                 return result.AsDataless();
@@ -244,7 +244,7 @@ namespace Aster.Net.Clients.FuturesApi
 
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v1/batchOrders", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/batchOrders", AsterExchange.RateLimiter.RestIp, 1, true);
             var response = await _baseClient.SendAsync<AsterOrderResult[]>(request, parameters, ct).ConfigureAwait(false);
 
             if (!response.Success)
@@ -275,7 +275,7 @@ namespace Aster.Net.Clients.FuturesApi
             };
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v1/countdownCancelAll", AsterExchange.RateLimiter.RestIp, 10, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/countdownCancelAll", AsterExchange.RateLimiter.RestIp, 10, true);
             return await _baseClient.SendAsync<AsterCountDownResult>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -294,7 +294,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
             var weight = symbol == null ? 40 : 1;
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v1/openOrders", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/openOrders", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterOrder[]>(request, parameters, ct, weight: weight).ConfigureAwait(false);
         }
 
@@ -320,7 +320,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("limit", limit);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v1/allOrders", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/allOrders", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterOrder[]>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -335,7 +335,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("symbol", symbol);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v2/positionRisk", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v3/positionRisk", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterPosition[]>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -355,7 +355,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("limit", limit);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v1/userTrades", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v3/userTrades", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterUserTrade[]>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -376,7 +376,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("limit", limit);
 
             var weight = symbol == null ? 50 : 20;
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v1/forceOrders", AsterExchange.RateLimiter.RestIp, weight, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/forceOrders", AsterExchange.RateLimiter.RestIp, weight, true);
             return await _baseClient.SendAsync<AsterOrder[]>(request, parameters, ct, weight).ConfigureAwait(false);
         }
 

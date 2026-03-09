@@ -1,5 +1,5 @@
 GET
-/fapi/v1/income
+/fapi/v3/income
 true
 [
 	{

@@ -1,5 +1,5 @@
 POST
-/fapi/v1/positionSide/dual
+/fapi/v3/positionSide/dual
 true
 {
 	"code": 200,

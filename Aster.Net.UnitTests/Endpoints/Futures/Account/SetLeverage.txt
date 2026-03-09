@@ -1,5 +1,5 @@
 POST
-/fapi/v1/leverage
+/fapi/v3/leverage
 true
 {
  	"leverage": 21,
