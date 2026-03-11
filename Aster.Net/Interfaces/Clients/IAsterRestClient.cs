@@ -21,6 +21,11 @@ namespace Aster.Net.Interfaces.Clients
         /// </summary>
         /// <see cref="IAsterRestClientFuturesApi"/>
         public IAsterRestClientFuturesApi FuturesApi { get; }
+        /// <summary>
+        /// Futures V3 API endpoints
+        /// </summary>
+        /// <see cref="IAsterRestClientFuturesV3Api"/>
+        public IAsterRestClientFuturesV3Api FuturesV3Api { get; }
 
         /// <summary>
         /// Update specific options

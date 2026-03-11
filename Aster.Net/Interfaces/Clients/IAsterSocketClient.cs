@@ -23,6 +23,12 @@ namespace Aster.Net.Interfaces.Clients
         public IAsterSocketClientFuturesApi FuturesApi { get; }
 
         /// <summary>
+        /// Futures V3 API endpoints
+        /// </summary>
+        /// <see cref="IAsterSocketClientFuturesV3Api"/>
+        public IAsterSocketClientFuturesV3Api FuturesV3Api { get; }
+
+        /// <summary>
         /// Set the API credentials for this client. All Api clients in this client will use the new credentials, regardless of earlier set options.
         /// </summary>
         /// <param name="credentials">The credentials to set</param>

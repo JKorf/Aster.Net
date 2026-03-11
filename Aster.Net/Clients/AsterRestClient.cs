@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System;
-using CryptoExchange.Net.Authentication;
 using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net.Clients;
@@ -11,6 +10,7 @@ using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Clients.FuturesApi;
 using Aster.Net.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
+using CryptoExchange.Net.Authentication;
 
 namespace Aster.Net.Clients
 {
@@ -23,6 +23,8 @@ namespace Aster.Net.Clients
         public IAsterRestClientSpotApi SpotApi { get; }
         /// <inheritdoc />
         public IAsterRestClientFuturesApi FuturesApi { get; }
+        /// <inheritdoc />
+        public IAsterRestClientFuturesV3Api FuturesV3Api { get; }
 
         #endregion
 
@@ -49,6 +51,7 @@ namespace Aster.Net.Clients
             
             SpotApi = AddApiClient(new AsterRestClientSpotApi(_logger, httpClient, options.Value));
             FuturesApi = AddApiClient(new AsterRestClientFuturesApi(_logger, httpClient, options.Value));
+            FuturesV3Api = AddApiClient(new AsterRestClientFuturesV3Api(this, _logger, httpClient, options.Value));
         }
 
         #endregion
@@ -58,6 +61,7 @@ namespace Aster.Net.Clients
         {
             SpotApi.SetOptions(options);
             FuturesApi.SetOptions(options);
+            FuturesV3Api.SetOptions(options);
         }
 
         /// <summary>
@@ -74,6 +78,7 @@ namespace Aster.Net.Clients
         {   
             SpotApi.SetApiCredentials(credentials);
             FuturesApi.SetApiCredentials(credentials);
+            FuturesV3Api.SetApiCredentials(credentials);
         }
     }
 }

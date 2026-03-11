@@ -9,7 +9,7 @@ namespace Aster.Net
 {
     internal class AsterAuthenticationProvider : AuthenticationProvider
     {
-        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Hmac, ApiCredentialsType.RsaXml, ApiCredentialsType.RsaPem];
+        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Hmac, ApiCredentialsType.Rsa];
 
         public AsterAuthenticationProvider(ApiCredentials credentials) : base(credentials)
         {
@@ -18,7 +18,7 @@ namespace Aster.Net
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
             request.Headers ??= new Dictionary<string, string>();
-            request.Headers.Add("X-MBX-APIKEY", ApiKey);
+            request.Headers.Add("X-MBX-APIKEY", Credential.PublicIdentifier);
 
             if (!request.Authenticated)
                 return;
@@ -45,7 +45,7 @@ namespace Aster.Net
 
         private string Sign(string data)
         {
-            if (_credentials.CredentialType == ApiCredentialsType.Hmac)
+            if (Credential.CredentialType == ApiCredentialsType.Hmac)
                 return SignHMACSHA256(data);
             else
                 return SignRSASHA256(Encoding.ASCII.GetBytes(data), SignOutputType.Base64);

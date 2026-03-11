@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Aster.Net.Converters
 {
+    [JsonSerializable(typeof(IDictionary<string, object>))]
     [JsonSerializable(typeof(SymbolFilterType))]
     [JsonSerializable(typeof(AsterServerTime))]
     [JsonSerializable(typeof(AsterExchangeInfo))]
