@@ -6,7 +6,7 @@ namespace Aster.Net.Objects.Options
     /// <summary>
     /// Options for the AsterRestClient
     /// </summary>
-    public class AsterRestOptions : RestExchangeOptions<AsterEnvironment>
+    public class AsterRestOptions : RestExchangeOptions<AsterEnvironment, AsterCredentials>
     {
         /// <summary>
         /// Default options for new clients
@@ -33,12 +33,12 @@ namespace Aster.Net.Objects.Options
         /// <summary>
         /// Spot API options
         /// </summary>
-        public RestApiOptions SpotOptions { get; private set; } = new RestApiOptions();
+        public RestApiOptions<AsterCredentials> SpotOptions { get; private set; } = new RestApiOptions<AsterCredentials>();
 
         /// <summary>
         /// Futures API options
         /// </summary>
-        public RestApiOptions FuturesOptions { get; private set; } = new RestApiOptions();
+        public RestApiOptions<AsterCredentials> FuturesOptions { get; private set; } = new RestApiOptions<AsterCredentials>();
 
         internal AsterRestOptions Set(AsterRestOptions targetOptions)
         {

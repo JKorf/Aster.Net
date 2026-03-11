@@ -1,21 +1,31 @@
 ﻿using CryptoExchange.Net.Authentication;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Aster.Net.Objects
 {
-    public class AsterECDSACredential : CredentialPair
+    public class AsterCredentials : ApiCredentials
     {
-        public string PublicKey { get; set; }
-        public string SignerKey { get; set; }
-        public string PrivateKey { get; set; }
 
-        public override ApiCredentialsType CredentialType => ApiCredentialsType.Ecdsa;
-        public override string PublicIdentifier => PublicKey;
-
-        public AsterECDSACredential(string publicKey, string signerKey, string privateKey)
+        public AsterCredentials(HMACCredential hmacCredential)
+            : base(hmacCredential) 
         {
-            PublicKey = publicKey;
-            SignerKey = signerKey;
-            PrivateKey = privateKey;
         }
+
+        public AsterCredentials(AsterECDSACredential ecdsaCredential)
+            : base(ecdsaCredential)
+        {
+        }
+
+        public AsterCredentials(HMACCredential? hmacCredential, AsterECDSACredential? ecdsaCredential)
+            : base(hmacCredential, ecdsaCredential)
+        {
+        }
+
+        public override ApiCredentials Copy() => 
+            new AsterCredentials(GetCredential<HMACCredential>(), GetCredential<AsterECDSACredential>());
     }
 }

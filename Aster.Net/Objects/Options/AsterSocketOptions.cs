@@ -5,7 +5,7 @@ namespace Aster.Net.Objects.Options
     /// <summary>
     /// Options for the AsterSocketClient
     /// </summary>
-    public class AsterSocketOptions : SocketExchangeOptions<AsterEnvironment>
+    public class AsterSocketOptions : SocketExchangeOptions<AsterEnvironment, AsterCredentials>
     {
         /// <summary>
         /// Default options for new clients
@@ -27,12 +27,12 @@ namespace Aster.Net.Objects.Options
         /// <summary>
         /// Spot API options
         /// </summary>
-        public SocketApiOptions SpotOptions { get; private set; } = new SocketApiOptions();
+        public SocketApiOptions<AsterCredentials> SpotOptions { get; private set; } = new SocketApiOptions<AsterCredentials>();
 
         /// <summary>
         /// Futures API options
         /// </summary>
-        public SocketApiOptions FuturesOptions { get; private set; } = new SocketApiOptions();
+        public SocketApiOptions<AsterCredentials> FuturesOptions { get; private set; } = new SocketApiOptions<AsterCredentials>();
 
 
         internal AsterSocketOptions Set(AsterSocketOptions targetOptions)
