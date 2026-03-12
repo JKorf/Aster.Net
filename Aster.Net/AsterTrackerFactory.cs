@@ -1,6 +1,7 @@
 using Aster.Net.Clients;
 using Aster.Net.Interfaces;
 using Aster.Net.Interfaces.Clients;
+using Aster.Net.Objects;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Trackers.Klines;
@@ -121,7 +122,7 @@ namespace Aster.Net
         }
 
         /// <inheritdoc />
-        public IUserSpotDataTracker CreateUserSpotDataTracker(string userIdentifier, ApiCredentials credentials, SpotUserDataTrackerConfig? config = null, AsterEnvironment? environment = null)
+        public IUserSpotDataTracker CreateUserSpotDataTracker(string userIdentifier, AsterCredentials credentials, SpotUserDataTrackerConfig? config = null, AsterEnvironment? environment = null)
         {
             var clientProvider = _serviceProvider?.GetRequiredService<IAsterUserClientProvider>() ?? new AsterUserClientProvider();
             var restClient = clientProvider.GetRestClient(userIdentifier, credentials, environment);
@@ -150,7 +151,7 @@ namespace Aster.Net
         }
 
         /// <inheritdoc />
-        public IUserFuturesDataTracker CreateUserFuturesDataTracker(string userIdentifier, ApiCredentials credentials, FuturesUserDataTrackerConfig? config = null, AsterEnvironment? environment = null)
+        public IUserFuturesDataTracker CreateUserFuturesDataTracker(string userIdentifier, AsterCredentials credentials, FuturesUserDataTrackerConfig? config = null, AsterEnvironment? environment = null)
         {
             var clientProvider = _serviceProvider?.GetRequiredService<IAsterUserClientProvider>() ?? new AsterUserClientProvider();
             var restClient = clientProvider.GetRestClient(userIdentifier, credentials, environment);

@@ -11,11 +11,12 @@ using Aster.Net.Clients.FuturesApi;
 using Aster.Net.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using CryptoExchange.Net.Authentication;
+using Aster.Net.Objects;
 
 namespace Aster.Net.Clients
 {
     /// <inheritdoc cref="IAsterRestClient" />
-    public class AsterRestClient : BaseRestClient, IAsterRestClient
+    public class AsterRestClient : BaseRestClient<AsterEnvironment, AsterCredentials>, IAsterRestClient
     {
         #region Api clients
 
@@ -56,14 +57,6 @@ namespace Aster.Net.Clients
 
         #endregion
 
-        /// <inheritdoc />
-        public void SetOptions(UpdateOptions options)
-        {
-            SpotApi.SetOptions(options);
-            FuturesApi.SetOptions(options);
-            FuturesV3Api.SetOptions(options);
-        }
-
         /// <summary>
         /// Set the default options to be used when creating new clients
         /// </summary>
@@ -71,14 +64,6 @@ namespace Aster.Net.Clients
         public static void SetDefaultOptions(Action<AsterRestOptions> optionsDelegate)
         {
             AsterRestOptions.Default = ApplyOptionsDelegate(optionsDelegate);
-        }
-
-        /// <inheritdoc />
-        public void SetApiCredentials(ApiCredentials credentials)
-        {   
-            SpotApi.SetApiCredentials(credentials);
-            FuturesApi.SetApiCredentials(credentials);
-            FuturesV3Api.SetApiCredentials(credentials);
         }
     }
 }

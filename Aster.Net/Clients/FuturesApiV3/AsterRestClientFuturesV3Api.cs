@@ -1,5 +1,6 @@
 using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Objects;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
@@ -22,7 +23,7 @@ using System.Threading.Tasks;
 namespace Aster.Net.Clients.FuturesApi
 {
     /// <inheritdoc cref="IAsterRestClientFuturesV3Api" />
-    internal partial class AsterRestClientFuturesV3Api : RestApiClient, IAsterRestClientFuturesV3Api
+    internal partial class AsterRestClientFuturesV3Api : RestApiClient<AsterEnvironment, AsterCredentials>, IAsterRestClientFuturesV3Api
     {
         #region fields 
         protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.FuturesErrors);
@@ -44,7 +45,11 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region constructor/destructor
         internal AsterRestClientFuturesV3Api(AsterRestClient baseClient, ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger, httpClient, options.Environment.FuturesRestClientAddress, options, options.FuturesOptions)
+            : base(logger,
+                  httpClient,
+                  options.Environment.FuturesRestClientAddress,
+                  options,
+                  options.FuturesOptions)
         {
             Account = new AsterRestClientFuturesV3ApiAccount(this);
             ExchangeData = new AsterRestClientFuturesV3ApiExchangeData(logger, this);
@@ -65,7 +70,7 @@ namespace Aster.Net.Clients.FuturesApi
         protected override IMessageSerializer CreateSerializer() => new SystemTextJsonMessageSerializer(AsterExchange._serializerContext);
 
         /// <inheritdoc />
-        protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
+        protected override AuthenticationProvider<AsterCredentials> CreateAuthenticationProvider(AsterCredentials credentials)
             => new AsterFuturesV3AuthenticationProvider(credentials);
 
         internal async Task<WebCallResult> SendAsync(RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null)

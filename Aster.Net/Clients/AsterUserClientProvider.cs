@@ -1,4 +1,5 @@
 using Aster.Net.Interfaces.Clients;
+using Aster.Net.Objects;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net.Authentication;
 using Microsoft.Extensions.Logging;
@@ -51,7 +52,7 @@ namespace Aster.Net.Clients
         }
 
         /// <inheritdoc />
-        public void InitializeUserClient(string userIdentifier, ApiCredentials credentials, AsterEnvironment? environment = null)
+        public void InitializeUserClient(string userIdentifier, AsterCredentials credentials, AsterEnvironment? environment = null)
         {
             CreateRestClient(userIdentifier, credentials, environment);
             CreateSocketClient(userIdentifier, credentials, environment);
@@ -65,7 +66,7 @@ namespace Aster.Net.Clients
         }
 
         /// <inheritdoc />
-        public IAsterRestClient GetRestClient(string userIdentifier, ApiCredentials? credentials = null, AsterEnvironment? environment = null)
+        public IAsterRestClient GetRestClient(string userIdentifier, AsterCredentials? credentials = null, AsterEnvironment? environment = null)
         {
             if (!_restClients.TryGetValue(userIdentifier, out var client) || client.Disposed)
                 client = CreateRestClient(userIdentifier, credentials, environment);
@@ -74,7 +75,7 @@ namespace Aster.Net.Clients
         }
 
         /// <inheritdoc />
-        public IAsterSocketClient GetSocketClient(string userIdentifier, ApiCredentials? credentials = null, AsterEnvironment? environment = null)
+        public IAsterSocketClient GetSocketClient(string userIdentifier, AsterCredentials? credentials = null, AsterEnvironment? environment = null)
         {
             if (!_socketClients.TryGetValue(userIdentifier, out var client) || client.Disposed)
                 client = CreateSocketClient(userIdentifier, credentials, environment);
@@ -82,7 +83,7 @@ namespace Aster.Net.Clients
             return client;
         }
 
-        private IAsterRestClient CreateRestClient(string userIdentifier, ApiCredentials? credentials, AsterEnvironment? environment)
+        private IAsterRestClient CreateRestClient(string userIdentifier, AsterCredentials? credentials, AsterEnvironment? environment)
         {
             var clientRestOptions = SetRestEnvironment(environment);
             var client = new AsterRestClient(_httpClient, _loggerFactory, clientRestOptions);
@@ -94,7 +95,7 @@ namespace Aster.Net.Clients
             return client;
         }
 
-        private IAsterSocketClient CreateSocketClient(string userIdentifier, ApiCredentials? credentials, AsterEnvironment? environment)
+        private IAsterSocketClient CreateSocketClient(string userIdentifier, AsterCredentials? credentials, AsterEnvironment? environment)
         {
             var clientSocketOptions = SetSocketEnvironment(environment);
             var client = new AsterSocketClient(clientSocketOptions!, _loggerFactory);

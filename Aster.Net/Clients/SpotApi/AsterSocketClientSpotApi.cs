@@ -1,6 +1,7 @@
 using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Objects;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using Aster.Net.Objects.Options;
@@ -34,7 +35,7 @@ namespace Aster.Net.Clients.SpotApi
     /// <summary>
     /// Client providing access to the Aster Spot websocket Api
     /// </summary>
-    internal partial class AsterSocketClientSpotApi : SocketApiClient, IAsterSocketClientSpotApi
+    internal partial class AsterSocketClientSpotApi : SocketApiClient<AsterEnvironment, AsterCredentials>, IAsterSocketClientSpotApi
     {
         #region fields
         protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
@@ -59,8 +60,10 @@ namespace Aster.Net.Clients.SpotApi
         public override ISocketMessageHandler CreateMessageConverter(WebSocketMessageType messageType)
             => new AsterSocketSpotMessageConverter();
         /// <inheritdoc />
-        protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
-            => new AsterAuthenticationProvider(credentials);
+        protected override AuthenticationProvider<AsterCredentials> CreateAuthenticationProvider(AsterCredentials credentials)
+            => credentials.CredentialType == ApiCredentialsType.Hmac
+                ? new AsterHmacAuthenticationProvider(credentials)
+                : new AsterRsaAuthenticationProvider(credentials);
 
         #region Aggregate Trade Streams
 

@@ -10,11 +10,12 @@ using Aster.Net.Clients.FuturesApi;
 using Aster.Net.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using CryptoExchange.Net.Authentication;
+using Aster.Net.Objects;
 
 namespace Aster.Net.Clients
 {
     /// <inheritdoc cref="IAsterSocketClient" />
-    public class AsterSocketClient : BaseSocketClient, IAsterSocketClient
+    public class AsterSocketClient : BaseSocketClient<AsterEnvironment, AsterCredentials>, IAsterSocketClient
     {
         #region fields
         #endregion
@@ -55,30 +56,5 @@ namespace Aster.Net.Clients
             FuturesV3Api = AddApiClient(new AsterSocketClientFuturesV3Api(_logger, options.Value));
         }
         #endregion
-
-        /// <inheritdoc />
-        public void SetOptions(UpdateOptions options)
-        {
-            SpotApi.SetOptions(options);
-            FuturesApi.SetOptions(options);
-            FuturesV3Api.SetOptions(options);
-        }
-
-        /// <summary>
-        /// Set the default options to be used when creating new clients
-        /// </summary>
-        /// <param name="optionsDelegate">Option configuration delegate</param>
-        public static void SetDefaultOptions(Action<AsterSocketOptions> optionsDelegate)
-        {
-            AsterSocketOptions.Default = ApplyOptionsDelegate(optionsDelegate);
-        }
-
-        /// <inheritdoc />
-        public void SetApiCredentials(ApiCredentials credentials)
-        {
-            SpotApi.SetApiCredentials(credentials);
-            FuturesApi.SetApiCredentials(credentials);
-            FuturesV3Api.SetApiCredentials(credentials);
-        }
     }
 }

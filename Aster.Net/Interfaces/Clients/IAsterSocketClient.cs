@@ -1,5 +1,6 @@
 using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Objects;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Interfaces.Clients;
 
@@ -8,7 +9,7 @@ namespace Aster.Net.Interfaces.Clients
     /// <summary>
     /// Client for accessing the Aster websocket API
     /// </summary>
-    public interface IAsterSocketClient : ISocketClient
+    public interface IAsterSocketClient : ISocketClient<AsterCredentials>
     {
         /// <summary>
         /// Spot API endpoints
@@ -27,11 +28,5 @@ namespace Aster.Net.Interfaces.Clients
         /// </summary>
         /// <see cref="IAsterSocketClientFuturesV3Api"/>
         public IAsterSocketClientFuturesV3Api FuturesV3Api { get; }
-
-        /// <summary>
-        /// Set the API credentials for this client. All Api clients in this client will use the new credentials, regardless of earlier set options.
-        /// </summary>
-        /// <param name="credentials">The credentials to set</param>
-        void SetApiCredentials(ApiCredentials credentials);
     }
 }

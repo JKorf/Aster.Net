@@ -10,11 +10,11 @@ using System.Collections.Generic;
 
 namespace Aster.Net
 {
-    internal class AsterFuturesV3AuthenticationProvider : AuthenticationProvider
+    internal class AsterFuturesV3AuthenticationProvider : AuthenticationProvider<AsterCredentials, AsterECDSACredential>
     {
         public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Ecdsa];
 
-        public AsterFuturesV3AuthenticationProvider(ApiCredentials credentials) : base(credentials, typeof(AsterECDSACredential))
+        public AsterFuturesV3AuthenticationProvider(AsterCredentials credentials) : base(credentials)
         {
         }
 
@@ -25,20 +25,18 @@ namespace Aster.Net
 
             request.Headers ??= new Dictionary<string, string>();
 
-            var ecdsaCredentials = (AsterECDSACredential)Credential;
-
             var nonce = GetMillisecondTimestampLong(apiClient) * 1000;
             var parameters = request.GetPositionParameters();
             parameters["nonce"] = nonce.ToString();
-            parameters["user"] = ecdsaCredentials.PublicKey;
-            parameters["signer"] = ecdsaCredentials.SignerKey;
+            parameters["user"] = Credential.PublicKey;
+            parameters["signer"] = Credential.SignerKey;
 
             var paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);
             
             var typedData = GetTypedData(paramString, 1666);
             var message = CeEip712TypedDataEncoder.EncodeTypedDataRaw(typedData);
             var keccakSigned = CeSha3Keccack.CalculateHash(message);
-            var signatureHex = SignRequest(keccakSigned, ecdsaCredentials.PrivateKey);
+            var signatureHex = SignRequest(keccakSigned, Credential.PrivateKey);
             signatureHex = signatureHex.ToLower();
 
             parameters["signature"] = signatureHex;

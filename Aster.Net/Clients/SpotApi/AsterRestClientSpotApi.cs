@@ -1,5 +1,6 @@
 using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Objects;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 namespace Aster.Net.Clients.SpotApi
 {
     /// <inheritdoc cref="IAsterRestClientSpotApi" />
-    internal partial class AsterRestClientSpotApi : RestApiClient, IAsterRestClientSpotApi
+    internal partial class AsterRestClientSpotApi : RestApiClient<AsterEnvironment, AsterCredentials>, IAsterRestClientSpotApi
     {
         #region fields 
         protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.SpotErrors);
@@ -43,7 +44,11 @@ namespace Aster.Net.Clients.SpotApi
 
         #region constructor/destructor
         internal AsterRestClientSpotApi(ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger, httpClient, options.Environment.SpotRestClientAddress, options, options.SpotOptions)
+            : base(logger, 
+                  httpClient,
+                  options.Environment.SpotRestClientAddress, 
+                  options,
+                  options.SpotOptions)
         {
             Account = new AsterRestClientSpotApiAccount(this);
             ExchangeData = new AsterRestClientSpotApiExchangeData(logger, this);
@@ -59,8 +64,10 @@ namespace Aster.Net.Clients.SpotApi
         protected override IMessageSerializer CreateSerializer() => new SystemTextJsonMessageSerializer(AsterExchange._serializerContext);
 
         /// <inheritdoc />
-        protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
-            => new AsterAuthenticationProvider(credentials);
+        protected override AuthenticationProvider<AsterCredentials> CreateAuthenticationProvider(AsterCredentials credentials)
+            => credentials.CredentialType == ApiCredentialsType.Hmac
+                ? new AsterHmacAuthenticationProvider(credentials)
+                : new AsterRsaAuthenticationProvider(credentials);
 
         internal async Task<WebCallResult> SendAsync(RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null)
         {
