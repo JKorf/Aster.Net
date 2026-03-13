@@ -1,7 +1,6 @@
 using Aster.Net.Clients;
 using Aster.Net.Interfaces;
 using Aster.Net.Interfaces.Clients;
-using Aster.Net.Objects;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Trackers.Klines;

@@ -14,7 +14,7 @@ namespace Aster.Net.UnitTests
         [Test]
         public void CheckSignatureExample1()
         {
-            var authProvider = new AsterAuthenticationProvider(new ApiCredentials("XXX", "XXX"));
+            var authProvider = new AsterAuthenticationProvider(new AsterCredentials("XXX", "XXX"));
             var client = (RestApiClient)new AsterRestClient().FuturesApi;
 
             CryptoExchange.Net.Testing.TestHelpers.CheckSignature(

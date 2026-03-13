@@ -17,7 +17,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
+                opts.ApiCredentials = new AsterCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Spot/Account", "https://sapi.asterdex.com", IsAuthenticated);
             await tester.ValidateAsync(client => client.SpotApi.Account.GetUserCommissionRateAsync("ETHUSDT"), "GetUserCommissionRate");
@@ -33,7 +33,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
+                opts.ApiCredentials = new AsterCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Spot/ExchangeData", "https://sapi.asterdex.com", IsAuthenticated);
             await tester.ValidateAsync(client => client.SpotApi.ExchangeData.GetExchangeInfoAsync(), "GetExchangeInfo");
@@ -53,7 +53,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
+                opts.ApiCredentials = new AsterCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Spot/Trading", "https://sapi.asterdex.com", IsAuthenticated);
             await tester.ValidateAsync(client => client.SpotApi.Trading.PlaceOrderAsync("ETHUSDT", Enums.OrderSide.Sell, Enums.OrderType.TakeProfit, 1), "PlaceOrder", ignoreProperties: ["cumQty"]);
@@ -71,7 +71,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
+                opts.ApiCredentials = new AsterCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Futures/Account", "https://fapi.asterdex.com", IsAuthenticated);
             await tester.ValidateAsync(client => client.FuturesApi.Account.GetPositionModeAsync(), "GetPositionMode");
@@ -97,7 +97,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
+                opts.ApiCredentials = new AsterCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Futures/ExchangeData", "https://fapi.asterdex.com", IsAuthenticated);
             await tester.ValidateAsync(client => client.FuturesApi.ExchangeData.GetExchangeInfoAsync(), "GetExchangeInfo");
@@ -125,7 +125,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
-                opts.ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456");
+                opts.ApiCredentials = new AsterCredentials("123", "456");
             });
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/Futures/Trading", "https://fapi.asterdex.com", IsAuthenticated);
             await tester.ValidateAsync(client => client.FuturesApi.Trading.PlaceOrderAsync("ETHUSDT", Enums.OrderSide.Buy, Enums.OrderType.Market), "PlaceOrder");

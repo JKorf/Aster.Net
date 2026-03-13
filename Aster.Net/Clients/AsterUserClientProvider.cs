@@ -1,5 +1,4 @@
 using Aster.Net.Interfaces.Clients;
-using Aster.Net.Objects;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net.Authentication;
 using Microsoft.Extensions.Logging;

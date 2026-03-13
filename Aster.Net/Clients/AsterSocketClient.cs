@@ -10,7 +10,6 @@ using Aster.Net.Clients.FuturesApi;
 using Aster.Net.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using CryptoExchange.Net.Authentication;
-using Aster.Net.Objects;
 
 namespace Aster.Net.Clients
 {

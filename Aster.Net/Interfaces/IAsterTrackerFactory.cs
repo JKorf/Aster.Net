@@ -1,4 +1,3 @@
-using Aster.Net.Objects;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Trackers.UserData;

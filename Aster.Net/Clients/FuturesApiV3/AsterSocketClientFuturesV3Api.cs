@@ -1,7 +1,6 @@
 using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.FuturesApi;
-using Aster.Net.Objects;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using Aster.Net.Objects.Options;
@@ -35,7 +34,7 @@ namespace Aster.Net.Clients.FuturesApi
     /// <summary>
     /// Client providing access to the Aster Futures websocket Api
     /// </summary>
-    internal partial class AsterSocketClientFuturesV3Api : SocketApiClient<AsterEnvironment, AsterCredentials>, IAsterSocketClientFuturesV3Api
+    internal partial class AsterSocketClientFuturesV3Api : SocketApiClient<AsterEnvironment, AsterFuturesV3AuthenticationProvider, AsterCredentials>, IAsterSocketClientFuturesV3Api
     {
         #region fields
         protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
@@ -61,10 +60,8 @@ namespace Aster.Net.Clients.FuturesApi
             => new AsterSocketFuturesMessageConverter();
 
         /// <inheritdoc />
-        protected override AuthenticationProvider<AsterCredentials> CreateAuthenticationProvider(AsterCredentials credentials)
-            => credentials.CredentialType == ApiCredentialsType.Hmac 
-                ? new AsterHmacAuthenticationProvider(credentials)
-                : new AsterRsaAuthenticationProvider(credentials);
+        protected override AsterFuturesV3AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
+            => new AsterFuturesV3AuthenticationProvider(credentials);
 
 
         #region Aggregate Trade Streams

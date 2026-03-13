@@ -9,9 +9,8 @@ namespace Aster.Net.Objects
         public string PrivateKey { get; set; }
 
         public override ApiCredentialsType CredentialType => ApiCredentialsType.Ecdsa;
-        public override string PublicIdentifier => PublicKey;
 
-        public AsterECDSACredential(string publicKey, string signerKey, string privateKey)
+        public AsterECDSACredential(string publicKey, string signerKey, string privateKey): base(publicKey)
         {
             PublicKey = publicKey;
             SignerKey = signerKey;
