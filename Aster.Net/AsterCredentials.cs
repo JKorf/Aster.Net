@@ -1,5 +1,6 @@
 ﻿using Aster.Net.Objects;
 using CryptoExchange.Net.Authentication;
+using System;
 using System.Linq;
 
 namespace Aster.Net
@@ -9,8 +10,15 @@ namespace Aster.Net
     /// </summary>
     public class AsterCredentials : ApiCredentials
     {
+        /// <summary>
+        /// Provided credential type
+        /// </summary>
         public ApiCredentialsType CredentialType => CredentialPairs.First(x => x is not AsterECDSACredential).CredentialType;
-        public string ApiKey => CredentialPairs.First(x => x is not AsterECDSACredential).PublicKey;
+
+        /// <summary>
+        /// </summary>
+        [Obsolete("Parameterless constructor is only for deserialization purposes and should not be used directly. Use parameterized constructor instead.")]
+        public AsterCredentials() { }
 
         /// <summary>
         /// Create credentials using an API key and secret. HMAC authentication is assumed. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDSACredential?)" /> instead.
@@ -27,12 +35,22 @@ namespace Aster.Net
         {
         }
 
-        /// <summary>
-        /// Create credentials using RSA credentials. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDSACredential?)" /> instead.
+#if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
+        //// <summary>
+        /// Create credentials using RSA credentials in PEM/Base64 format. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDSACredential?)" /> instead.
         /// </summary>
-        /// <param name="rsaCredential">RSA credentials for the Spot and Futures API</param>
-        public AsterCredentials(RSACredential rsaCredential)
-            : this(rsaCredential, null)
+        /// <param name="rsaCredential">RSA credentials</param>
+        public AsterCredentials(RSAPemCredential rsaCredential)
+            : base(rsaCredential)
+        {
+        }
+#endif
+        /// <summary>
+        /// Create credentials using RSA credentials in XML format. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDSACredential?)" /> instead.
+        /// </summary>
+        /// <param name="rsaCredential">RSA credentials</param>
+        public AsterCredentials(RSAXmlCredential rsaCredential)
+            : base(rsaCredential)
         {
         }
 
@@ -66,9 +84,8 @@ namespace Aster.Net
         }
 
         /// <inheritdoc />
-        public override ApiCredentials Copy() => 
-            Hmac == null 
-                ? new AsterCredentials(GetCredential<RSACredential>(), GetCredential<AsterECDSACredential>())
-                : new AsterCredentials(GetCredential<HMACCredential>(), GetCredential<AsterECDSACredential>());
+#pragma warning disable CS0618 // Type or member is obsolete
+        public override ApiCredentials Copy() => new AsterCredentials { CredentialPairs = CredentialPairs };
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 }

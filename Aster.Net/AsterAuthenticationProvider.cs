@@ -10,7 +10,7 @@ namespace Aster.Net
     internal class AsterAuthenticationProvider : AuthenticationProvider<AsterCredentials>
     {
         public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Hmac, ApiCredentialsType.Rsa];
-        public override string PublicKey => ApiCredentials.ApiKey;
+        public override string Key => ApiCredentials.Key;
 
         public AsterAuthenticationProvider(AsterCredentials credentials) : base(credentials)
         {
@@ -19,7 +19,7 @@ namespace Aster.Net
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
             request.Headers ??= new Dictionary<string, string>();
-            request.Headers.Add("X-MBX-APIKEY", ApiCredentials.ApiKey);
+            request.Headers.Add("X-MBX-APIKEY", ApiCredentials.Key);
 
             if (!request.Authenticated)
                 return;
