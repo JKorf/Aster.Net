@@ -28,7 +28,7 @@ namespace Aster.Net
             var nonce = GetMillisecondTimestampLong(apiClient) * 1000;
             var parameters = request.GetPositionParameters();
             parameters["nonce"] = nonce.ToString();
-            parameters["user"] = Credential.PublicKey;
+            parameters["user"] = Credential.Key;
             parameters["signer"] = Credential.SignerKey;
 
             var paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);

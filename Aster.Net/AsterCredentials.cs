@@ -36,7 +36,7 @@ namespace Aster.Net
         }
 
 #if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
-        //// <summary>
+        /// <summary>
         /// Create credentials using RSA credentials in PEM/Base64 format. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDSACredential?)" /> instead.
         /// </summary>
         /// <param name="rsaCredential">RSA credentials</param>
