@@ -10,9 +10,9 @@ using System.Collections.Generic;
 
 namespace Aster.Net
 {
-    internal class AsterFuturesV3AuthenticationProvider : AuthenticationProvider<AsterCredentials, AsterECDSACredential>
+    internal class AsterFuturesV3AuthenticationProvider : AuthenticationProvider<AsterCredentials, AsterECDsaCredential>
     {
-        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Ecdsa];
+        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.ECDsa];
 
         public AsterFuturesV3AuthenticationProvider(AsterCredentials credentials) : base(credentials)
         {

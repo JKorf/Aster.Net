@@ -9,7 +9,7 @@ namespace Aster.Net
 {
     internal class AsterAuthenticationProvider : AuthenticationProvider<AsterCredentials>
     {
-        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Hmac, ApiCredentialsType.Rsa];
+        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.HMAC, ApiCredentialsType.RSA];
         public override string Key => ApiCredentials.Key;
 
         public AsterAuthenticationProvider(AsterCredentials credentials) : base(credentials)
@@ -46,7 +46,7 @@ namespace Aster.Net
 
         private string Sign(string data)
         {
-            if (ApiCredentials.CredentialType == ApiCredentialsType.Hmac)
+            if (ApiCredentials.CredentialType == ApiCredentialsType.HMAC)
                 return SignHMACSHA256(ApiCredentials.GetCredential<HMACCredential>()!, data);
             else
                 return SignRSASHA256(ApiCredentials.GetCredential<RSACredential>()!, Encoding.ASCII.GetBytes(data), SignOutputType.Base64);
