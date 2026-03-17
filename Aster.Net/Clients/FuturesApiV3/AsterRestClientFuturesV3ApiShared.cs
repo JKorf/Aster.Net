@@ -674,11 +674,17 @@ namespace Aster.Net.Clients.FuturesApi
             return null;
         }
 
+
         private SharedOrderStatus ParseOrderStatus(OrderStatus status)
         {
-            if (status == OrderStatus.New || status == OrderStatus.PartiallyFilled) return SharedOrderStatus.Open;
-            if (status == OrderStatus.Canceled || status == OrderStatus.Rejected || status == OrderStatus.Expired) return SharedOrderStatus.Canceled;
-            return SharedOrderStatus.Filled;
+            if (status == Enums.OrderStatus.Canceled || status == OrderStatus.Rejected || status == OrderStatus.Expired)
+                return SharedOrderStatus.Canceled;
+            if (status == Enums.OrderStatus.New || status == Enums.OrderStatus.PartiallyFilled)
+                return SharedOrderStatus.Open;
+            if (status == OrderStatus.Filled)
+                return SharedOrderStatus.Filled;
+
+            return SharedOrderStatus.Unknown;
         }
 
         private SharedOrderType ParseOrderType(OrderType type)
@@ -1177,7 +1183,10 @@ namespace Aster.Net.Clients.FuturesApi
             if (data.Status == OrderStatus.Canceled || data.Status == OrderStatus.Rejected || data.Status == OrderStatus.Expired)
                 return SharedTriggerOrderStatus.CanceledOrRejected;
 
-            return SharedTriggerOrderStatus.Active;
+            if (data.Status == OrderStatus.PartiallyFilled || data.Status == OrderStatus.New)
+                return SharedTriggerOrderStatus.Active;
+
+            return SharedTriggerOrderStatus.Unknown;
         }
 
         EndpointOptions<CancelOrderRequest> IFuturesTriggerOrderRestClient.CancelFuturesTriggerOrderOptions { get; } = new EndpointOptions<CancelOrderRequest>(true);

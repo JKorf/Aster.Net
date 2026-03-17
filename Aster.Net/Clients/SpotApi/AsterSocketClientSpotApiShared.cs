@@ -192,7 +192,14 @@ namespace Aster.Net.Clients.SpotApi
                 return SharedOrderStatus.Open;
             }
 
-            return SharedOrderStatus.Canceled;
+            if (status == OrderStatus.Canceled
+                || status == OrderStatus.Expired
+                || status == OrderStatus.Rejected)
+            {
+                return SharedOrderStatus.Canceled;
+            }
+
+            return SharedOrderStatus.Unknown;
         }
 
         private SharedOrderType ParseOrderType(OrderType type)
