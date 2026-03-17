@@ -277,5 +277,6 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <returns></returns>
         Task<WebCallResult> StopUserStreamAsync(string listenKey, CancellationToken ct = default);
 
+        Task<WebCallResult> ApproveBuilderAsync(CancellationToken ct = default);
     }
 }

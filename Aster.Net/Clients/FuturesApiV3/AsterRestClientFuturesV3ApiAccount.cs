@@ -3,6 +3,7 @@ using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
+using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Objects;
 using System;
 using System.Globalization;
@@ -345,5 +346,29 @@ namespace Aster.Net.Clients.FuturesApi
         }
 
         #endregion
+
+        #region Approve Builder
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> ApproveBuilderAsync(CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection
+            {
+                { "builder", "0x64E807d36a59E28265167e1473E0DF83821Dc291" },
+                { "maxFeeRate", "0.00001" },
+                { "builderName", "AsterNet" },
+            };
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/approveBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
+            if (!result)
+                return result.AsDataless();
+
+            if (result.Data.Code != 200)
+                return result.AsDatalessError(new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
+            return result.AsDataless();
+        }
+
+        #endregion
+
     }
 }
