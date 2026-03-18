@@ -105,13 +105,13 @@ namespace Aster.Net
         /// </summary>
         /// <param name="key">Public key</param>
         /// <param name="privateKey">Private key</param>
-        /// <param name="signerKey">Signer public key (key from web interface "Api Management - ProApi")</param>
-        /// <param name="signerPrivateKey">Signer private key (secret from web interface "Api Management - ProApi")</param>
-        public AsterCredentials WithFutures(string key, string privateKey, string signerKey, string signerPrivateKey)
+        /// <param name="signerKey">Signer public key</param>
+        /// <param name="signerPrivateKey">Signer private key</param>
+        public AsterCredentials WithFutures(string key, string privateKey, string? signerKey = null, string? signerPrivateKey = null)
         {
             if (Futures != null) throw new InvalidOperationException("Futures credentials already set");
 
-            Futures = new AsterFuturesCredential(key, /*privateKey,*/ signerKey, signerPrivateKey);
+            Futures = new AsterFuturesCredential(key, privateKey, signerKey, signerPrivateKey);
             return this;
         }
 

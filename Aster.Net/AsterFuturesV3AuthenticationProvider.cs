@@ -60,8 +60,7 @@ namespace Aster.Net
                 var messageFields = GetMessageFields(parameters);
                 var message = CeEip712TypedDataEncoder.EncodeEip721("ApproveBuilder", domainFields, messageFields);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
-                //signatureHex = SignRequest(keccakSigned, Credential.PrivateKey).ToLower();
-                signatureHex = SignRequest(keccakSigned, "").ToLower();// <- needs to be the private key of the address, not the private key of the API wallet
+                signatureHex = SignRequest(keccakSigned, Credential.PrivateKey).ToLower();
 
                 //parameters["signature"] = signatureHex;
                 parameters["signatureChainId"] = 56;
@@ -69,16 +68,19 @@ namespace Aster.Net
             }
             else
             {
+                if (string.IsNullOrEmpty(Credential.SignerPrivateKey))
+                    throw new ArgumentException("Signer credentials required for this endpoint, provide the signer credentials in the ApiCredentials configuration");
+
                 parameters["nonce"] = nonce;
-                parameters["user"] = ApiCredentials.Futures!.Key;
-                parameters["signer"] = ApiCredentials.Futures.SignerKey;
+                parameters["user"] = Credential!.Key;
+                parameters["signer"] = Credential.SignerKey!;
 
                 paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);
             
                 var typedData = GetTradingTypedData(paramString, 1666);
                 var message = CeEip712TypedDataEncoder.EncodeTypedDataRaw(typedData);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
-                signatureHex = SignRequest(keccakSigned, ApiCredentials.Futures.PrivateKey).ToLower();
+                signatureHex = SignRequest(keccakSigned, Credential.SignerPrivateKey!).ToLower();
                 parameters["signature"] = signatureHex;
             }
 
