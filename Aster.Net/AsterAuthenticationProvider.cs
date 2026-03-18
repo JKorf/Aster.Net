@@ -2,6 +2,7 @@ using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,17 +10,16 @@ namespace Aster.Net
 {
     internal class AsterAuthenticationProvider : AuthenticationProvider<AsterCredentials>
     {
-        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.HMAC, ApiCredentialsType.RSA];
-        public override string Key => ApiCredentials.Key;
+        public override string Key => ApiCredentials.Spot!.Key;
 
-        public AsterAuthenticationProvider(AsterCredentials credentials) : base(credentials)
+        public AsterAuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.Spot)
         {
         }
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
             request.Headers ??= new Dictionary<string, string>();
-            request.Headers.Add("X-MBX-APIKEY", ApiCredentials.Key);
+            request.Headers.Add("X-MBX-APIKEY", Credential.Key);
 
             if (!request.Authenticated)
                 return;
@@ -46,10 +46,12 @@ namespace Aster.Net
 
         private string Sign(string data)
         {
-            if (ApiCredentials.CredentialType == ApiCredentialsType.HMAC)
-                return SignHMACSHA256(ApiCredentials.GetCredential<HMACCredential>()!, data);
+            if (Credential is HMACCredential hmacCred)
+                return SignHMACSHA256(hmacCred, data);
+            else if (Credential is RSACredential rsaCred)
+                return SignRSASHA256(rsaCred, Encoding.ASCII.GetBytes(data), SignOutputType.Base64);
             else
-                return SignRSASHA256(ApiCredentials.GetCredential<RSACredential>()!, Encoding.ASCII.GetBytes(data), SignOutputType.Base64);
+                throw new NotImplementedException();
         }
     }
 }

@@ -33,12 +33,12 @@ namespace Aster.Net.Objects.Options
         /// <summary>
         /// Spot API options
         /// </summary>
-        public RestApiOptions<AsterCredentials> SpotOptions { get; private set; } = new RestApiOptions<AsterCredentials>();
+        public RestApiOptions SpotOptions { get; private set; } = new RestApiOptions();
 
         /// <summary>
         /// Futures API options
         /// </summary>
-        public RestApiOptions<AsterCredentials> FuturesOptions { get; private set; } = new RestApiOptions<AsterCredentials>();
+        public RestApiOptions FuturesOptions { get; private set; } = new RestApiOptions();
 
         internal AsterRestOptions Set(AsterRestOptions targetOptions)
         {

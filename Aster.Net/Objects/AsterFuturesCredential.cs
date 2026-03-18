@@ -5,7 +5,7 @@ namespace Aster.Net.Objects
     /// <summary>
     /// Aster ECDsa credentials, used for the FuturesV3 API
     /// </summary>
-    public class AsterECDsaCredential : CredentialPair
+    public class AsterFuturesCredential : CredentialPair
     {
         /// <summary>
         /// Signer key
@@ -15,10 +15,6 @@ namespace Aster.Net.Objects
         /// Private key
         /// </summary>
         public string PrivateKey { get; set; }
-        /// <summary>
-        /// Credential type
-        /// </summary>
-        public override ApiCredentialsType CredentialType => ApiCredentialsType.ECDsa;
 
         /// <summary>
         /// Aster ECDsa credentials, used for the FuturesV3 API
@@ -26,10 +22,13 @@ namespace Aster.Net.Objects
         /// <param name="key">Public address</param>
         /// <param name="signerKey">Signer key</param>
         /// <param name="privateKey">Private key</param>
-        public AsterECDsaCredential(string key, string signerKey, string privateKey): base(key)
+        public AsterFuturesCredential(string key, string signerKey, string privateKey): base(key)
         {
             SignerKey = signerKey;
             PrivateKey = privateKey;
         }
+
+        /// <inheritdoc />
+        public override ApiCredentials Copy() => new AsterFuturesCredential(Key, SignerKey, PrivateKey);
     }
 }

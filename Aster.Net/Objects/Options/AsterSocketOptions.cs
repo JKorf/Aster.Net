@@ -27,12 +27,12 @@ namespace Aster.Net.Objects.Options
         /// <summary>
         /// Spot API options
         /// </summary>
-        public SocketApiOptions<AsterCredentials> SpotOptions { get; private set; } = new SocketApiOptions<AsterCredentials>();
+        public SocketApiOptions SpotOptions { get; private set; } = new SocketApiOptions();
 
         /// <summary>
         /// Futures API options
         /// </summary>
-        public SocketApiOptions<AsterCredentials> FuturesOptions { get; private set; } = new SocketApiOptions<AsterCredentials>();
+        public SocketApiOptions FuturesOptions { get; private set; } = new SocketApiOptions();
 
 
         internal AsterSocketOptions Set(AsterSocketOptions targetOptions)

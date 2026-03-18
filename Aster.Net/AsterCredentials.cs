@@ -2,6 +2,7 @@
 using CryptoExchange.Net.Authentication;
 using System;
 using System.Linq;
+using System.Net;
 
 namespace Aster.Net
 {
@@ -10,82 +11,118 @@ namespace Aster.Net
     /// </summary>
     public class AsterCredentials : ApiCredentials
     {
-        /// <summary>
-        /// Provided credential type
-        /// </summary>
-        public ApiCredentialsType CredentialType => CredentialPairs.First(x => x is not AsterECDsaCredential).CredentialType;
+        internal CredentialPair? Spot { get; set; }
+        internal AsterFuturesCredential? Futures { get; set; }
 
         /// <summary>
+        /// ctor
         /// </summary>
-        [Obsolete("Parameterless constructor is only for deserialization purposes and should not be used directly. Use parameterized constructor instead.")]
         public AsterCredentials() { }
 
         /// <summary>
-        /// Create credentials using an API key and secret. HMAC authentication is assumed. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDsaCredential?)" /> instead.
+        /// Create new credentials providing only spot credentials in HMAC format
         /// </summary>
-        public AsterCredentials(string apiKey, string secretKey)
-            : this(new HMACCredential(apiKey, secretKey)) { }
+        /// <param name="key">API key</param>
+        /// <param name="secret">API secret</param>
+        public AsterCredentials(string key, string secret)
+        {
+            Spot = new HMACCredential(key, secret);
+        }
 
         /// <summary>
-        /// Create credentials using HMAC credentials. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDsaCredential?)" /> instead.
+        /// Spot credentials in HMAC format
         /// </summary>
-        /// <param name="hmacCredential">HMAC credentials for the Spot and Futures API</param>
-        public AsterCredentials(HMACCredential hmacCredential)
-            : this(hmacCredential, null) 
+        public HMACCredential? SpotHMAC
         {
+            get => Spot as HMACCredential;
+            set { if (value != null) Spot = value; }
+        }
+
+        /// <summary>
+        /// Spot credentials in RSA XML format
+        /// </summary>
+        public RSAXmlCredential? SpotRSAXml
+        {
+            get => Spot as RSAXmlCredential;
+            set { if (value != null) Spot = value; }
         }
 
 #if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
         /// <summary>
-        /// Create credentials using RSA credentials in PEM/Base64 format. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDsaCredential?)" /> instead.
+        /// Spot credentials in RSA PEM/Base64 format
         /// </summary>
-        /// <param name="rsaCredential">RSA credentials</param>
-        public AsterCredentials(RSAPemCredential rsaCredential)
-            : base(rsaCredential)
+        public RSAPemCredential? SpotRSAPem
         {
+            get => Spot as RSAPemCredential;
+            set { if (value != null) Spot = value; }
         }
 #endif
+
         /// <summary>
-        /// Create credentials using RSA credentials in XML format. If the FuturesV3 API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDsaCredential?)" /> instead.
+        /// Spot credentials in HMAC format
         /// </summary>
-        /// <param name="rsaCredential">RSA credentials</param>
-        public AsterCredentials(RSAXmlCredential rsaCredential)
-            : base(rsaCredential)
+        /// <param name="key">API key</param>
+        /// <param name="secret">API secret</param>
+        public AsterCredentials WithSpotHMAC(string key, string secret)
         {
+            if (Spot != null) throw new InvalidOperationException("Spot credentials already set");
+
+            Spot = new HMACCredential(key, secret);
+            return this;
         }
 
         /// <summary>
-        /// Create credentials using ECDsa credentials. This only grants access to the FuturesV3 API.If the Spot API will be used use <see cref="AsterCredentials(HMACCredential?, AsterECDsaCredential?)" /> instead.
+        /// Spot credentials in RSA XML format
         /// </summary>
-        /// <param name="futuresV3Credential">ECDsa credentials for the FuturesV3 API</param>
-        public AsterCredentials(AsterECDsaCredential futuresV3Credential)
-            : base(futuresV3Credential)
+        /// <param name="key">Public key</param>
+        /// <param name="privateKey">Private key</param>
+        public AsterCredentials WithSpotRSAXml(string key, string privateKey)
         {
+            if (Spot != null) throw new InvalidOperationException("Spot credentials already set");
+
+            Spot = new RSAXmlCredential(key, privateKey);
+            return this;
         }
 
+#if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
         /// <summary>
-        /// Create credentials proving both HMAC credentials for the Spot/Futures API's and ECDsa credentials for the FuturesV3 API
+        /// Spot credentials in RSA PEM/Base64 format
         /// </summary>
-        /// <param name="hmacCredential">HMAC credentials for the Spot and Futures API</param>
-        /// <param name="futuresV3Credential">ECDsa credentials for the FuturesV3 API</param>
-        public AsterCredentials(HMACCredential? hmacCredential, AsterECDsaCredential? futuresV3Credential)
-            : base(hmacCredential, futuresV3Credential)
+        /// <param name="key">Public key</param>
+        /// <param name="privateKey">Private key</param>
+        public AsterCredentials WithSpotRSAPem(string key, string privateKey)
         {
+
+            if (Spot != null) throw new InvalidOperationException("Spot credentials already set");
+
+            Spot = new RSAPemCredential(key, privateKey);
+            return this;
         }
+#endif
 
         /// <summary>
-        /// Create credentials proving both RSA credentials for the Spot/Futures API's and ECDsa credentials for the FuturesV3 API
+        /// Futures credentials
         /// </summary>
-        /// <param name="rsaCredential">RSA credentials for the Spot and Futures API</param>
-        /// <param name="futuresV3Credential">ECDsa credentials for the FuturesV3 API</param>
-        public AsterCredentials(RSACredential? rsaCredential, AsterECDsaCredential? futuresV3Credential)
-            : base(rsaCredential, futuresV3Credential)
+        /// <param name="key">Public key</param>
+        /// <param name="privateKey">Private key</param>
+        /// <param name="signerKey">Signer public key (key from web interface "Api Management - ProApi")</param>
+        /// <param name="signerPrivateKey">Signer private key (secret from web interface "Api Management - ProApi")</param>
+        public AsterCredentials WithFutures(string key, string privateKey, string signerKey, string signerPrivateKey)
         {
+            if (Futures != null) throw new InvalidOperationException("Futures credentials already set");
+
+            Futures = new AsterFuturesCredential(key, /*privateKey,*/ signerKey, signerPrivateKey);
+            return this;
         }
 
         /// <inheritdoc />
-#pragma warning disable CS0618 // Type or member is obsolete
-        public override ApiCredentials Copy() => new AsterCredentials { CredentialPairs = CredentialPairs };
-#pragma warning restore CS0618 // Type or member is obsolete
+        public override ApiCredentials Copy()
+        {
+            return new AsterCredentials
+            {
+                Futures = Futures,
+                Spot = Spot
+            };
+        }
     }
 }

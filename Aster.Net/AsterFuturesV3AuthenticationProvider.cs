@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Aster.Net
 {
-    internal class AsterFuturesV3AuthenticationProvider : AuthenticationProvider<AsterCredentials, AsterECDsaCredential>
+    internal class AsterFuturesV3AuthenticationProvider : AuthenticationProvider<AsterCredentials, AsterFuturesCredential>
     {
         private static IEnumerable<(string Name, string Type, object Value)> GetDomainFields(
             string action,
@@ -33,9 +33,7 @@ namespace Aster.Net
             { typeof(bool), "bool" }
         };
 
-        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.ECDsa];
-
-        public AsterFuturesV3AuthenticationProvider(AsterCredentials credentials) : base(credentials)
+        public AsterFuturesV3AuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.Futures)
         {
         }
 
@@ -55,7 +53,7 @@ namespace Aster.Net
              || request.Path.Contains("/v3/approveBuilder"))
             {
                 parameters["asterChain"] = "Mainnet";
-                parameters["user"] = Credential.Key;
+                parameters["user"] = ApiCredentials.Futures!.Key;
                 parameters["nonce"] = nonce;
 
                 var domainFields = GetDomainFields("AsterSignTransaction", "1", 56, "0x0000000000000000000000000000000000000000");
@@ -72,15 +70,15 @@ namespace Aster.Net
             else
             {
                 parameters["nonce"] = nonce;
-                parameters["user"] = Credential.Key;
-                parameters["signer"] = Credential.SignerKey;
+                parameters["user"] = ApiCredentials.Futures!.Key;
+                parameters["signer"] = ApiCredentials.Futures.SignerKey;
 
                 paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);
             
                 var typedData = GetTradingTypedData(paramString, 1666);
                 var message = CeEip712TypedDataEncoder.EncodeTypedDataRaw(typedData);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
-                signatureHex = SignRequest(keccakSigned, Credential.PrivateKey).ToLower();
+                signatureHex = SignRequest(keccakSigned, ApiCredentials.Futures.PrivateKey).ToLower();
                 parameters["signature"] = signatureHex;
             }
 
