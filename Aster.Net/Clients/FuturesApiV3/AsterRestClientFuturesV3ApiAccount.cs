@@ -350,14 +350,18 @@ namespace Aster.Net.Clients.FuturesApi
         #region Approve Builder
 
         /// <inheritdoc />
-        public async Task<WebCallResult> ApproveBuilderAsync(CancellationToken ct = default)
+        public Task<WebCallResult> ApproveBuilderAsync(CancellationToken ct = default)
+            => ApproveBuilderAsync(_baseClient.ClientOptions.BuilderAddress, _baseClient.ClientOptions.BuilderName, (_baseClient.ClientOptions.BuilderFeePercentage ?? 0.01m) / 100, ct);
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> ApproveBuilderAsync(string builderAddress, string builderName, decimal maxFeeRate, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
-            {
-                { "builder", "0x64E807d36a59E28265167e1473E0DF83821Dc291" },
-                { "maxFeeRate", "0.00001" },
-                { "builderName", "AsterNet" },
-            };
+            var parameters = new ParameterCollection();
+            parameters.Add("builder", builderAddress);
+            parameters.AddString("maxFeeRate", maxFeeRate);
+            parameters.Add("builderName", builderName);
+            parameters.Add("signaction", "ApproveBuilder");
+
             var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/approveBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
             var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
             if (!result)
@@ -370,5 +374,59 @@ namespace Aster.Net.Clients.FuturesApi
 
         #endregion
 
+        #region Update Builder
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> UpdateBuilderAsync(string builderAddress, decimal newMaxFeeRate, CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("builder", builderAddress);
+            parameters.AddString("maxFeeRate", newMaxFeeRate / 100);
+            parameters.Add("signaction", "UpdateBuilder");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/updateBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
+            if (!result)
+                return result.AsDataless();
+
+            if (result.Data.Code != 200)
+                return result.AsDatalessError(new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
+            return result.AsDataless();
+        }
+
+        #endregion
+
+        #region Delete Builder
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> DeleteBuilderAsync(string builderAddress, CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("builder", builderAddress);
+            parameters.Add("signaction", "DelBuilder");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/builder", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
+            if (!result)
+                return result.AsDataless();
+
+            if (result.Data.Code != 200)
+                return result.AsDatalessError(new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
+            return result.AsDataless();
+        }
+
+        #endregion
+
+        #region Get Approved Builders
+
+        /// <inheritdoc />
+        public async Task<WebCallResult<AsterBuilder[]>> GetApprovedBuildersAsync(CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection();
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/builder", AsterExchange.RateLimiter.RestIp, 1, true);
+            return await _baseClient.SendAsync<AsterBuilder[]>(request, parameters, ct).ConfigureAwait(false);
+        }
+
+        #endregion
     }
 }

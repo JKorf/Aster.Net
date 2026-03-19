@@ -1,8 +1,6 @@
 ﻿using Aster.Net.Objects;
 using CryptoExchange.Net.Authentication;
 using System;
-using System.Linq;
-using System.Net;
 
 namespace Aster.Net
 {
@@ -11,8 +9,11 @@ namespace Aster.Net
     /// </summary>
     public class AsterCredentials : ApiCredentials
     {
-        internal CredentialPair? Spot { get; set; }
-        internal AsterFuturesCredential? FuturesV3 { get; set; }
+        internal CredentialPair? V1 { get; set; }
+        /// <summary>
+        /// V3 API credentials
+        /// </summary>
+        public AsterV3Credential? V3 { get; set; }
 
         /// <summary>
         /// Create new credentials
@@ -20,170 +21,133 @@ namespace Aster.Net
         public AsterCredentials() { }
 
         /// <summary>
-        /// Create new credentials providing Spot HMAC credentials
+        /// Create new credentials providing V1 HMAC credentials
         /// </summary>
         /// <param name="key">API key</param>
         /// <param name="secret">API secret</param>
         public AsterCredentials(string key, string secret)
         {
-            Spot = new HMACCredential(key, secret);
+            V1 = new HMACCredential(key, secret);
         }
 
         /// <summary>
-        /// Create new credentials providing only Spot credentials in HMAC format
+        /// Create new credentials providing V1 credentials in HMAC format
         /// </summary>
-        /// <param name="spotHmacCredential">HMAC credentials</param>
-        public AsterCredentials(HMACCredential spotHmacCredential)
+        /// <param name="v1HmacCredential">HMAC credentials</param>
+        public AsterCredentials(HMACCredential v1HmacCredential)
         {
-            Spot = spotHmacCredential;
+            V1 = v1HmacCredential;
         }
 
         /// <summary>
-        /// Create new credentials providing only Spot credentials in RSA XML format
+        /// Create new credentials providing V1 credentials in RSA XML format
         /// </summary>
-        /// <param name="rsaXmlCredential">RSA XML credentials</param>
-        public AsterCredentials(RSAXmlCredential rsaXmlCredential)
+        /// <param name="v1RsaXmlCredential">RSA XML credentials</param>
+        public AsterCredentials(RSAXmlCredential v1RsaXmlCredential)
         {
-            Spot = rsaXmlCredential;
+            V1 = v1RsaXmlCredential;
         }
 
 #if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
         /// <summary>
-        /// Create new credentials providing only Spot credentials in RSA PEM/Base64 format
+        /// Create new credentials providing V1 credentials in RSA PEM/Base64 format
         /// </summary>
-        /// <param name="rsaPemCredential">RSA PEM/Base64 credentials</param>
-        public AsterCredentials(RSAPemCredential rsaPemCredential)
+        /// <param name="v1RsaPemCredential">RSA PEM/Base64 credentials</param>
+        public AsterCredentials(RSAPemCredential v1RsaPemCredential)
         {
-            Spot = rsaPemCredential;
+            V1 = v1RsaPemCredential;
         }
 #endif
 
         /// <summary>
-        /// Create new credentials providing only Futures V3 credentials
+        /// Create new credentials providing V3 credential
         /// </summary>
-        /// <param name="futuresCredential">Futures V3 credentials</param>
-        public AsterCredentials(AsterFuturesCredential futuresCredential)
+        /// <param name="v3Credential">V3 credential</param>
+        public AsterCredentials(AsterV3Credential v3Credential)
         {
-            FuturesV3 = futuresCredential;
+            V3 = v3Credential;
         }
 
         /// <summary>
-        /// Create new credentials providing Spot credentials in HMAC format and Futures credentials
+        /// V1 credentials in HMAC format
         /// </summary>
-        /// <param name="spotHmacCredential">Spot HMAC credentials</param>
-        /// <param name="futuresV3Credential">Futures V3 credentials</param>
-        public AsterCredentials(HMACCredential spotHmacCredential, AsterFuturesCredential futuresV3Credential)
+        public HMACCredential? V1HMAC
         {
-            Spot = spotHmacCredential;
-            FuturesV3 = futuresV3Credential;
+            get => V1 as HMACCredential;
+            set { if (value != null) V1 = value; }
         }
 
         /// <summary>
-        /// Create new credentials providing Spot credentials in RSA XML format and Futures credentials
+        /// V1 credentials in RSA XML format
         /// </summary>
-        /// <param name="rsaXmlCredential">Spot RSA XML credentials</param>
-        /// <param name="futuresV3Credential">Futures V3 credentials</param>
-        public AsterCredentials(RSAXmlCredential rsaXmlCredential, AsterFuturesCredential futuresV3Credential)
+        public RSAXmlCredential? V1RSAXml
         {
-            Spot = rsaXmlCredential;
-            FuturesV3 = futuresV3Credential;
+            get => V1 as RSAXmlCredential;
+            set { if (value != null) V1 = value; }
         }
 
 #if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
         /// <summary>
-        /// Create new credentials providing Spot credentials in RSA PEM format and Futures V3 credentials
+        /// V1 credentials in RSA PEM/Base64 format
         /// </summary>
-        /// <param name="futuresV3Credential">Futures V3 credentials</param>
-        /// <param name="rsaPemCredential">Spot RSA PEM credentials</param>
-        public AsterCredentials(RSAPemCredential rsaPemCredential, AsterFuturesCredential futuresV3Credential)
+        public RSAPemCredential? V1RSAPem
         {
-            Spot = rsaPemCredential;
-            FuturesV3 = futuresV3Credential;
+            get => V1 as RSAPemCredential;
+            set { if (value != null) V1 = value; }
         }
 #endif
 
         /// <summary>
-        /// Spot credentials in HMAC format
-        /// </summary>
-        public HMACCredential? SpotHMAC
-        {
-            get => Spot as HMACCredential;
-            set { if (value != null) Spot = value; }
-        }
-
-        /// <summary>
-        /// Spot credentials in RSA XML format
-        /// </summary>
-        public RSAXmlCredential? SpotRSAXml
-        {
-            get => Spot as RSAXmlCredential;
-            set { if (value != null) Spot = value; }
-        }
-
-#if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
-        /// <summary>
-        /// Spot credentials in RSA PEM/Base64 format
-        /// </summary>
-        public RSAPemCredential? SpotRSAPem
-        {
-            get => Spot as RSAPemCredential;
-            set { if (value != null) Spot = value; }
-        }
-#endif
-
-        /// <summary>
-        /// Spot credentials in HMAC format
+        /// V1 credentials in HMAC format
         /// </summary>
         /// <param name="key">API key</param>
         /// <param name="secret">API secret</param>
-        public AsterCredentials WithSpotHMAC(string key, string secret)
+        public AsterCredentials WithV1HMAC(string key, string secret)
         {
-            if (Spot != null) throw new InvalidOperationException("Spot credentials already set");
+            if (V1 != null) throw new InvalidOperationException("V1 credentials already set");
 
-            Spot = new HMACCredential(key, secret);
+            V1 = new HMACCredential(key, secret);
             return this;
         }
 
         /// <summary>
-        /// Spot credentials in RSA XML format
+        /// V1 credentials in RSA XML format
         /// </summary>
         /// <param name="key">Public key</param>
         /// <param name="privateKey">Private key</param>
-        public AsterCredentials WithSpotRSAXml(string key, string privateKey)
+        public AsterCredentials WithV1RSAXml(string key, string privateKey)
         {
-            if (Spot != null) throw new InvalidOperationException("Spot credentials already set");
+            if (V1 != null) throw new InvalidOperationException("V1 credentials already set");
 
-            Spot = new RSAXmlCredential(key, privateKey);
+            V1 = new RSAXmlCredential(key, privateKey);
             return this;
         }
 
 #if NETSTANDARD2_1_OR_GREATER || NET7_0_OR_GREATER
         /// <summary>
-        /// Spot credentials in RSA PEM/Base64 format
+        /// V1 credentials in RSA PEM/Base64 format
         /// </summary>
         /// <param name="key">Public key</param>
         /// <param name="privateKey">Private key</param>
-        public AsterCredentials WithSpotRSAPem(string key, string privateKey)
+        public AsterCredentials WithV1RSAPem(string key, string privateKey)
         {
-            if (Spot != null) throw new InvalidOperationException("Spot credentials already set");
+            if (V1 != null) throw new InvalidOperationException("V1 credentials already set");
 
-            Spot = new RSAPemCredential(key, privateKey);
+            V1 = new RSAPemCredential(key, privateKey);
             return this;
         }
 #endif
 
         /// <summary>
-        /// Futures V3 credentials
+        /// V3 credentials
         /// </summary>
-        /// <param name="key">Public key</param>
         /// <param name="privateKey">Private key</param>
-        /// <param name="signerKey">Signer public key</param>
         /// <param name="signerPrivateKey">Signer private key</param>
-        public AsterCredentials WithFuturesV3(string key, string privateKey, string? signerKey = null, string? signerPrivateKey = null)
+        public AsterCredentials WithV3(string privateKey, string signerPrivateKey)
         {
-            if (FuturesV3 != null) throw new InvalidOperationException("Futures credentials already set");
+            if (V3 != null) throw new InvalidOperationException("V3 credentials already set");
 
-            FuturesV3 = new AsterFuturesCredential(key, privateKey, signerKey, signerPrivateKey);
+            V3 = new AsterV3Credential(privateKey, signerPrivateKey);
             return this;
         }
 
@@ -192,16 +156,16 @@ namespace Aster.Net
         {
             return new AsterCredentials
             {
-                FuturesV3 = FuturesV3,
-                Spot = Spot
+                V3 = V3,
+                V1 = V1
             };
         }
 
         /// <inheritdoc />
         public override void Validate() 
         {
-            Spot?.Validate();
-            FuturesV3?.Validate();
+            V1?.Validate();
+            V3?.Validate();
         }
     }
 }

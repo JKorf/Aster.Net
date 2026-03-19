@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Aster.Net.Clients.FuturesApi
 {
     /// <inheritdoc cref="IAsterRestClientFuturesApi" />
-    internal partial class AsterRestClientFuturesApi : RestApiClient<AsterEnvironment, AsterAuthenticationProvider, AsterCredentials>, IAsterRestClientFuturesApi
+    internal partial class AsterRestClientFuturesApi : RestApiClient<AsterEnvironment, AsterV1AuthenticationProvider, AsterCredentials>, IAsterRestClientFuturesApi
     {
         #region fields 
         protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.FuturesErrors);
@@ -63,8 +63,8 @@ namespace Aster.Net.Clients.FuturesApi
         protected override IMessageSerializer CreateSerializer() => new SystemTextJsonMessageSerializer(AsterExchange._serializerContext);
 
         /// <inheritdoc />
-        protected override AsterAuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
-            => new AsterAuthenticationProvider(credentials);
+        protected override AsterV1AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
+            => new AsterV1AuthenticationProvider(credentials);
 
         internal async Task<WebCallResult> SendAsync(RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null)
         {

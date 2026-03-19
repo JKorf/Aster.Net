@@ -34,7 +34,7 @@ namespace Aster.Net.Clients.FuturesApi
     /// <summary>
     /// Client providing access to the Aster Futures websocket Api
     /// </summary>
-    internal partial class AsterSocketClientFuturesV3Api : SocketApiClient<AsterEnvironment, AsterFuturesV3AuthenticationProvider, AsterCredentials>, IAsterSocketClientFuturesV3Api
+    internal partial class AsterSocketClientFuturesV3Api : SocketApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterSocketClientFuturesV3Api
     {
         #region fields
         protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
@@ -60,8 +60,8 @@ namespace Aster.Net.Clients.FuturesApi
             => new AsterSocketFuturesMessageConverter();
 
         /// <inheritdoc />
-        protected override AsterFuturesV3AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
-            => new AsterFuturesV3AuthenticationProvider(credentials);
+        protected override AsterV3AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
+            => new AsterV3AuthenticationProvider(credentials);
 
 
         #region Aggregate Trade Streams

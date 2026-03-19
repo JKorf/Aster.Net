@@ -7,10 +7,11 @@ using CryptoExchange.Net.Objects;
 using Secp256k1Net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Aster.Net
 {
-    internal class AsterFuturesV3AuthenticationProvider : AuthenticationProvider<AsterCredentials, AsterFuturesCredential>
+    internal class AsterV3AuthenticationProvider : AuthenticationProvider<AsterCredentials, AsterV3Credential>
     {
         private static IEnumerable<(string Name, string Type, object Value)> GetDomainFields(
             string action,
@@ -33,7 +34,7 @@ namespace Aster.Net
             { typeof(bool), "bool" }
         };
 
-        public AsterFuturesV3AuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.FuturesV3)
+        public AsterV3AuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.V3)
         {
         }
 
@@ -49,16 +50,18 @@ namespace Aster.Net
 
             string signatureHex;
             string paramString;
-            if (request.Path.Contains("/v3/approveAgent")
-             || request.Path.Contains("/v3/approveBuilder"))
+            if (parameters.ContainsKey("signaction"))
             {
+                var signAction = (string)parameters["signaction"];
+                parameters.Remove("signaction");
+
                 parameters["asterChain"] = "Mainnet";
-                parameters["user"] = ApiCredentials.FuturesV3!.Key;
+                parameters["user"] = ApiCredentials.V3!.Key;
                 parameters["nonce"] = nonce;
 
                 var domainFields = GetDomainFields("AsterSignTransaction", "1", 56, "0x0000000000000000000000000000000000000000");
                 var messageFields = GetMessageFields(parameters);
-                var message = CeEip712TypedDataEncoder.EncodeEip721("ApproveBuilder", domainFields, messageFields);
+                var message = CeEip712TypedDataEncoder.EncodeEip721(signAction, domainFields, messageFields);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
                 signatureHex = SignRequest(keccakSigned, Credential.PrivateKey).ToLower();
 

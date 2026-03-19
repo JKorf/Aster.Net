@@ -31,6 +31,21 @@ namespace Aster.Net.Objects.Options
         public TimeSpan ReceiveWindow { get; set; } = TimeSpan.FromSeconds(5);
 
         /// <summary>
+        /// The builder fee percentage to apply to orders. This refers to a fee percentage being paid to the developer to support development. Defaults to 1bps/0.01%, but can be set to 0/null
+        /// </summary>
+        public decimal? BuilderFeePercentage { get; set; } = 0.01m;
+
+        /// <summary>
+        /// Name of the builder
+        /// </summary>
+        public string BuilderName { get; set; } = "Aster.Net";
+
+        /// <summary>
+        /// Address of the builder
+        /// </summary>
+        public string BuilderAddress { get; set; } = "0x64E807d36a59E28265167e1473E0DF83821Dc291";
+
+        /// <summary>
         /// Spot API options
         /// </summary>
         public RestApiOptions SpotOptions { get; private set; } = new RestApiOptions();
@@ -42,7 +57,10 @@ namespace Aster.Net.Objects.Options
 
         internal AsterRestOptions Set(AsterRestOptions targetOptions)
         {
-            targetOptions = base.Set<AsterRestOptions>(targetOptions);            
+            targetOptions = base.Set<AsterRestOptions>(targetOptions);
+            targetOptions.BuilderAddress = BuilderAddress;
+            targetOptions.BuilderName = BuilderName;
+            targetOptions.BuilderFeePercentage = BuilderFeePercentage;
             targetOptions.FuturesOptions = FuturesOptions.Set(targetOptions.FuturesOptions);
             targetOptions.SpotOptions = SpotOptions.Set(targetOptions.SpotOptions);
             return targetOptions;

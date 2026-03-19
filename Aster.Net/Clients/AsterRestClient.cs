@@ -21,6 +21,7 @@ namespace Aster.Net.Clients
 
         /// <inheritdoc />
         public IAsterRestClientSpotApi SpotApi { get; }
+#warning add SpotV3Api
         /// <inheritdoc />
         public IAsterRestClientFuturesApi FuturesApi { get; }
         /// <inheritdoc />

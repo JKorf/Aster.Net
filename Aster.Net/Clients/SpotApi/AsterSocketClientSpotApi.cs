@@ -34,7 +34,7 @@ namespace Aster.Net.Clients.SpotApi
     /// <summary>
     /// Client providing access to the Aster Spot websocket Api
     /// </summary>
-    internal partial class AsterSocketClientSpotApi : SocketApiClient<AsterEnvironment, AsterAuthenticationProvider, AsterCredentials>, IAsterSocketClientSpotApi
+    internal partial class AsterSocketClientSpotApi : SocketApiClient<AsterEnvironment, AsterV1AuthenticationProvider, AsterCredentials>, IAsterSocketClientSpotApi
     {
         #region fields
         protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
@@ -59,8 +59,8 @@ namespace Aster.Net.Clients.SpotApi
         public override ISocketMessageHandler CreateMessageConverter(WebSocketMessageType messageType)
             => new AsterSocketSpotMessageConverter();
         /// <inheritdoc />
-        protected override AsterAuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
-            => new AsterAuthenticationProvider(credentials);
+        protected override AsterV1AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
+            => new AsterV1AuthenticationProvider(credentials);
 
         #region Aggregate Trade Streams
 

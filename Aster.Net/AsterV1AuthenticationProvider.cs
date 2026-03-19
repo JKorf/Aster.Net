@@ -8,20 +8,20 @@ using System.Text;
 
 namespace Aster.Net
 {
-    internal class AsterAuthenticationProvider : AuthenticationProvider<AsterCredentials>
+    internal class AsterV1AuthenticationProvider : AuthenticationProvider<AsterCredentials>
     {
-        public override string Key => ApiCredentials.Spot!.Key;
+        public override string Key => ApiCredentials.V1!.Key;
 
-        public AsterAuthenticationProvider(AsterCredentials credentials) : base(credentials)
+        public AsterV1AuthenticationProvider(AsterCredentials credentials) : base(credentials)
         {
-            if (credentials.Spot == null)
-                throw new ArgumentException("Spot credentials not provided", nameof(credentials));
+            if (credentials.V1 == null)
+                throw new ArgumentException("V1 credentials not provided", nameof(credentials));
         }
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
             request.Headers ??= new Dictionary<string, string>();
-            request.Headers.Add("X-MBX-APIKEY", ApiCredentials.Spot!.Key);
+            request.Headers.Add("X-MBX-APIKEY", ApiCredentials.V1!.Key);
 
             if (!request.Authenticated)
                 return;
@@ -48,9 +48,9 @@ namespace Aster.Net
 
         private string Sign(string data)
         {
-            if (ApiCredentials.Spot is HMACCredential hmacCred)
+            if (ApiCredentials.V1 is HMACCredential hmacCred)
                 return SignHMACSHA256(hmacCred, data);
-            else if (ApiCredentials.Spot is RSACredential rsaCred)
+            else if (ApiCredentials.V1 is RSACredential rsaCred)
                 return SignRSASHA256(rsaCred, Encoding.ASCII.GetBytes(data), SignOutputType.Base64);
             else
                 throw new NotImplementedException();

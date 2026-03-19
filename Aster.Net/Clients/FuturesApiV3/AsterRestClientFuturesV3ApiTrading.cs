@@ -71,6 +71,11 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptionalEnum("workingType", workingType);
             parameters.AddOptional("priceProtect", priceProtect);
             parameters.AddOptional("newOrderRespType", "RESULT");
+            if (_baseClient.ClientOptions.BuilderFeePercentage != null)
+            {
+                parameters.AddOptional("builder", _baseClient.ClientOptions.BuilderAddress);
+                parameters.AddOptional("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
+            }
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
             var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
@@ -110,6 +115,11 @@ namespace Aster.Net.Clients.FuturesApi
                 orderParameters.AddOptionalEnum("workingType", order.WorkingType);
                 orderParameters.AddOptionalParameter("reduceOnly", order.ReduceOnly?.ToString().ToLower());
                 orderParameters.AddOptionalParameter("priceProtect", order.PriceProtect?.ToString().ToUpper());
+                if (_baseClient.ClientOptions.BuilderFeePercentage != null)
+                {
+                    orderParameters.AddOptional("builder", _baseClient.ClientOptions.BuilderAddress);
+                    orderParameters.AddOptional("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
+                }
                 parameterOrders.Add(orderParameters);
                 i++;
             }

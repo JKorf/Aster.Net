@@ -263,6 +263,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <returns></returns>
         Task<WebCallResult> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default);
 
+#warning fix docs and paths
+
         /// <summary>
         /// Stop the user stream, no updates will be send anymore
         /// <para>
@@ -277,6 +279,70 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <returns></returns>
         Task<WebCallResult> StopUserStreamAsync(string listenKey, CancellationToken ct = default);
 
+        /// <summary>
+        /// Approve a builder to charge a fee, uses the parameters from the client options
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#approve-builder-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/approveBuilder
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
         Task<WebCallResult> ApproveBuilderAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Approve a builder to charge a fee
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#approve-builder-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/approveBuilder
+        /// </para>
+        /// </summary>
+        /// <param name="builderAddress">The builder address</param>
+        /// <param name="builderName">The builder name</param>
+        /// <param name="maxFeeRate">Max fee rate in percentage the builder can charge. 0.001 = 0.1%</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult> ApproveBuilderAsync(string builderAddress, string builderName, decimal maxFeeRate, CancellationToken ct = default);
+
+        /// <summary>
+        /// Update a previously approved builder
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#update-builder-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/updateBuilder
+        /// </para>
+        /// </summary>
+        /// <param name="builderAddress">The builder address</param>
+        /// <param name="newMaxFeeRate">Max new fee rate the builder can charge. 0.001 = 0.1%</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult> UpdateBuilderAsync(string builderAddress, decimal newMaxFeeRate, CancellationToken ct = default);
+
+        /// <summary>
+        /// Remove a previously approved builder
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#delete-builder-trade" /><br />
+        /// Endpoint:<br />
+        /// DELETE /fapi/v3/builder
+        /// </para>
+        /// </summary>
+        /// <param name="builderAddress">The builder address</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult> DeleteBuilderAsync(string builderAddress, CancellationToken ct = default);
+
+        /// <summary>
+        /// Get approved builders
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#get-builders-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v3/builder
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterBuilder[]>> GetApprovedBuildersAsync(CancellationToken ct = default);
     }
 }
