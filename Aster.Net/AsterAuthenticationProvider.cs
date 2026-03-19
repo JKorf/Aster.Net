@@ -12,14 +12,16 @@ namespace Aster.Net
     {
         public override string Key => ApiCredentials.Spot!.Key;
 
-        public AsterAuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.Spot)
+        public AsterAuthenticationProvider(AsterCredentials credentials) : base(credentials)
         {
+            if (credentials.Spot == null)
+                throw new ArgumentException("Spot credentials not provided", nameof(credentials));
         }
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
             request.Headers ??= new Dictionary<string, string>();
-            request.Headers.Add("X-MBX-APIKEY", Credential.Key);
+            request.Headers.Add("X-MBX-APIKEY", ApiCredentials.Spot!.Key);
 
             if (!request.Authenticated)
                 return;
@@ -46,9 +48,9 @@ namespace Aster.Net
 
         private string Sign(string data)
         {
-            if (Credential is HMACCredential hmacCred)
+            if (ApiCredentials.Spot is HMACCredential hmacCred)
                 return SignHMACSHA256(hmacCred, data);
-            else if (Credential is RSACredential rsaCred)
+            else if (ApiCredentials.Spot is RSACredential rsaCred)
                 return SignRSASHA256(rsaCred, Encoding.ASCII.GetBytes(data), SignOutputType.Base64);
             else
                 throw new NotImplementedException();

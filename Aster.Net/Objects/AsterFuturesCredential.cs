@@ -1,4 +1,5 @@
 ﻿using CryptoExchange.Net.Authentication;
+using System;
 
 namespace Aster.Net.Objects
 {
@@ -38,5 +39,14 @@ namespace Aster.Net.Objects
 
         /// <inheritdoc />
         public override ApiCredentials Copy() => new AsterFuturesCredential(Key, PrivateKey, SignerKey, SignerPrivateKey);
+
+        /// <inheritdoc />
+        public override void Validate()
+        {
+            base.Validate();
+
+            if (string.IsNullOrEmpty(PrivateKey))
+                throw new ArgumentException("PrivateKey unset", nameof(PrivateKey));
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Aster.Net
             { typeof(bool), "bool" }
         };
 
-        public AsterFuturesV3AuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.Futures)
+        public AsterFuturesV3AuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.FuturesV3)
         {
         }
 
@@ -53,7 +53,7 @@ namespace Aster.Net
              || request.Path.Contains("/v3/approveBuilder"))
             {
                 parameters["asterChain"] = "Mainnet";
-                parameters["user"] = ApiCredentials.Futures!.Key;
+                parameters["user"] = ApiCredentials.FuturesV3!.Key;
                 parameters["nonce"] = nonce;
 
                 var domainFields = GetDomainFields("AsterSignTransaction", "1", 56, "0x0000000000000000000000000000000000000000");
@@ -62,7 +62,6 @@ namespace Aster.Net
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
                 signatureHex = SignRequest(keccakSigned, Credential.PrivateKey).ToLower();
 
-                //parameters["signature"] = signatureHex;
                 parameters["signatureChainId"] = 56;
                 paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);
             }
