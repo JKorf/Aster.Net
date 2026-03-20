@@ -1,5 +1,5 @@
 POST
-/fapi/v3/marginType
+/fapi/v1/marginType
 true
 {
 	"code": 200,

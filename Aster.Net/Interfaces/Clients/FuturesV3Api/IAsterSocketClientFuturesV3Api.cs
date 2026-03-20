@@ -8,12 +8,12 @@ using System.Collections.Generic;
 using Aster.Net.Enums;
 using CryptoExchange.Net.Interfaces.Clients;
 
-namespace Aster.Net.Interfaces.Clients.FuturesApi
+namespace Aster.Net.Interfaces.Clients.FuturesV3Api
 {
     /// <summary>
     /// Aster Futures streams
     /// </summary>
-    public interface IAsterSocketClientFuturesV3Api : ISocketApiClient, IDisposable
+    public interface IAsterSocketClientFuturesV3Api : ISocketApiClient<AsterCredentials>, IDisposable
     {
         /// <summary>
         /// Subscribe to aggregated trade updates
@@ -480,7 +480,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         Task<CallResult<HighPerfUpdateSubscription>> SubscribeToOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int? updateInterval, Action<AsterOrderBookUpdate> onMessage, CancellationToken ct);
 
         /// <summary>
-        /// Subscribes to the account update stream. Prior to using this, the <see cref="IAsterRestClientFuturesApiAccount.StartUserStreamAsync(CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
+        /// Subscribes to the account update stream. Prior to using this, the <see cref="IAsterRestClientFuturesV3ApiAccount.StartUserStreamAsync(CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
         /// <para>
         /// Docs:<br />
         /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-futures-api.md#event-user-data-stream-expired" /><br />
@@ -488,7 +488,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// &lt;listenKey&gt;
         /// </para>
         /// </summary>
-        /// <param name="listenKey">Listen key retrieved by the <see cref="IAsterRestClientFuturesApiAccount.StartUserStreamAsync(CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method</param>
+        /// <param name="listenKey">Listen key retrieved by the <see cref="IAsterRestClientFuturesV3ApiAccount.StartUserStreamAsync(CancellationToken)">restClient.FuturesApi.Account.StartUserStreamAsync</see> method</param>
         /// <param name="onConfigUpdate">The event handler for leverage changed update</param>
         /// <param name="onMarginUpdate">The event handler for whenever a margin has changed</param>
         /// <param name="onAccountUpdate">The event handler for whenever an account update is received</param>

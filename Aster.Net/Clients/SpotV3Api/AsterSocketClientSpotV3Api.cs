@@ -1,6 +1,7 @@
 using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using Aster.Net.Objects.Options;
@@ -29,15 +30,15 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.SpotV3Api
 {
     /// <summary>
-    /// Client providing access to the Aster Futures websocket Api
+    /// Client providing access to the Aster Spot websocket Api
     /// </summary>
-    internal partial class AsterSocketClientFuturesV3Api : SocketApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterSocketClientFuturesV3Api
+    internal partial class AsterSocketClientSpotV3Api : SocketApiClient<AsterEnvironment, AsterV1AuthenticationProvider, AsterCredentials>, IAsterSocketClientSpotV3Api
     {
         #region fields
-        protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
+        protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
         #endregion
 
         #region constructor/destructor
@@ -45,8 +46,8 @@ namespace Aster.Net.Clients.FuturesApi
         /// <summary>
         /// ctor
         /// </summary>
-        internal AsterSocketClientFuturesV3Api(ILogger logger, AsterSocketOptions options) :
-            base(logger, options.Environment.FuturesSocketClientAddress!, options, options.FuturesOptions)
+        internal AsterSocketClientSpotV3Api(ILogger logger, AsterSocketOptions options) :
+            base(logger, options.Environment.SpotSocketClientAddress!, options, options.SpotOptions)
         {
             RateLimiter = AsterExchange.RateLimiter.Socket;
         }
@@ -57,17 +58,15 @@ namespace Aster.Net.Clients.FuturesApi
 
         /// <inheritdoc />
         public override ISocketMessageHandler CreateMessageConverter(WebSocketMessageType messageType)
-            => new AsterSocketFuturesMessageConverter();
-
+            => new AsterSocketSpotMessageConverter();
         /// <inheritdoc />
-        protected override AsterV3AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
-            => new AsterV3AuthenticationProvider(credentials);
-
+        protected override AsterV1AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
+            => new AsterV1AuthenticationProvider(credentials);
 
         #region Aggregate Trade Streams
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(string symbol, Action<DataEvent<AsterAggregatedTradeUpdate>> onMessage, CancellationToken ct = default) 
+        public async Task<CallResult<UpdateSubscription>> SubscribeToAggregatedTradeUpdatesAsync(string symbol, Action<DataEvent<AsterAggregatedTradeUpdate>> onMessage, CancellationToken ct = default)
             => await SubscribeToAggregatedTradeUpdatesAsync(new[] { symbol }, onMessage, ct).ConfigureAwait(false);
 
         /// <inheritdoc />
@@ -87,62 +86,14 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithUpdateType(SocketUpdateType.Update)
                     );
             });
-
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@aggTrade").ToArray();
             return await SubscribeAsync(BaseAddress, "aggTrade", symbols, handler, ct).ConfigureAwait(false);
         }
 
-        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToAggregatedTradeUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterAggregatedTradeUpdate> callback, CancellationToken ct)
+        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToAggregatedTradeUpdatesPerfAsync(IEnumerable<string> symbols, Action<AsterStreamMinimalTrade> callback, CancellationToken ct)
         {
             var topics = new HashSet<string>(symbols.Select(x => x.ToLowerInvariant() + "@aggTrade"));
-            return SubscribeHighPerfAsync<AsterCombinedStream<AsterAggregatedTradeUpdate>, AsterAggregatedTradeUpdate>(BaseAddress, topics.ToArray(), callback, ct: ct);
-        }
-        #endregion
-
-        #region Mark Price Streams
-
-        /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToMarkPriceUpdatesAsync(int? updateInterval, Action<DataEvent<AsterMarkPriceUpdate[]>> onMessage, CancellationToken ct = default)
-        {
-            updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-
-            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMarkPriceUpdate[]>>((receiveTime, originalData, data) =>
-            {
-                onMessage(
-                    new DataEvent<AsterMarkPriceUpdate[]>(Exchange, data.Data, receiveTime, originalData)
-                        .WithStreamId(data.Stream)
-                        .WithDataTimestamp(data.Data.Max(x => x.EventTime), GetTimeOffset())
-                        .WithUpdateType(SocketUpdateType.Update)
-                    );
-            });
-            return await SubscribeAsync(BaseAddress, "markPriceUpdate",["!markPrice@arr" + (updateInterval == 1000 ? "@1s" : "")], handler, ct).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToMarkPriceUpdatesAsync(string symbol, int? updateInterval, Action<DataEvent<AsterMarkPriceUpdate>> onMessage, CancellationToken ct = default)
-            => await SubscribeToMarkPriceUpdatesAsync(new[] { symbol }, updateInterval, onMessage, ct).ConfigureAwait(false);
-
-        /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToMarkPriceUpdatesAsync(IEnumerable<string> symbols, int? updateInterval, Action<DataEvent<AsterMarkPriceUpdate>> onMessage, CancellationToken ct = default)
-        {
-            symbols.ValidateNotNull(nameof(symbols));
-
-            updateInterval?.ValidateIntValues(nameof(updateInterval), 1000, 3000);
-
-            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterMarkPriceUpdate>>((receiveTime, originalData, data) =>
-            {
-                UpdateTimeOffset(data.Data.EventTime);
-
-                onMessage(
-                    new DataEvent<AsterMarkPriceUpdate>(Exchange, data.Data, receiveTime, originalData)
-                        .WithStreamId(data.Stream)
-                        .WithSymbol(data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
-                        .WithUpdateType(SocketUpdateType.Update)
-                    );
-            });
-            symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@markPrice" + (updateInterval == 1000 ? "@1s" : "")).ToArray();
-            return await SubscribeAsync(BaseAddress, "markPriceUpdate", symbols, handler, ct).ConfigureAwait(false);
+            return SubscribeHighPerfAsync<AsterCombinedStream<AsterStreamMinimalTrade>, AsterStreamMinimalTrade>(BaseAddress, topics.ToArray(), callback, ct: ct);
         }
         #endregion
 
@@ -279,7 +230,7 @@ namespace Aster.Net.Clients.FuturesApi
         #region Book Ticker Streams
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToBookTickerUpdatesAsync(string symbol, Action<DataEvent<AsterBookTickerUpdate>> onMessage, CancellationToken ct = default) 
+        public async Task<CallResult<UpdateSubscription>> SubscribeToBookTickerUpdatesAsync(string symbol, Action<DataEvent<AsterBookTickerUpdate>> onMessage, CancellationToken ct = default)
             => await SubscribeToBookTickerUpdatesAsync(new[] { symbol }, onMessage, ct).ConfigureAwait(false);
 
         /// <inheritdoc />
@@ -329,57 +280,10 @@ namespace Aster.Net.Clients.FuturesApi
 
         #endregion
 
-        #region Liquidation Streams
-
-        /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToLiquidationUpdatesAsync(string symbol, Action<DataEvent<AsterLiquidationUpdate>> onMessage, CancellationToken ct = default)
-            => await SubscribeToLiquidationUpdatesAsync(new[] { symbol }, onMessage, ct).ConfigureAwait(false);
-
-        /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToLiquidationUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<AsterLiquidationUpdate>> onMessage, CancellationToken ct = default)
-        {
-            symbols.ValidateNotNull(nameof(symbols));
-
-            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
-            {
-                UpdateTimeOffset(data.Data.EventTime);
-
-                onMessage(
-                    new DataEvent<AsterLiquidationUpdate>(Exchange, data.Data.Data, receiveTime, originalData)
-                        .WithStreamId(data.Stream)
-                        .WithSymbol(data.Data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
-                        .WithUpdateType(SocketUpdateType.Update)
-                    );
-            });
-            symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@forceOrder").ToArray();
-            return await SubscribeAsync(BaseAddress, "forceOrder", symbols, handler, ct).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToLiquidationUpdatesAsync(Action<DataEvent<AsterLiquidationUpdate>> onMessage, CancellationToken ct = default)
-        {
-            var handler = new Action<DateTime, string?, AsterCombinedStream<AsterLiquidationUpdateEvent>>((receiveTime, originalData, data) =>
-            {
-                UpdateTimeOffset(data.Data.EventTime);
-
-                onMessage(
-                    new DataEvent<AsterLiquidationUpdate>(Exchange, data.Data.Data, receiveTime, originalData)
-                        .WithStreamId(data.Stream)
-                        .WithSymbol(data.Data.Data.Symbol)
-                        .WithDataTimestamp(data.Data.EventTime, GetTimeOffset())
-                        .WithUpdateType(SocketUpdateType.Update)
-                    );
-            });
-            return await SubscribeAsync(BaseAddress, "forceOrder", new[] { "!forceOrder@arr" }, handler, ct).ConfigureAwait(false);
-        }
-
-        #endregion
-
         #region Partial Book Depth Streams
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(string symbol, int levels, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default) 
+        public async Task<CallResult<UpdateSubscription>> SubscribeToPartialOrderBookUpdatesAsync(string symbol, int levels, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default)
             => await SubscribeToPartialOrderBookUpdatesAsync(new[] { symbol }, levels, updateInterval, onMessage, ct).ConfigureAwait(false);
 
         /// <inheritdoc />
@@ -387,7 +291,7 @@ namespace Aster.Net.Clients.FuturesApi
         {
             symbols.ValidateNotNull(nameof(symbols));
             levels.ValidateIntValues(nameof(levels), 5, 10, 20);
-            updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 250, 500);
+            updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 1000);
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
@@ -402,14 +306,14 @@ namespace Aster.Net.Clients.FuturesApi
                         .WithSequenceNumber(data.Data.LastUpdateId)
                     );
             });
-
             symbols = symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")).ToArray();
             return await SubscribeAsync(BaseAddress, "depthUpdate", symbols, handler, ct).ConfigureAwait(false);
         }
 
         public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToPartialOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int levels, int? updateInterval, Action<AsterOrderBookUpdate> onMessage, CancellationToken ct)
         {
-            var topics = new HashSet<string>(symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")));
+            var topics = new HashSet<string>(symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + levels +
+                (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")));
             return SubscribeHighPerfAsync<AsterCombinedStream<AsterOrderBookUpdate>, AsterOrderBookUpdate>(BaseAddress, topics.ToArray(), onMessage, ct: ct);
         }
         #endregion
@@ -417,14 +321,14 @@ namespace Aster.Net.Clients.FuturesApi
         #region Diff. Book Depth Streams
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(string symbol, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default) 
+        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(string symbol, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default)
             => await SubscribeToOrderBookUpdatesAsync(new[] { symbol }, updateInterval, onMessage, ct).ConfigureAwait(false);
 
         /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(IEnumerable<string> symbols, int? updateInterval, Action<DataEvent<AsterOrderBookUpdate>> onMessage, CancellationToken ct = default)
         {
             symbols.ValidateNotNull(nameof(symbols));
-            updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 250, 500);
+            updateInterval?.ValidateIntValues(nameof(updateInterval), 100, 1000);
 
             var handler = new Action<DateTime, string?, AsterCombinedStream<AsterOrderBookUpdate>>((receiveTime, originalData, data) =>
             {
@@ -443,10 +347,11 @@ namespace Aster.Net.Clients.FuturesApi
             return await SubscribeAsync(BaseAddress, "depthUpdate", symbols, handler, ct).ConfigureAwait(false);
         }
 
-        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int? updateInterval, Action<AsterOrderBookUpdate> onMessage, CancellationToken ct)
+        public Task<CallResult<HighPerfUpdateSubscription>> SubscribeToOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int? updateInterval, Action<AsterOrderBookUpdate> callback, CancellationToken ct)
         {
-            var topics = new HashSet<string>(symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" + (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")));
-            return SubscribeHighPerfAsync<AsterCombinedStream<AsterOrderBookUpdate>, AsterOrderBookUpdate>(BaseAddress, topics.ToArray(), onMessage, ct: ct);
+            var topics = new HashSet<string>(symbols.Select(a => a.ToLower(CultureInfo.InvariantCulture) + "@depth" +
+                (updateInterval.HasValue ? $"@{updateInterval.Value}ms" : "")));
+            return SubscribeHighPerfAsync<AsterCombinedStream<AsterOrderBookUpdate>, AsterOrderBookUpdate>(BaseAddress, topics.ToArray(), callback, ct: ct);
         }
 
         #endregion
@@ -456,16 +361,13 @@ namespace Aster.Net.Clients.FuturesApi
         /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
             string listenKey,
-            Action<DataEvent<AsterConfigUpdate>>? onConfigUpdate = null,
-            Action<DataEvent<AsterMarginUpdate>>? onMarginUpdate = null,
-            Action<DataEvent<AsterAccountUpdate>>? onAccountUpdate = null,
-            Action<DataEvent<AsterOrderUpdate>>? onOrderUpdate = null,
-            Action<DataEvent<AsterSocketEvent>>? onListenKeyExpired = null,
+            Action<DataEvent<AsterSpotAccountUpdate>>? onAccountUpdate = null,
+            Action<DataEvent<AsterSpotOrderUpdate>>? onOrderUpdate = null,
             CancellationToken ct = default)
         {
             listenKey.ValidateNotNull(nameof(listenKey));
 
-            var subscription = new AsterUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onConfigUpdate, onMarginUpdate, onAccountUpdate, onListenKeyExpired);
+            var subscription = new AsterSpotUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onAccountUpdate);
             return await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
         }
 
@@ -476,6 +378,7 @@ namespace Aster.Net.Clients.FuturesApi
             var subscription = new AsterSubscription<T>(_logger, dataType, topics.ToList(), onData, false);
             return SubscribeAsync(url.AppendPath("stream"), subscription, ct);
         }
+
         internal Task<CallResult<HighPerfUpdateSubscription>> SubscribeHighPerfAsync<T, U>(
             string url,
             string[] topics,
@@ -506,7 +409,7 @@ namespace Aster.Net.Clients.FuturesApi
         }
 
         /// <inheritdoc />
-        public IAsterSocketClientFuturesV3ApiShared SharedClient => this;
+        public IAsterSocketClientSpotV3ApiShared SharedClient => this;
 
         /// <inheritdoc />
         public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null)

@@ -1,5 +1,5 @@
 GET
-/fapi/v3/openOrders
+/fapi/v1/openOrders
 true
 [
   {

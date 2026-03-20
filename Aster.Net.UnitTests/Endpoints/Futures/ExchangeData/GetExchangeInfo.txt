@@ -1,5 +1,5 @@
 GET
-/fapi/v3/exchangeInfo
+/fapi/v1/exchangeInfo
 false
 {
 	"exchangeFilters": [],

@@ -1,5 +1,5 @@
 DELETE
-/fapi/v3/allOpenOrders
+/fapi/v1/allOpenOrders
 true
 {
 	"code": "200", 

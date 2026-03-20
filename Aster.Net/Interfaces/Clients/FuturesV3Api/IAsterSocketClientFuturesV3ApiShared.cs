@@ -1,6 +1,6 @@
 using CryptoExchange.Net.SharedApis;
 
-namespace Aster.Net.Interfaces.Clients.FuturesApi
+namespace Aster.Net.Interfaces.Clients.FuturesV3Api
 {
     /// <summary>
     /// Shared interface for Futures socket API usage

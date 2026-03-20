@@ -63,7 +63,7 @@ namespace Aster.Net.Objects
             var pubAddress = new byte[20];
             Array.Copy(hash, hash.Length - 20, pubAddress, 0, 20);
 
-            return "0x" + ExchangeHelpers.BytesToHexString(pubAddress);
+            return "0x" + ExchangeHelpers.BytesToHexString(pubAddress).ToLower();
         }
 
         /// <inheritdoc />

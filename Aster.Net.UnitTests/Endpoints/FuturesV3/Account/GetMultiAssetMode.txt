@@ -1,0 +1,6 @@
+GET
+/fapi/v3/multiAssetsMargin
+true
+{
+	"multiAssetsMargin": true
+}

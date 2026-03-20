@@ -1,5 +1,5 @@
 POST
-/fapi/v3/countdownCancelAll
+/fapi/v1/countdownCancelAll
 true
 {
 	"symbol": "BTCUSDT", 

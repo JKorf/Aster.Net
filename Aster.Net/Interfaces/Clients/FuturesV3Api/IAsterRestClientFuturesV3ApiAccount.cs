@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Interfaces.Clients.FuturesApi
+namespace Aster.Net.Interfaces.Clients.FuturesV3Api
 {
     /// <summary>
     /// Aster Futures account endpoints. Account endpoints include balance info, withdraw/deposit info and requesting and account settings

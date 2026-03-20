@@ -335,7 +335,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("symbol", symbol);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v1/positionRisk", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v2/positionRisk", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterPosition[]>(request, parameters, ct).ConfigureAwait(false);
         }
 

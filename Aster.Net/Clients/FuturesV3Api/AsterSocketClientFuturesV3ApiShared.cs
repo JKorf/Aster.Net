@@ -1,5 +1,6 @@
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Sockets;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.FuturesV3Api
 {
     internal partial class AsterSocketClientFuturesV3Api : IAsterSocketClientFuturesV3ApiShared
     {

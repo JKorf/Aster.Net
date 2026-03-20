@@ -1,5 +1,5 @@
 GET
-/fapi/v3/fundingInfo
+/fapi/v1/fundingInfo
 false
 [
 	{

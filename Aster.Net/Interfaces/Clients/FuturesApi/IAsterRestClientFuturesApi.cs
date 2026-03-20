@@ -6,7 +6,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
     /// <summary>
     /// Aster Futures API endpoints
     /// </summary>
-    public interface IAsterRestClientFuturesApi : IRestApiClient, IDisposable
+    public interface IAsterRestClientFuturesApi : IRestApiClient<AsterCredentials>, IDisposable
     {
         /// <summary>
         /// Endpoints related to account settings, info or actions

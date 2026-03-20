@@ -1,5 +1,6 @@
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Converters.SystemTextJson;
@@ -11,7 +12,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.FuturesV3Api
 {
     /// <inheritdoc />
     internal class AsterRestClientFuturesV3ApiExchangeData : IAsterRestClientFuturesV3ApiExchangeData

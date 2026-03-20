@@ -1,5 +1,5 @@
 GET
-/fapi/v3/depth
+/fapi/v1/depth
 false
 {
   "lastUpdateId": 1027024,

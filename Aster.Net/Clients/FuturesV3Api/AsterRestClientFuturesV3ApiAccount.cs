@@ -1,7 +1,9 @@
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
+using Aster.Net.Utils;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Objects;
@@ -11,7 +13,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.FuturesV3Api
 {
     /// <inheritdoc />
     internal class AsterRestClientFuturesV3ApiAccount : IAsterRestClientFuturesV3ApiAccount
@@ -363,7 +365,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.Add("signaction", "ApproveBuilder");
 
             var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/approveBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
-            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
             if (!result)
                 return result.AsDataless();
 
@@ -385,7 +387,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.Add("signaction", "UpdateBuilder");
 
             var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/updateBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
-            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
             if (!result)
                 return result.AsDataless();
 
@@ -406,7 +408,7 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.Add("signaction", "DelBuilder");
 
             var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/builder", AsterExchange.RateLimiter.RestIp, 1, true);
-            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
             if (!result)
                 return result.AsDataless();
 
@@ -424,7 +426,7 @@ namespace Aster.Net.Clients.FuturesApi
         {
             var parameters = new ParameterCollection();
             var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/builder", AsterExchange.RateLimiter.RestIp, 1, true);
-            return await _baseClient.SendAsync<AsterBuilder[]>(request, parameters, ct).ConfigureAwait(false);
+            return await _baseClient.SendAsync<AsterBuilder[]>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
         }
 
         #endregion

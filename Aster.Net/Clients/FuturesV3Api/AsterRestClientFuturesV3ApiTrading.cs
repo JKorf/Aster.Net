@@ -1,5 +1,6 @@
 using Aster.Net.Enums;
 using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
@@ -15,7 +16,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.FuturesV3Api
 {
     /// <inheritdoc />
     internal class AsterRestClientFuturesV3ApiTrading : IAsterRestClientFuturesV3ApiTrading

@@ -1,5 +1,5 @@
 GET
-/fapi/v3/positionMargin/history
+/fapi/v1/positionMargin/history
 true
 [
 	{

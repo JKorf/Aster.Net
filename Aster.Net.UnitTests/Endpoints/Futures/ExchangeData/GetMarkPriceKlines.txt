@@ -1,5 +1,5 @@
 GET
-/fapi/v3/markPriceKlines
+/fapi/v1/markPriceKlines
 false
 [
   [

@@ -10,6 +10,10 @@ using Aster.Net.Clients.FuturesApi;
 using Aster.Net.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using CryptoExchange.Net.Authentication;
+using Aster.Net.Interfaces.Clients.SpotV3Api;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
+using Aster.Net.Clients.FuturesV3Api;
+using Aster.Net.Clients.SpotV3Api;
 
 namespace Aster.Net.Clients
 {
@@ -23,6 +27,8 @@ namespace Aster.Net.Clients
         
          /// <inheritdoc />
         public IAsterSocketClientSpotApi SpotApi { get; }
+        /// <inheritdoc />
+        public IAsterSocketClientSpotV3Api SpotV3Api { get; }
         /// <inheritdoc />
         public IAsterSocketClientFuturesApi FuturesApi { get; }
         /// <inheritdoc />
@@ -51,6 +57,7 @@ namespace Aster.Net.Clients
             Initialize(options.Value);
 
             SpotApi = AddApiClient(new AsterSocketClientSpotApi(_logger, options.Value));
+            SpotV3Api = AddApiClient(new AsterSocketClientSpotV3Api(_logger, options.Value));
             FuturesApi = AddApiClient(new AsterSocketClientFuturesApi(_logger, options.Value));
             FuturesV3Api = AddApiClient(new AsterSocketClientFuturesV3Api(_logger, options.Value));
         }

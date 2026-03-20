@@ -13,7 +13,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
     /// <summary>
     /// Aster Spot streams
     /// </summary>
-    public interface IAsterSocketClientSpotApi : ISocketApiClient, IDisposable
+    public interface IAsterSocketClientSpotApi : ISocketApiClient<AsterCredentials>, IDisposable
     {
 
         /// <summary>

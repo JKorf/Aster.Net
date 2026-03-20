@@ -1,5 +1,5 @@
 GET
-/fapi/v3/historicalTrades
+/fapi/v1/historicalTrades
 true
 [
   {

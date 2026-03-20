@@ -1,5 +1,5 @@
 GET
-/fapi/v3/positionSide/dual
+/fapi/v1/positionSide/dual
 true
 {
 	"dualSidePosition": true

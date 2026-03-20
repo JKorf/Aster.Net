@@ -1,0 +1,6 @@
+GET
+/fapi/v3/positionSide/dual
+true
+{
+	"dualSidePosition": true
+}

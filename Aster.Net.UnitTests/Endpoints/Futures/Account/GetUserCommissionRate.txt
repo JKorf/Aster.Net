@@ -1,5 +1,5 @@
 GET
-/fapi/v3/commissionRate
+/fapi/v1/commissionRate
 true
 {
 	"symbol": "BTCUSDT",

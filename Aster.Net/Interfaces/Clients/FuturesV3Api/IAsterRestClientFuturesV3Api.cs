@@ -1,12 +1,12 @@
 using CryptoExchange.Net.Interfaces.Clients;
 using System;
 
-namespace Aster.Net.Interfaces.Clients.FuturesApi
+namespace Aster.Net.Interfaces.Clients.FuturesV3Api
 {
     /// <summary>
     /// Aster Futures API endpoints
     /// </summary>
-    public interface IAsterRestClientFuturesV3Api : IRestApiClient, IDisposable
+    public interface IAsterRestClientFuturesV3Api : IRestApiClient<AsterCredentials>, IDisposable
     {
         /// <summary>
         /// Endpoints related to account settings, info or actions
@@ -25,6 +25,11 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </summary>
         /// <see cref="IAsterRestClientFuturesV3ApiTrading" />
         public IAsterRestClientFuturesV3ApiTrading Trading { get; }
+
+        /// <summary>
+        /// Get the shared rest requests client. This interface is shared with other exchanges to allow for a common implementation for different exchanges.
+        /// </summary>
+        public IAsterRestClientFuturesV3ApiShared SharedClient { get; }
 
     }
 }

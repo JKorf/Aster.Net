@@ -1,5 +1,5 @@
 GET
-/fapi/v3/order
+/fapi/v1/order
 true
 {
   	"avgPrice": "0.00000",

@@ -1,7 +1,7 @@
 using CryptoExchange.Net.SharedApis;
 using System;
 using System.Collections.Generic;
-using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Net.Objects;
@@ -11,9 +11,9 @@ using CryptoExchange.Net;
 using CryptoExchange.Net.Objects.Errors;
 using Aster.Net.Objects.Models;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.FuturesV3Api
 {
-    internal partial class AsterRestClientFuturesV3Api : IAsterRestClientFuturesApiShared
+    internal partial class AsterRestClientFuturesV3Api : IAsterRestClientFuturesV3ApiShared
     {
         private const string _topicId = "AsterFutures";
         public string Exchange => AsterExchange.ExchangeName;

@@ -1,6 +1,8 @@
 using Aster.Net.Clients.MessageHandlers;
-using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Objects.Options;
+using Aster.Net.Utils;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
@@ -19,51 +21,52 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.SpotV3Api
 {
-    /// <inheritdoc cref="IAsterRestClientFuturesV3Api" />
-    internal partial class AsterRestClientFuturesV3Api : RestApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterRestClientFuturesV3Api
+    /// <inheritdoc cref="IAsterRestClientSpotV3Api" />
+    internal partial class AsterRestClientSpotV3Api : RestApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterRestClientSpotV3Api
     {
         #region fields 
-        protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.FuturesErrors);
-        protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
+        protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.SpotErrors);
+        protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
+        internal AsterRestClient BaseClient { get; set; }
 
         public new AsterRestOptions ClientOptions => (AsterRestOptions)base.ClientOptions;
         #endregion
 
         #region Api clients
         /// <inheritdoc />
-        public IAsterRestClientFuturesV3ApiAccount Account { get; }
+        public IAsterRestClientSpotV3ApiAccount Account { get; }
         /// <inheritdoc />
-        public IAsterRestClientFuturesV3ApiExchangeData ExchangeData { get; }
+        public IAsterRestClientSpotV3ApiExchangeData ExchangeData { get; }
         /// <inheritdoc />
-        public IAsterRestClientFuturesV3ApiTrading Trading { get; }
+        public IAsterRestClientSpotV3ApiTrading Trading { get; }
         /// <inheritdoc />
         public string ExchangeName => "Aster";
         #endregion
 
         #region constructor/destructor
-        internal AsterRestClientFuturesV3Api(AsterRestClient baseClient, ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger,
+        internal AsterRestClientSpotV3Api(AsterRestClient baseClient, ILogger logger, HttpClient? httpClient, AsterRestOptions options)
+            : base(logger, 
                   httpClient,
-                  options.Environment.FuturesRestClientAddress,
+                  options.Environment.SpotRestClientAddress, 
                   options,
-                  options.FuturesOptions)
+                  options.SpotOptions)
         {
-            Account = new AsterRestClientFuturesV3ApiAccount(this);
-            ExchangeData = new AsterRestClientFuturesV3ApiExchangeData(logger, this);
-            Trading = new AsterRestClientFuturesV3ApiTrading(logger, this);
+            BaseClient = baseClient;
 
-            StandardRequestHeaders = new Dictionary<string, string>
-            {
-                { "User-Agent", "CryptoExchange.Net/" + baseClient.CryptoExchangeLibVersion }
-            };
+            Account = new AsterRestClientSpotV3ApiAccount(this);
+            ExchangeData = new AsterRestClientSpotV3ApiExchangeData(logger, this);
+            Trading = new AsterRestClientSpotV3ApiTrading(logger, this);
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;
             ArraySerialization = ArrayParametersSerialization.MultipleValues;
 
-            OrderParameters = false;
+            StandardRequestHeaders = new Dictionary<string, string>
+            {
+                { "User-Agent", "CryptoExchange.Net/" + baseClient.CryptoExchangeLibVersion }
+            };
         }
         #endregion
 
@@ -90,6 +93,9 @@ namespace Aster.Net.Clients.FuturesApi
 
         internal async Task<WebCallResult<T>> SendToAddressAsync<T>(string baseAddress, RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
         {
+            if (definition.Authenticated)
+                await AsterUtils.CheckBuilderFeeAsync(BaseClient).ConfigureAwait(false);
+
             var result = await base.SendAsync<T>(baseAddress, definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
             if (!result && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
@@ -107,8 +113,7 @@ namespace Aster.Net.Clients.FuturesApi
         public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null) 
             => AsterExchange.FormatSymbol(baseAsset, quoteAsset, tradingMode, deliverDate);
 
-        ///// <inheritdoc />
-        //public IAsterRestClientFuturesApiShared SharedClient => this;
-
+        /// <inheritdoc />
+        public IAsterRestClientSpotV3ApiShared SharedClient => this;
     }
 }

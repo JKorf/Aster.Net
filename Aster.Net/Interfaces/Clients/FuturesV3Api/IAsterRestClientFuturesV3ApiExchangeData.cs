@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Interfaces.Clients.FuturesApi
+namespace Aster.Net.Interfaces.Clients.FuturesV3Api
 {
     /// <summary>
     /// Aster Futures exchange data endpoints. Exchange data includes market data (tickers, order books, etc) and system status.

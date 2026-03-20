@@ -1,5 +1,5 @@
 POST
-/fapi/v3/asset/wallet/transfer
+/fapi/v1/asset/wallet/transfer
 true
 {
     "tranId": 21841, 
