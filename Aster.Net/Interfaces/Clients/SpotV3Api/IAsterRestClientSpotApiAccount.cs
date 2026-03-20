@@ -15,9 +15,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get user fee rates
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-symbol-fees" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#get-symbol-fees" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/commissionRate
+        /// GET /api/v3/commissionRate
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
@@ -29,9 +29,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Transfer between Spot and Futures account
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#perp-spot-transfer-trade" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#perp-spot-transfer-trade" /><br />
         /// Endpoint:<br />
-        /// POST /api/v1/asset/wallet/transfer
+        /// POST /api/v3/asset/wallet/transfer
         /// </para>
         /// </summary>
         /// <param name="asset">["<c>asset</c>"] Asset to transfer</param>
@@ -43,44 +43,12 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         Task<WebCallResult<AsterTransferResult>> TransferAsync(string asset, TransferDirection direction, decimal quantity, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
 
         /// <summary>
-        /// Send to a different address
-        /// <para>
-        /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#transfer-asset-to-other-address-trade" /><br />
-        /// Endpoint:<br />
-        /// POST /api/v1/asset/sendToAddress
-        /// </para>
-        /// </summary>
-        /// <param name="asset">["<c>asset</c>"] Asset to send</param>
-        /// <param name="toAddress">["<c>toAddress</c>"] Target EVM address</param>
-        /// <param name="quantity">["<c>amount</c>"] Quantity</param>
-        /// <param name="clientOrderId">["<c>clientTranId</c>"] Client defined id, min 20 characters</param>
-        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-        /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterTransferResult>> SendToAddressAsync(string asset, string toAddress, decimal quantity, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
-
-        /// <summary>
-        /// Get withdrawal fee
-        /// <para>
-        /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-withdraw-fee-none" /><br />
-        /// Endpoint:<br />
-        /// GET /api/v1/aster/withdraw/estimateFee
-        /// </para>
-        /// </summary>
-        /// <param name="asset">["<c>asset</c>"] Asset to withdraw</param>
-        /// <param name="network">["<c>chainId</c>"] Network type</param>
-        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
-        /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterWithdrawFee>> GetWithdrawFeeAsync(string asset, NetworkType network, long? receiveWindow = null, CancellationToken ct = default);
-
-        /// <summary>
         /// Get account info and balances
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-information-user_data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#account-information-user_data" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/account
+        /// GET /api/v3/account
         /// </para>
         /// </summary>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -91,9 +59,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Start a user stream. The resulting listen key can be used to subscribe to the user stream using the socket client. The stream will close after 60 minutes unless <see cref="KeepAliveUserStreamAsync">KeepAliveUserStreamAsync</see> is called.
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#generate-listen-key-user_stream" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/websocket-account-info/#listen-key-spot-account" /><br />
         /// Endpoint:<br />
-        /// POST /api/v1/listenKey
+        /// POST /api/v3/listenKey
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
@@ -104,9 +72,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Keep alive the user stream. This should be called every 30 minutes to prevent the user stream being stopped
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#extend-listen-key-validity-period-user_stream" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/websocket-account-info/#extend-listen-key-validity-period-user_stream" /><br />
         /// Endpoint:<br />
-        /// PUT /api/v1/listenKey
+        /// PUT /api/v3/listenKey
         /// </para>
         /// </summary>
         /// <param name="listenKey">["<c>listenKey</c>"] The listen key to keep alive</param>
@@ -118,9 +86,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Stop the user stream, no updates will be send anymore
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#close-listen-key-user_stream" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/websocket-account-info/#close-listen-key-user_stream" /><br />
         /// Endpoint:<br />
-        /// DELETE /api/v1/listenKey
+        /// DELETE /api/v3/listenKey
         /// </para>
         /// </summary>
         /// <param name="listenKey">["<c>listenKey</c>"] The listen key to stop</param>

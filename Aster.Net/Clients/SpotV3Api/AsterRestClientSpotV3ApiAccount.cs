@@ -57,40 +57,6 @@ namespace Aster.Net.Clients.SpotV3Api
 
         #endregion
 
-        #region Send To Address
-
-        /// <inheritdoc />
-        public async Task<WebCallResult<AsterTransferResult>> SendToAddressAsync(string asset, string toAddress, decimal quantity, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default)
-        {
-            var parameters = new ParameterCollection();
-            parameters.Add("asset", asset);
-            parameters.Add("amount", quantity);
-            parameters.Add("toAddress", toAddress);
-            parameters.Add("clientTranId", clientOrderId ?? Guid.NewGuid().ToString());
-            parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-            var request = _definitions.GetOrCreate(HttpMethod.Post, "/api/v3/asset/sendToAddress", AsterExchange.RateLimiter.RestIp, 5, true);
-            return await _baseClient.SendAsync<AsterTransferResult>(request, parameters, ct).ConfigureAwait(false);
-        }
-
-        #endregion
-
-        #region Get Withdraw Fee
-
-        /// <inheritdoc />
-        public async Task<WebCallResult<AsterWithdrawFee>> GetWithdrawFeeAsync(string asset, NetworkType network, long? receiveWindow = null, CancellationToken ct = default)
-        {
-            var parameters = new ParameterCollection();
-            parameters.Add("asset", asset);
-            parameters.AddEnumAsInt("chainId", network);
-            parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/api/v3/aster/withdraw/estimateFee", AsterExchange.RateLimiter.RestIp, 5, true);
-            return await _baseClient.SendAsync<AsterWithdrawFee>(request, parameters, ct).ConfigureAwait(false);
-        }
-
-        #endregion
-
         #region Get Account Info
 
         /// <inheritdoc />
@@ -109,7 +75,7 @@ namespace Aster.Net.Clients.SpotV3Api
         /// <inheritdoc />
         public async Task<WebCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Post, "api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
             var result = await _baseClient.SendAsync<AsterListenKey>(request, null, ct).ConfigureAwait(false);
             return result.As(result.Data?.ListenKey!);
         }
@@ -128,7 +94,7 @@ namespace Aster.Net.Clients.SpotV3Api
                 { "listenKey", listenKey }
             };
 
-            var request = _definitions.GetOrCreate(HttpMethod.Put, "api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Put, "api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -145,7 +111,7 @@ namespace Aster.Net.Clients.SpotV3Api
                 { "listenKey", listenKey }
             };
 
-            var request = _definitions.GetOrCreate(HttpMethod.Delete, "api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, "api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
         }
 

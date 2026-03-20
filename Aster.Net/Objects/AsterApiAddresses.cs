@@ -32,5 +32,16 @@ namespace Aster.Net.Objects
             SpotRestClientAddress = "https://sapi.asterdex.com",
             SpotSocketClientAddress = "wss://sstream.asterdex.com"
         };
+
+        /// <summary>
+        /// The addresses to connect to the Aster Testnet API
+        /// </summary>
+        public static AsterApiAddresses Testnet = new AsterApiAddresses
+        {
+            FuturesRestClientAddress = "https://fapi.asterdex-testnet.com",
+            FuturesSocketClientAddress = "wss://fstream5.asterdex-testnet.com",
+            SpotRestClientAddress = "https://sapi.asterdex-testnet.com",
+            SpotSocketClientAddress = "wss://sstream.asterdex-testnet.com"
+        };
     }
 }

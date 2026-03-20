@@ -16,9 +16,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Place a new order
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#place-order-trade" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#place-order-trade" /><br />
         /// Endpoint:<br />
-        /// POST /api/v1/order
+        /// POST /api/v3/order
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -48,9 +48,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Cancel an order
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-order-trade" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#cancel-order-trade" /><br />
         /// Endpoint:<br />
-        /// DELETE /api/v1/order
+        /// DELETE /api/v3/order
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -69,9 +69,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get info on an order
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-order-user_data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#query-order-user_data" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/order
+        /// GET /api/v3/order
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -90,9 +90,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get current open order list
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-open-orders-user_data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#current-open-orders-user_data" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/openOrders
+        /// GET /api/v3/openOrders
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -107,9 +107,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Cancel all open orders for a symbol
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#cancel-all-open-orders-trade" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#cancel-all-open-orders-trade" /><br />
         /// Endpoint:<br />
-        /// DELETE /api/v1/allOpenOrders
+        /// DELETE /api/v3/allOpenOrders
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
@@ -124,9 +124,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get list of all orders
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-all-orders-user_data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#query-all-orders-user_data" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/allOrders
+        /// GET /api/v3/allOrders
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
@@ -149,9 +149,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get user trades
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#account-trade-history-user_data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#account-trade-history-user_data" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/userTrades
+        /// GET /api/v3/userTrades
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>

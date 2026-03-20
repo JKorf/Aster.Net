@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Aster.Net.Clients;
 using Aster.Net.Objects;
+using Microsoft.Extensions.Logging;
+using Aster.Net.Objects.Options;
+using Microsoft.Extensions.Options;
 
 namespace Aster.Net.UnitTests
 {
@@ -146,14 +149,17 @@ namespace Aster.Net.UnitTests
         [Test]
         public async Task ValidateFuturesV3AccountCalls()
         {
-            var client = new AsterRestClient(opts =>
-            {
-                opts.AutoTimestamp = false;
-                opts.ApiCredentials = new AsterCredentials(
+            var logger = new LoggerFactory();
+            logger.AddProvider(new TraceLoggerProvider());
+            var client = new AsterRestClient(null, logger, Options.Create(new AsterRestOptions 
+            {            
+                AutoTimestamp = false,
+                Environment = AsterEnvironment.CreateCustom("UnitTest", "https://sapi.asterdex.com/", "wss://localhost/", "https://fapi.asterdex.com/", "wss://localhost/"),
+                ApiCredentials = new AsterCredentials(
                     new AsterV3Credential(
                         "0x1212121212121212121212121212121212121212121212121212121212121212",
-                        "0x1212121212121212121212121212121212121212121212121212121212121212"));
-            });
+                        "0x1212121212121212121212121212121212121212121212121212121212121212"))
+            }));
             var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/FuturesV3/Account", "https://fapi.asterdex.com", IsAuthenticated);
             await tester.ValidateAsync(client => client.FuturesV3Api.Account.GetPositionModeAsync(), "GetPositionMode");
             await tester.ValidateAsync(client => client.FuturesV3Api.Account.SetPositionModeAsync(true), "SetPositionMode");
@@ -178,6 +184,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
+                opts.Environment = AsterEnvironment.CreateCustom("UnitTest", "https://sapi.asterdex.com/", "wss://localhost/", "https://fapi.asterdex.com/", "wss://localhost/");
                 opts.ApiCredentials = new AsterCredentials(
                     new AsterV3Credential(
                         "0x1212121212121212121212121212121212121212121212121212121212121212",
@@ -209,6 +216,7 @@ namespace Aster.Net.UnitTests
             var client = new AsterRestClient(opts =>
             {
                 opts.AutoTimestamp = false;
+                opts.Environment = AsterEnvironment.CreateCustom("UnitTest", "https://sapi.asterdex.com/", "wss://localhost/", "https://fapi.asterdex.com/", "wss://localhost/");
                 opts.ApiCredentials = new AsterCredentials(
                     new AsterV3Credential(
                         "0x1212121212121212121212121212121212121212121212121212121212121212",
@@ -226,6 +234,65 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.FuturesV3Api.Trading.GetPositionsAsync("ETHUSDT"), "GetPositions2");
             await tester.ValidateAsync(client => client.FuturesV3Api.Trading.GetUserTradesAsync("ETHUSDT"), "GetUserTrades");
             await tester.ValidateAsync(client => client.FuturesV3Api.Trading.GetForcedOrdersAsync("ETHUSDT"), "GetForcedOrders");
+        }
+
+        [Test]
+        public async Task ValidateSpotV3AccountCalls()
+        {
+            var client = new AsterRestClient(opts =>
+            {
+                opts.AutoTimestamp = false;
+                opts.Environment = AsterEnvironment.CreateCustom("UnitTest", "https://sapi.asterdex.com/", "wss://localhost/", "https://fapi.asterdex.com/", "wss://localhost/");
+                opts.ApiCredentials = new AsterCredentials(
+                    new AsterV3Credential(
+                        "0x1212121212121212121212121212121212121212121212121212121212121212",
+                        "0x1212121212121212121212121212121212121212121212121212121212121212"));
+            });
+            var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/SpotV3/Account", "https://sapi.asterdex.com", IsAuthenticated);
+            await tester.ValidateAsync(client => client.SpotV3Api.Account.GetUserCommissionRateAsync("ETHUSDT"), "GetUserCommissionRate");
+            await tester.ValidateAsync(client => client.SpotV3Api.Account.TransferAsync("ETH", Enums.TransferDirection.FuturesToSpot, 1), "Transfer");
+            await tester.ValidateAsync(client => client.SpotV3Api.Account.GetAccountInfoAsync(), "GetAccountInfo");
+        }
+
+        [Test]
+        public async Task ValidateSpotV3ExchangeDataCalls()
+        {
+            var client = new AsterRestClient(opts =>
+            {
+                opts.AutoTimestamp = false;
+            });
+            var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/SpotV3/ExchangeData", "https://sapi.asterdex.com", IsAuthenticated);
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetExchangeInfoAsync(), "GetExchangeInfo");
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetOrderBookAsync("ETHUSDT"), "GetOrderBook");
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetRecentTradesAsync("ETHUSDT"), "GetRecentTrades", ignoreProperties: ["baseQty"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetTradeHistoryAsync("ETHUSDT"), "GetTradeHistory", ignoreProperties: ["baseQty"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetAggregatedTradeHistoryAsync("ETHUSDT"), "GetAggregatedTradeHistory");
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay), "GetKlines");
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetTickerAsync("ETHUSDT"), "GetTicker", ignoreProperties: ["prevClosePrice"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetPriceAsync("ETHUSDT"), "GetPrice");
+            await tester.ValidateAsync(client => client.SpotV3Api.ExchangeData.GetBookTickerAsync("ETHUSDT"), "GetBookTicker");
+        }
+
+        [Test]
+        public async Task ValidateSpotV3TradingCalls()
+        {
+            var client = new AsterRestClient(opts =>
+            {
+                opts.AutoTimestamp = false;
+                opts.Environment = AsterEnvironment.CreateCustom("UnitTest", "https://sapi.asterdex.com/", "wss://localhost/", "https://fapi.asterdex.com/", "wss://localhost/");
+                opts.ApiCredentials = new AsterCredentials(
+                    new AsterV3Credential(
+                        "0x1212121212121212121212121212121212121212121212121212121212121212",
+                        "0x1212121212121212121212121212121212121212121212121212121212121212"));
+            });
+            var tester = new RestRequestValidator<AsterRestClient>(client, "Endpoints/SpotV3/Trading", "https://sapi.asterdex.com", IsAuthenticated);
+            await tester.ValidateAsync(client => client.SpotV3Api.Trading.PlaceOrderAsync("ETHUSDT", Enums.OrderSide.Sell, Enums.OrderType.TakeProfit, 1), "PlaceOrder", ignoreProperties: ["cumQty"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.Trading.CancelOrderAsync("ETHUSDT", 123), "CancelOrder", ignoreProperties: ["cumQty"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.Trading.GetOrderAsync("ETHUSDT", 123), "GetOrder", ignoreProperties: ["cumQty"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.Trading.GetOpenOrdersAsync("ETHUSDT"), "GetOpenOrders", ignoreProperties: ["cumQty"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.Trading.CancelAllOrdersAsync("ETHUSDT"), "CancelAllOrders");
+            await tester.ValidateAsync(client => client.SpotV3Api.Trading.GetOrdersAsync("ETHUSDT"), "GetOrders", ignoreProperties: ["cumQty"]);
+            await tester.ValidateAsync(client => client.SpotV3Api.Trading.GetUserTradesAsync(), "GetUserTrades", ignoreProperties: ["counterpartyId", "createUpdateId"]);
         }
 
         private bool IsAuthenticated(WebCallResult result)

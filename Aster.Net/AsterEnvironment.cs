@@ -57,6 +57,7 @@ namespace Aster.Net
          => name switch
          {
              TradeEnvironmentNames.Live => Live,
+             TradeEnvironmentNames.Testnet => Testnet,
              "" => Live,
              null => Live,
              _ => default
@@ -66,7 +67,7 @@ namespace Aster.Net
         /// Available environment names
         /// </summary>
         /// <returns></returns>
-        public static string[] All => [Live.Name];
+        public static string[] All => [Live.Name, Testnet.Name];
 
         /// <summary>
         /// Live environment
@@ -77,6 +78,16 @@ namespace Aster.Net
                                      AsterApiAddresses.Default.SpotSocketClientAddress,
                                      AsterApiAddresses.Default.FuturesRestClientAddress,
                                      AsterApiAddresses.Default.FuturesSocketClientAddress);
+
+        /// <summary>
+        /// Testnet environment
+        /// </summary>
+        public static AsterEnvironment Testnet { get; }
+            = new AsterEnvironment(TradeEnvironmentNames.Testnet,
+                                     AsterApiAddresses.Testnet.SpotRestClientAddress,
+                                     AsterApiAddresses.Testnet.SpotSocketClientAddress,
+                                     AsterApiAddresses.Testnet.FuturesRestClientAddress,
+                                     AsterApiAddresses.Testnet.FuturesSocketClientAddress);
 
         /// <summary>
         /// Create a custom environment

@@ -27,7 +27,7 @@ namespace Aster.Net.Utils
                 return CallResult.SuccessResult;
 
             var envName = client.ClientOptions.Environment.Name;
-            if (envName.Equals("UnitTest", StringComparison.Ordinal))
+            if (!envName.Equals(TradeEnvironmentNames.Live, StringComparison.Ordinal))
                 return CallResult.SuccessResult;
 
             var options = client.ClientOptions;

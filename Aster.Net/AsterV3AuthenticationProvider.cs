@@ -77,9 +77,11 @@ namespace Aster.Net
                 parameters["user"] = Credential!.Key;
                 parameters["signer"] = Credential.SignerKey!;
 
+                var chainId = apiClient.EnvironmentName == TradeEnvironmentNames.Live ? AsterExchange._mainnetChainId : AsterExchange._testnetChainId;
+
                 paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);
             
-                var typedData = GetTradingTypedData(paramString, 1666);
+                var typedData = GetTradingTypedData(paramString, chainId);
                 var message = CeEip712TypedDataEncoder.EncodeTypedDataRaw(typedData);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
                 signatureHex = SignRequest(keccakSigned, Credential.SignerPrivateKey!).ToLower();

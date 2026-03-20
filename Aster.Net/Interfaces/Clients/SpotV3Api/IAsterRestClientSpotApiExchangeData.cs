@@ -16,9 +16,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get the current server time
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#get-server-time" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#get-server-time" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/time
+        /// GET /api/v3/time
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
@@ -28,9 +28,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get exchange information
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#trading-specification-information" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#trading-specification-information" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/exchangeInfo
+        /// GET /api/v3/exchangeInfo
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
@@ -40,9 +40,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get order book snapshot
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#depth-information" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#depth-informationn" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/depth
+        /// GET /api/v3/depth
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -54,9 +54,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get recent trades for a symbol
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#recent-trades-list" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#recent-trades-list" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/trades
+        /// GET /api/v3/trades
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -68,9 +68,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get trade history
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#query-historical-trades-market_data" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/historicalTrades
+        /// GET /api/v3/historicalTrades
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -83,9 +83,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get aggregated trade history
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#query-historical-trades-market_data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#recent-trades-aggregated" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/aggTrades
+        /// GET /api/v3/aggTrades
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -101,9 +101,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get kline/candlestick data
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#k-line-data" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#k-line-data" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/klines
+        /// GET /api/v3/klines
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -119,9 +119,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get price ticker info
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#24h-price-change" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/ticker/24hr
+        /// GET /api/v3/ticker/24hr
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -132,9 +132,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get price ticker info for all symbols
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#24h-price-change" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#24h-price-change" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/ticker/24hr
+        /// GET /api/v3/ticker/24hr
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
@@ -144,9 +144,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get price info for a symbol
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#latest-price" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/ticker/price
+        /// GET /api/v3/ticker/price
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
@@ -157,9 +157,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get price info for all symbols
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#latest-price" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#latest-price" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/ticker/price
+        /// GET /api/v3/ticker/price
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
@@ -169,9 +169,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get book ticker
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#current-best-order" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/ticker/bookTicker
+        /// GET /api/v3/ticker/bookTicker
         /// </para>
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
@@ -182,9 +182,9 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// Get book tickers
         /// <para>
         /// Docs:<br />
-        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#current-best-order" /><br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#current-best-order" /><br />
         /// Endpoint:<br />
-        /// GET /api/v1/ticker/bookTicker
+        /// GET /api/v3/ticker/bookTicker
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
