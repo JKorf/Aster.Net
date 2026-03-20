@@ -9,7 +9,7 @@ namespace Aster.Net.Objects
     /// <summary>
     /// Aster V3 credentials, used for the V3 Spot and Futures API
     /// </summary>
-    public class AsterV3Credential : CredentialPair
+    public class AsterV3Credential : CredentialSet
     {
         private string? _publicAddress;
 

@@ -9,7 +9,7 @@ namespace Aster.Net
     /// </summary>
     public class AsterCredentials : ApiCredentials
     {
-        internal CredentialPair? V1 { get; set; }
+        internal CredentialSet? V1 { get; set; }
         /// <summary>
         /// V3 API credentials
         /// </summary>
