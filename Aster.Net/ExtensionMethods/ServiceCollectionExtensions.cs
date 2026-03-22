@@ -113,8 +113,6 @@ namespace Microsoft.Extensions.DependencyInjection
             }).SetHandlerLifetime(Timeout.InfiniteTimeSpan);
             services.Add(new ServiceDescriptor(typeof(IAsterSocketClient), x => { return new AsterSocketClient(x.GetRequiredService<IOptions<AsterSocketOptions>>(), x.GetRequiredService<ILoggerFactory>()); }, socketClientLifeTime ?? ServiceLifetime.Singleton));
 
-            services.AddTransient<ICryptoRestClient, CryptoRestClient>();
-            services.AddSingleton<ICryptoSocketClient, CryptoSocketClient>();
             services.AddTransient<IAsterOrderBookFactory, AsterOrderBookFactory>();
             services.AddTransient<IAsterTrackerFactory, AsterTrackerFactory>();
             services.AddTransient<ITrackerFactory, AsterTrackerFactory>();

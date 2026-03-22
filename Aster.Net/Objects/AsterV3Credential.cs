@@ -75,10 +75,10 @@ namespace Aster.Net.Objects
             base.Validate();
 
             if (string.IsNullOrEmpty(PrivateKey))
-                throw new ArgumentException("PrivateKey unset", nameof(PrivateKey));
+                throw new ArgumentException($"PrivateKey not set on {GetType().Name}", nameof(PrivateKey));
 
             if (string.IsNullOrEmpty(SignerPrivateKey))
-                throw new ArgumentException("SignerPrivateKey unset", nameof(SignerPrivateKey));
+                throw new ArgumentException($"SignerPrivateKey not set on {GetType().Name}", nameof(SignerPrivateKey));
         }
     }
 }

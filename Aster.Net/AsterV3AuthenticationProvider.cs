@@ -70,9 +70,6 @@ namespace Aster.Net
             }
             else
             {
-                if (string.IsNullOrEmpty(Credential.SignerPrivateKey))
-                    throw new ArgumentException("Signer credentials required for this endpoint, provide the signer credentials in the ApiCredentials configuration");
-
                 parameters["nonce"] = nonce;
                 parameters["user"] = Credential!.Key;
                 parameters["signer"] = Credential.SignerKey!;
