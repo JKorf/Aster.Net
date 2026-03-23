@@ -42,6 +42,6 @@ namespace Aster.Net.Objects.Models
         /// ["<c>lastUpdateId</c>"] Last update sequence number
         /// </summary>
         [JsonPropertyName("lastUpdateId")]
-        public long lastUpdateId { get; set; }
+        public long LastUpdateId { get; set; }
     }
 }

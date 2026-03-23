@@ -98,7 +98,7 @@ namespace Aster.Net
 
             foreach (var parameter in parameters)
             {
-                if (parameter.Value == "true" || parameter.Value == "false")
+                if (parameter.Value.ToString() == "true" || parameter.Value.ToString() == "false")
                 {
                     result.Add(
                             (parameter.Key.Substring(0, 1).ToUpperInvariant() + parameter.Key.Substring(1),
