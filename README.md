@@ -68,6 +68,24 @@ For information on the clients, dependency injection, response processing and mo
 **NOTE**  
 Aster.Net uses the Builder Code mechanism for Aster, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
 
+## Authentication
+Depending on the API used different credentials types are required.  
+**SpotV3Api / FuturesV3Api**  
+The V3 API is recommended, API credentials can be provided via the AsterV3Credential overload available on the AsterCredentials object. The private key is the user private key, the private signer key can be obtained via the Aster UI under [Api Management] => [Pro Api]
+```
+var credentials = new AsterCredentials(new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY"));
+var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
+var result = await client.FuturesV3Api.Account.GetBalancesAsync();
+```
+
+**SpotApi / FuturesApi**  
+The API key and secret can be obtained via the Aster UI under [Api Management] => [Api]
+```
+var credentials = new AsterCredentials(new HMACCredential("APIKEY", "APISECRET"));
+var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
+var result = await client.FuturesApi.Account.GetBalancesAsync();
+```
+
 ## CryptoExchange.Net
 Aster.Net is based on the [CryptoExchange.Net](https://github.com/JKorf/CryptoExchange.Net) base library. Other exchange API implementations based on the CryptoExchange.Net base library are available and follow the same logic.
 
