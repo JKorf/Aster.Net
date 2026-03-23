@@ -62,5 +62,14 @@ namespace Aster.Net.Clients
             FuturesV3Api = AddApiClient(new AsterSocketClientFuturesV3Api(_logger, options.Value));
         }
         #endregion
+
+        /// <summary>
+        /// Set the default options to be used when creating new clients
+        /// </summary>
+        /// <param name="optionsDelegate">Option configuration delegate</param>
+        public static void SetDefaultOptions(Action<AsterSocketOptions> optionsDelegate)
+        {
+            AsterSocketOptions.Default = ApplyOptionsDelegate(optionsDelegate);
+        }
     }
 }

@@ -70,8 +70,8 @@ namespace Aster.Net.Clients.FuturesApi
             parameters.AddOptional("callbackRate", callbackRate);
             parameters.AddOptionalEnum("workingType", workingType);
             parameters.AddOptional("priceProtect", priceProtect);
-            //parameters.AddOptional("newOrderRespType", "RESULT");
-            //parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+            parameters.AddOptional("newOrderRespType", "RESULT");
+            parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
             var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v1/order", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterOrder>(request, parameters, ct).ConfigureAwait(false);

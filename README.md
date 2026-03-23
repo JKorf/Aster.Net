@@ -66,7 +66,7 @@ The NuGet package files are added along side the source with the latest GitHub r
 For information on the clients, dependency injection, response processing and more see the [documentation](https://cryptoexchange.jkorf.dev/client-libs/getting-started), or have a look at the examples [here](https://github.com/JKorf/Aster.Net/tree/main/Examples) or [here](https://github.com/JKorf/CryptoExchange.Net/tree/master/Examples).
 
 **NOTE**  
-Aster.Net uses the Builder Code mechanism for Aster, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
+Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
 
 ## Authentication
 Depending on the API used different credentials types are required.  
