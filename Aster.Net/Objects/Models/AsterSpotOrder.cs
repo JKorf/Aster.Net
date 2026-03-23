@@ -19,6 +19,11 @@ namespace Aster.Net.Objects.Models
         /// </summary>
         [JsonPropertyName("orderId")]
         public long Id { get; set; }
+        /// <summary>
+        /// ["<c>orderListId</c>"] Order list id
+        /// </summary>
+        [JsonPropertyName("orderListId")]
+        public long? OrderListId { get; set; }
 
         /// <summary>
         /// ["<c>origClientOrderId</c>"] Original order id

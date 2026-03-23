@@ -14,7 +14,7 @@ namespace Aster.Net.Objects.Models
         /// <summary>
         /// ["<c>s</c>"] The symbol of the order book 
         /// </summary>
-        [JsonPropertyName("s")]
+        [JsonPropertyName("symbol")]
         public string Symbol { get; set; } = string.Empty;
 
         /// <summary>

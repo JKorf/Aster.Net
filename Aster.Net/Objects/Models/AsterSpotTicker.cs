@@ -8,6 +8,17 @@ namespace Aster.Net.Objects.Models
     public record AsterSpotTicker : AsterTicker
     {
         /// <summary>
+        /// ["<c>baseAsset</c>"] Base asset name
+        /// </summary>
+        [JsonPropertyName("baseAsset")]
+        public string BaseAsset { get; set; } = string.Empty;
+        /// <summary>
+        /// ["<c>quoteAsset</c>"] Quote asset name
+        /// </summary>
+        [JsonPropertyName("quoteAsset")]
+        public string QuoteAsset { get; set; } = string.Empty;
+
+        /// <summary>
         /// ["<c>bidPrice</c>"] The current best bid price
         /// </summary>
         [JsonPropertyName("bidPrice")]

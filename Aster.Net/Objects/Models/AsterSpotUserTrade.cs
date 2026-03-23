@@ -70,5 +70,10 @@ namespace Aster.Net.Objects.Models
         /// </summary>
         [JsonPropertyName("quoteQty")]
         public decimal QuoteQuantity { get; set; }
+        /// <summary>
+        /// ["<c>counterpartyId</c>"] Counterparty id
+        /// </summary>
+        [JsonPropertyName("counterpartyId")]
+        public decimal CounterpartyId { get; set; }
     }
 }

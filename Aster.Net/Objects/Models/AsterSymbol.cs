@@ -116,7 +116,16 @@ namespace Aster.Net.Objects.Models
         /// </summary>
         [JsonPropertyName("marketTakeBound")]
         public decimal MarketTakeBound { get; set; }
-
+        /// <summary>
+        /// ["<c>twapMinNotional</c>"] TWAP min notional, the minimum notional value of a TWAP order
+        /// </summary>
+        [JsonPropertyName("twapMinNotional")]
+        public decimal? TwapMinNotional { get; set; }
+        /// <summary>
+        /// ["<c>createTime</c>"] Create time
+        /// </summary>
+        [JsonPropertyName("createTime")]
+        public DateTime? CreateTime { get; set; }
         /// <summary>
         /// ["<c>timeInForce</c>"] Allowed order time in force
         /// </summary>

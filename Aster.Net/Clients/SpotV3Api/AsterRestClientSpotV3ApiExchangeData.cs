@@ -60,8 +60,6 @@ namespace Aster.Net.Clients.SpotV3Api
 
             var request = _definitions.GetOrCreate(HttpMethod.Get, "api/v3/depth", AsterExchange.RateLimiter.RestIp, requestWeight);
             var result = await _baseClient.SendAsync<AsterOrderBook>(request, parameters, ct, requestWeight).ConfigureAwait(false);
-            if (result)
-                result.Data.Symbol = symbol;
             return result;
         }
 

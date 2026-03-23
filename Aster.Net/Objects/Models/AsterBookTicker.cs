@@ -38,5 +38,10 @@ namespace Aster.Net.Objects.Models
         /// </summary>
         [JsonPropertyName("time")]
         public DateTime Timestamp { get; set; }
+        /// <summary>
+        /// ["<c>lastUpdateId</c>"] Last update sequence number
+        /// </summary>
+        [JsonPropertyName("lastUpdateId")]
+        public long lastUpdateId { get; set; }
     }
 }

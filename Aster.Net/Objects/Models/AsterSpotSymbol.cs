@@ -41,6 +41,11 @@ namespace Aster.Net.Objects.Models
         [JsonPropertyName("baseAssetPrecision")]
         public int BaseAssetPrecision { get; set; }
         /// <summary>
+        /// ["<c>baseAssetAddress</c>"] Base asset address
+        /// </summary>
+        [JsonPropertyName("baseAssetAddress")]
+        public string? BaseAssetAddress { get; set; }
+        /// <summary>
         /// ["<c>quotePrecision</c>"] The precision of the quote asset
         /// </summary>
         [JsonPropertyName("quotePrecision")]
@@ -65,6 +70,11 @@ namespace Aster.Net.Objects.Models
         /// </summary>
         [JsonPropertyName("timeInForce")]
         public TimeInForce[] TimeInForce { get; set; } = Array.Empty<TimeInForce>();
+        /// <summary>
+        /// ["<c>listingTime</c>"] Listing time
+        /// </summary>
+        [JsonPropertyName("listingTime")]
+        public DateTime ListingTime { get; set; }
         /// <summary>
         /// Filter for the max accuracy of the price for this symbol
         /// </summary>

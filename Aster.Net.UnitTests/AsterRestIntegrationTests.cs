@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Aster.Net.Clients;
 using Aster.Net.Objects.Options;
+using Aster.Net.Objects;
 
 namespace Aster.Net.UnitTests
 {
@@ -24,7 +25,7 @@ namespace Aster.Net.UnitTests
             {
                 AutoTimestamp = false,
                 OutputOriginalData = true,
-                ApiCredentials = Authenticated ? new AsterCredentials(key, sec) : null
+                ApiCredentials = Authenticated ? new AsterCredentials(new AsterV3Credential(key, sec)) : null
             }));
         }
 
@@ -43,78 +44,77 @@ namespace Aster.Net.UnitTests
         [Test]
         public async Task TestSpotAccount()
         {
-            await RunAndCheckResult(client => client.SpotApi.Account.GetUserCommissionRateAsync("ETHUSDT", default, default), true);
-            await RunAndCheckResult(client => client.SpotApi.Account.GetWithdrawFeeAsync("ETH", default, default, default), true);
-            await RunAndCheckResult(client => client.SpotApi.Account.GetAccountInfoAsync(default, default), true);
+            await RunAndCheckResult(client => client.SpotV3Api.Account.GetUserCommissionRateAsync("ETHUSDT", default, default), true, true);
+            await RunAndCheckResult(client => client.SpotV3Api.Account.GetAccountInfoAsync(default, default), true, true);
         }
 
         [Test]
         public async Task TestSpotExchangeData()
         {
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetServerTimeAsync(default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetExchangeInfoAsync(default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetOrderBookAsync("ETHUSDT", default, default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetRecentTradesAsync("ETHUSDT", default, default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetTradeHistoryAsync("ETHUSDT", default, default, default), true);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetAggregatedTradeHistoryAsync("ETHUSDT", default, default, default, default, default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetTickerAsync("ETHUSDT", default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetTickersAsync(default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetPriceAsync("ETHUSDT", default), false);
-            await RunAndCheckResult(client => client.SpotApi.ExchangeData.GetBookTickerAsync("ETHUSDT", default), false);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetServerTimeAsync(default), false);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetExchangeInfoAsync(default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetOrderBookAsync("ETHUSDT", default, default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetRecentTradesAsync("ETHUSDT", default, default), false, true, ignoreProperties: ["baseQty"]);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetTradeHistoryAsync("ETHUSDT", default, default, default), true, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetAggregatedTradeHistoryAsync("ETHUSDT", default, default, default, default, default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetTickerAsync("ETHUSDT", default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetTickersAsync(default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetPriceAsync("ETHUSDT", default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetBookTickerAsync("ETHUSDT", default), false, true);
         }
 
         [Test]
         public async Task TestSpotTrading()
         {
-            await RunAndCheckResult(client => client.SpotApi.Trading.GetOpenOrdersAsync("ETHUSDT", default, default), true);
-            await RunAndCheckResult(client => client.SpotApi.Trading.GetOrdersAsync("ETHUSDT", default, default, default, default, default, default), true);
-            await RunAndCheckResult(client => client.SpotApi.Trading.GetUserTradesAsync(default, default, default, default, default, default, default, default), true);
+            await RunAndCheckResult(client => client.SpotV3Api.Trading.GetOpenOrdersAsync("ETHUSDT", default, default), true, true);
+            await RunAndCheckResult(client => client.SpotV3Api.Trading.GetOrdersAsync("ETHUSDT", default, default, default, default, default, default), true, true);
+            await RunAndCheckResult(client => client.SpotV3Api.Trading.GetUserTradesAsync(default, default, default, default, default, default, default, default), true, true, ignoreProperties: ["createUpdateId"]);
         }
 
         [Test]
         public async Task TestFuturesAccount()
         {
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetPositionModeAsync(default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetMultiAssetModeAsync(default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetBalancesAsync(default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetPositionMarginChangeHistoryAsync("ETHUSDT", default, default, default, default, default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetIncomeHistoryAsync(default, default, default, default, default, default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetLeverageBracketsAsync("ETHUSDT", default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetPositionAdlQuantileEstimationAsync(default, default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetUserCommissionRateAsync("ETHUSDT", default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Account.GetAccountInfoAsync(default, default), true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetPositionModeAsync(default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetMultiAssetModeAsync(default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetBalancesAsync(default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetPositionMarginChangeHistoryAsync("ETHUSDT", default, default, default, default, default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetIncomeHistoryAsync(default, default, default, default, default, default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetLeverageBracketsAsync("ETHUSDT", default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetPositionAdlQuantileEstimationAsync(default, default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetUserCommissionRateAsync("ETHUSDT", default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Account.GetAccountInfoAsync(default, default), true, true);
         }
 
         [Test]
         public async Task TestFuturesExchangeData()
         {
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetServerTimeAsync(default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetExchangeInfoAsync(default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetOrderBookAsync("ETHUSDT", default, default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetRecentTradesAsync("ETHUSDT", default, default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetTradeHistoryAsync("ETHUSDT", default, default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetAggregatedTradeHistoryAsync("ETHUSDT", default, default, default, default, default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetIndexPriceKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetMarkPriceKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetMarkPriceAsync("ETHUSDT", default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetFundingRatesAsync("ETHUSDT", default, default, default, default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetFundingInfoAsync(default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetTickerAsync("ETHUSDT", default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetTickersAsync(default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetPriceAsync("ETHUSDT", default), false);
-            await RunAndCheckResult(client => client.FuturesApi.ExchangeData.GetBookTickerAsync("ETHUSDT", default), false);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetServerTimeAsync(default), false);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetExchangeInfoAsync(default), false, true, ignoreProperties: ["futuresType", "symbolType", "tradingMode", "name", "channel", "imn", "sequenceNo", "tags"]);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetOrderBookAsync("ETHUSDT", default, default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetRecentTradesAsync("ETHUSDT", default, default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetTradeHistoryAsync("ETHUSDT", default, default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetAggregatedTradeHistoryAsync("ETHUSDT", default, default, default, default, default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetIndexPriceKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetMarkPriceKlinesAsync("ETHUSDT", Enums.KlineInterval.OneDay, default, default, default, default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetMarkPriceAsync("ETHUSDT", default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetFundingRatesAsync("ETHUSDT", default, default, default, default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetFundingInfoAsync(default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetTickerAsync("ETHUSDT", default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetTickersAsync(default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetPriceAsync("ETHUSDT", default), false, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.ExchangeData.GetBookTickerAsync("ETHUSDT", default), false, true);
         }
 
         [Test]
         public async Task TestFuturesTrading()
         {
-            await RunAndCheckResult(client => client.FuturesApi.Trading.GetPositionsAsync("ETHUSDT", default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Trading.GetForcedOrdersAsync("ETHUSDT", default, default, default, default, default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Trading.GetOpenOrdersAsync("ETHUSDT", default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Trading.GetOrdersAsync("ETHUSDT", default, default, default, default, default, default), true);
-            await RunAndCheckResult(client => client.FuturesApi.Trading.GetUserTradesAsync("ETHUSDT", default, default, default, default, default, default), true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Trading.GetPositionsAsync("ETHUSDT", default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Trading.GetForcedOrdersAsync("ETHUSDT", default, default, default, default, default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Trading.GetOpenOrdersAsync("ETHUSDT", default, default), true, true);
+            await RunAndCheckResult(client => client.FuturesV3Api.Trading.GetOrdersAsync("ETHUSDT", default, default, default, default, default, default), true, true, ignoreProperties: ["newChainData"]);
+            await RunAndCheckResult(client => client.FuturesV3Api.Trading.GetUserTradesAsync("ETHUSDT", default, default, default, default, default, default), true, true);
         }
     }
 }

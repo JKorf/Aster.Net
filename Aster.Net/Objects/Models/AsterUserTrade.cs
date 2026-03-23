@@ -24,12 +24,16 @@ namespace Aster.Net.Objects.Models
         /// </summary>
         [JsonPropertyName("commission")]
         public decimal Fee { get; set; }
-
         /// <summary>
         /// ["<c>commissionAsset</c>"] Asset the fee is paid in
         /// </summary>
         [JsonPropertyName("commissionAsset")]
         public string FeeAsset { get; set; } = string.Empty;
+        /// <summary>
+        /// ["<c>marginAsset</c>"] Margin asset
+        /// </summary>
+        [JsonPropertyName("marginAsset")]
+        public string MarginAsset { get; set; } = string.Empty;
         /// <summary>
         /// ["<c>id</c>"] Trade id
         /// </summary>

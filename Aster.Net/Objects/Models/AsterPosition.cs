@@ -95,6 +95,16 @@ namespace Aster.Net.Objects.Models
         [JsonPropertyName("maxNotionalValue")]
         public decimal? MaxNotionalValue { get; set; }
         /// <summary>
+        /// ["<c>notional</c>"] Notional
+        /// </summary>
+        [JsonPropertyName("notional")]
+        public decimal? Notional { get; set; }
+        /// <summary>
+        /// ["<c>isolatedWallet</c>"] IsolatedWallet
+        /// </summary>
+        [JsonPropertyName("isolatedWallet")]
+        public decimal? IsolatedWallet { get; set; }
+        /// <summary>
         /// ["<c>marginType</c>"] Margin type
         /// </summary>
         [JsonPropertyName("marginType")]
