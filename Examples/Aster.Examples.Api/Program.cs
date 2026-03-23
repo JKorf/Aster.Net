@@ -26,7 +26,7 @@ app.UseHttpsRedirection();
 // Map the endpoint and inject the rest client
 app.MapGet("/{Symbol}", async ([FromServices] IAsterRestClient client, string symbol) =>
 {
-    var result = await client.SpotApi.ExchangeData.GetTickerAsync(symbol);
+    var result = await client.SpotV3Api.ExchangeData.GetTickerAsync(symbol);
     return result.Data.LastPrice;
 })
 .WithOpenApi();
@@ -34,7 +34,7 @@ app.MapGet("/{Symbol}", async ([FromServices] IAsterRestClient client, string sy
 
 app.MapGet("/Balances", async ([FromServices] IAsterRestClient client) =>
 {
-    var result = await client.SpotApi.Account.GetAccountInfoAsync();
+    var result = await client.SpotV3Api.Account.GetAccountInfoAsync();
     return (object)(result.Success ? result.Data.Balances : result.Error!);
 })
 .WithOpenApi();
