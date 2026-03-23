@@ -1,0 +1,99 @@
+using Aster.Net.Enums;
+using Aster.Net.Objects.Models;
+using CryptoExchange.Net.Objects;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Aster.Net.Interfaces.Clients.SpotV3Api
+{
+    /// <summary>
+    /// Aster Spot account endpoints. Account endpoints include balance info, withdraw/deposit info and requesting and account settings
+    /// </summary>
+    public interface IAsterRestClientSpotV3ApiAccount
+    {
+        /// <summary>
+        /// Get user fee rates
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/market-data/#get-symbol-fees" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v3/commissionRate
+        /// </para>
+        /// </summary>
+        /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterUserCommission>> GetUserCommissionRateAsync(string symbol, long? receiveWindow = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Transfer between Spot and Futures account
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#perp-spot-transfer-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /api/v3/asset/wallet/transfer
+        /// </para>
+        /// </summary>
+        /// <param name="asset">["<c>asset</c>"] Asset to transfer</param>
+        /// <param name="direction">["<c>kindType</c>"] Transfer direction</param>
+        /// <param name="quantity">["<c>amount</c>"] Quantity</param>
+        /// <param name="clientOrderId">["<c>clientTranId</c>"] Client defined id</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterTransferResult>> TransferAsync(string asset, TransferDirection direction, decimal quantity, string? clientOrderId = null, long? receiveWindow = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Get account info and balances
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/account%26trades/#account-information-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v3/account
+        /// </para>
+        /// </summary>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterSpotAccountInfo>> GetAccountInfoAsync(long? receiveWindow = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Start a user stream. The resulting listen key can be used to subscribe to the user stream using the socket client. The stream will close after 60 minutes unless <see cref="KeepAliveUserStreamAsync">KeepAliveUserStreamAsync</see> is called.
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/websocket-account-info/#listen-key-spot-account" /><br />
+        /// Endpoint:<br />
+        /// POST /api/v3/listenKey
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<string>> StartUserStreamAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Keep alive the user stream. This should be called every 30 minutes to prevent the user stream being stopped
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/websocket-account-info/#extend-listen-key-validity-period-user_stream" /><br />
+        /// Endpoint:<br />
+        /// PUT /api/v3/listenKey
+        /// </para>
+        /// </summary>
+        /// <param name="listenKey">["<c>listenKey</c>"] The listen key to keep alive</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult> KeepAliveUserStreamAsync(string listenKey, CancellationToken ct = default);
+
+        /// <summary>
+        /// Stop the user stream, no updates will be send anymore
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/spot-v3/websocket-account-info/#close-listen-key-user_stream" /><br />
+        /// Endpoint:<br />
+        /// DELETE /api/v3/listenKey
+        /// </para>
+        /// </summary>
+        /// <param name="listenKey">["<c>listenKey</c>"] The listen key to stop</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult> StopUserStreamAsync(string listenKey, CancellationToken ct = default);
+    }
+}

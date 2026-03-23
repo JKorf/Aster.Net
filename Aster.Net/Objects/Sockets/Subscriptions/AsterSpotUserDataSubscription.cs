@@ -3,6 +3,7 @@ using Aster.Net.Clients.SpotApi;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
+using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.Sockets;
@@ -16,7 +17,7 @@ namespace Aster.Net.Objects.Sockets
     internal class AsterSpotUserDataSubscription : Subscription
     {
         private readonly string _lk;
-        private readonly AsterSocketClientSpotApi _client;
+        private readonly SocketApiClient _client;
 
         private readonly Action<DataEvent<AsterSpotOrderUpdate>>? _orderHandler;
         private readonly Action<DataEvent<AsterSpotAccountUpdate>>? _accountHandler;
@@ -26,7 +27,7 @@ namespace Aster.Net.Objects.Sockets
         /// </summary>
         public AsterSpotUserDataSubscription(
             ILogger logger,
-            AsterSocketClientSpotApi client,
+            SocketApiClient client,
             string listenKey,
             Action<DataEvent<AsterSpotOrderUpdate>>? orderHandler,
             Action<DataEvent<AsterSpotAccountUpdate>>? accountHandler) : base(logger, false)

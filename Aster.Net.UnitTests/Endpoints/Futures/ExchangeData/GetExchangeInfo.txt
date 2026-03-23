@@ -17,11 +17,11 @@ false
    			"rateLimitType": "ORDERS"
    		}
    	],
- 	"serverTime": 1565613908500,   
- 	"assets": [ 
+ 	"serverTime": 1565613908500,  
+ 	"assets": [
  		{
  			"asset": "BUSD",
-   			"marginAvailable": true, 
+   			"marginAvailable": true,
    			"autoAssetExchange": 0 
    		},
  		{
@@ -44,12 +44,12 @@ false
  			"onboardDate": 1598252400000,
  			"status": "TRADING",
  			"maintMarginPercent": "2.5000", 
- 			"requiredMarginPercent": "5.0000",  
+ 			"requiredMarginPercent": "5.0000", 
  			"baseAsset": "BLZ", 
  			"quoteAsset": "USDT",
  			"marginAsset": "USDT",
- 			"pricePrecision": 5,
- 			"quantityPrecision": 0,
+ 			"pricePrecision": 5,	
+ 			"quantityPrecision": 0, 
  			"baseAssetPrecision": 8,
  			"quotePrecision": 8, 
  			"underlyingType": "COIN",
@@ -107,11 +107,10 @@ false
    				"GTC", 
    				"IOC", 
    				"FOK", 
-   				"GTX",
-				"HIDDEN"
+   				"GTX" 
  			],
  			"liquidationFee": "0.010000",	
-   			"marketTakeBound": "0.30"	
+   			"marketTakeBound": "0.30"
  		}
    	],
 	"timezone": "UTC" 

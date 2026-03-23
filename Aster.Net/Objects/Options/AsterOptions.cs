@@ -6,7 +6,7 @@ namespace Aster.Net.Objects.Options
     /// <summary>
     /// Aster options
     /// </summary>
-    public class AsterOptions : LibraryOptions<AsterRestOptions, AsterSocketOptions, ApiCredentials, AsterEnvironment>
+    public class AsterOptions : LibraryOptions<AsterRestOptions, AsterSocketOptions, AsterCredentials, AsterEnvironment>
     {
     }
 }

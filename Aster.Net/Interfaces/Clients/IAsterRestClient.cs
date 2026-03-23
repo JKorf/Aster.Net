@@ -1,5 +1,7 @@
 using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Interfaces.Clients.SpotV3Api;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Interfaces.Clients;
 using CryptoExchange.Net.Objects.Options;
@@ -9,29 +11,27 @@ namespace Aster.Net.Interfaces.Clients
     /// <summary>
     /// Client for accessing the Aster Rest API. 
     /// </summary>
-    public interface IAsterRestClient : IRestClient
+    public interface IAsterRestClient : IRestClient<AsterCredentials>
     {
         /// <summary>
-        /// Spot API endpoints
+        /// Spot V1 API endpoints
         /// </summary>
         /// <see cref="IAsterRestClientSpotApi"/>
         public IAsterRestClientSpotApi SpotApi { get; }
         /// <summary>
-        /// Futures API endpoints
+        /// Spot V3 API endpoints
+        /// </summary>
+        /// <see cref="IAsterRestClientSpotV3Api"/>
+        public IAsterRestClientSpotV3Api SpotV3Api { get; }
+        /// <summary>
+        /// Futures V1 API endpoints
         /// </summary>
         /// <see cref="IAsterRestClientFuturesApi"/>
         public IAsterRestClientFuturesApi FuturesApi { get; }
-
         /// <summary>
-        /// Update specific options
+        /// Futures V3 API endpoints
         /// </summary>
-        /// <param name="options">Options to update. Only specific options are changeable after the client has been created</param>
-        void SetOptions(UpdateOptions options);
-
-        /// <summary>
-        /// Set the API credentials for this client. All Api clients in this client will use the new credentials, regardless of earlier set options.
-        /// </summary>
-        /// <param name="credentials">The credentials to set</param>
-        void SetApiCredentials(ApiCredentials credentials);
+        /// <see cref="IAsterRestClientFuturesV3Api"/>
+        public IAsterRestClientFuturesV3Api FuturesV3Api { get; }
     }
 }

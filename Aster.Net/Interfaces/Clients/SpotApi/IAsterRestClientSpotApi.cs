@@ -6,7 +6,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
     /// <summary>
     /// Aster Spot API endpoints
     /// </summary>
-    public interface IAsterRestClientSpotApi : IRestApiClient, IDisposable
+    public interface IAsterRestClientSpotApi : IRestApiClient<AsterCredentials>, IDisposable
     {
         /// <summary>
         /// Endpoints related to account settings, info or actions

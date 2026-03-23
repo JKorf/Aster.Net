@@ -40,7 +40,7 @@ namespace Aster.Net.UnitTests
 
             var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
             {
-                ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456"),
+                ApiCredentials = new AsterCredentials("123", "456"),
                 OutputOriginalData = true
             }), logger);
             var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Futures", "wss://fstream.asterdex.com");
@@ -86,7 +86,7 @@ namespace Aster.Net.UnitTests
 
             var client = new AsterSocketClient(Options.Create(new AsterSocketOptions
             {
-                ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("123", "456"),
+                ApiCredentials = new AsterCredentials("123", "456"),
                 OutputOriginalData = true
             }), logger);
             var tester = new SocketSubscriptionValidator<AsterSocketClient>(client, "Subscriptions/Spot", "wss://sstream.asterdex.com");

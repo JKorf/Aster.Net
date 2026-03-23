@@ -223,7 +223,7 @@ namespace Aster.Net.Clients.FuturesApi
         /// <inheritdoc />
         public async Task<WebCallResult<AsterFundingInfo[]>> GetFundingInfoAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v1/fundingInfo", AsterExchange.RateLimiter.RestIp, 0);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v1/fundingInfo", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterFundingInfo[]>(request, null, ct).ConfigureAwait(false);
         }
 

@@ -619,16 +619,14 @@ namespace Aster.Net.Clients.SpotApi
 
         private SharedOrderStatus ParseOrderStatus(OrderStatus status)
         {
+            if (status == Enums.OrderStatus.Canceled || status == OrderStatus.Rejected || status == OrderStatus.Expired)
+                return SharedOrderStatus.Canceled;
+            if (status == Enums.OrderStatus.New || status == Enums.OrderStatus.PartiallyFilled)
+                return SharedOrderStatus.Open;
             if (status == OrderStatus.Filled)
                 return SharedOrderStatus.Filled;
 
-            if (status == OrderStatus.PartiallyFilled
-                || status == OrderStatus.New)
-            {
-                return SharedOrderStatus.Open;
-            }
-
-            return SharedOrderStatus.Canceled;
+            return SharedOrderStatus.Unknown;
         }
 
         private SharedOrderType ParseOrderType(OrderType type)
@@ -883,7 +881,10 @@ namespace Aster.Net.Clients.SpotApi
             if (data.Status == OrderStatus.Canceled || data.Status == OrderStatus.Rejected || data.Status == OrderStatus.Expired)
                 return SharedTriggerOrderStatus.CanceledOrRejected;
 
-            return SharedTriggerOrderStatus.Active;
+            if (data.Status == OrderStatus.PartiallyFilled || data.Status == OrderStatus.New)
+                return SharedTriggerOrderStatus.Active;
+
+            return SharedTriggerOrderStatus.Unknown;
         }
 
         EndpointOptions<CancelOrderRequest> ISpotTriggerOrderRestClient.CancelSpotTriggerOrderOptions { get; } = new EndpointOptions<CancelOrderRequest>(true);

@@ -2,23 +2,26 @@ using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Aster.Net
 {
-    internal class AsterAuthenticationProvider : AuthenticationProvider
+    internal class AsterV1AuthenticationProvider : AuthenticationProvider<AsterCredentials>
     {
-        public override ApiCredentialsType[] SupportedCredentialTypes => [ApiCredentialsType.Hmac, ApiCredentialsType.RsaXml, ApiCredentialsType.RsaPem];
+        public override string Key => ApiCredentials.V1!.Key;
 
-        public AsterAuthenticationProvider(ApiCredentials credentials) : base(credentials)
+        public AsterV1AuthenticationProvider(AsterCredentials credentials) : base(credentials)
         {
+            if (credentials.V1 == null)
+                throw new ArgumentException("V1 credentials not provided", nameof(credentials));
         }
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
             request.Headers ??= new Dictionary<string, string>();
-            request.Headers.Add("X-MBX-APIKEY", ApiKey);
+            request.Headers.Add("X-MBX-APIKEY", ApiCredentials.V1!.Key);
 
             if (!request.Authenticated)
                 return;
@@ -45,10 +48,12 @@ namespace Aster.Net
 
         private string Sign(string data)
         {
-            if (_credentials.CredentialType == ApiCredentialsType.Hmac)
-                return SignHMACSHA256(data);
+            if (ApiCredentials.V1 is HMACCredential hmacCred)
+                return SignHMACSHA256(hmacCred, data);
+            else if (ApiCredentials.V1 is RSACredential rsaCred)
+                return SignRSASHA256(rsaCred, Encoding.ASCII.GetBytes(data), SignOutputType.Base64);
             else
-                return SignRSASHA256(Encoding.ASCII.GetBytes(data), SignOutputType.Base64);
+                throw new NotImplementedException();
         }
     }
 }

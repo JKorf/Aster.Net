@@ -2,6 +2,7 @@
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
+using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.Sockets;
@@ -15,7 +16,7 @@ namespace Aster.Net.Objects.Sockets
     internal class AsterUserDataSubscription : Subscription
     {
         private readonly string _lk;
-        private readonly AsterSocketClientFuturesApi _client;
+        private readonly SocketApiClient _client;
 
         private readonly Action<DataEvent<AsterOrderUpdate>>? _orderHandler;
         private readonly Action<DataEvent<AsterConfigUpdate>>? _configHandler;
@@ -28,7 +29,7 @@ namespace Aster.Net.Objects.Sockets
         /// </summary>
         public AsterUserDataSubscription(
             ILogger logger,
-            AsterSocketClientFuturesApi client,
+            SocketApiClient client,
             string listenKey,
             Action<DataEvent<AsterOrderUpdate>>? orderHandler,
             Action<DataEvent<AsterConfigUpdate>>? configHandler,

@@ -24,9 +24,9 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class ServiceCollectionExtensions
     {
-
         /// <summary>
-        /// Add services such as the IAsterRestClient and IAsterSocketClient. Configures the services based on the provided configuration.
+        /// Add services such as the IAsterRestClient and IAsterSocketClient. Configures the services based on the provided configuration.<br />
+        /// See <see href="https://github.com/JKorf/Aster.Net/blob/main/Examples/example-config.json" /> for an example of how to set up the configuration.
         /// </summary>
         /// <param name="services">The service collection</param>
         /// <param name="configuration">The configuration(section) containing the options</param>
@@ -39,7 +39,15 @@ namespace Microsoft.Extensions.DependencyInjection
             // Reset environment so we know if they're overridden
             options.Rest.Environment = null!;
             options.Socket.Environment = null!;
-            configuration.Bind(options);
+
+            try
+            {
+                configuration.Bind(options);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid configuration provided", ex);
+            }
 
             if (options.Rest == null || options.Socket == null)
                 throw new ArgumentException("Options null");
@@ -55,7 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(x => Options.Options.Create(options.Rest));
             services.AddSingleton(x => Options.Options.Create(options.Socket));
 
-            return AddAsterCore(services, options.SocketClientLifeTime);
+            return AddAsterCore(services, "V3", options.SocketClientLifeTime);
         }
 
         /// <summary>
@@ -84,11 +92,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(x => Options.Options.Create(options.Rest));
             services.AddSingleton(x => Options.Options.Create(options.Socket));
 
-            return AddAsterCore(services, options.SocketClientLifeTime);
+            var version = options.Rest.ApiCredentials?.V1 != null && options.Rest.ApiCredentials?.V3 == null ? "V1" : "V3";
+            return AddAsterCore(services, version, options.SocketClientLifeTime);
         }
 
         private static IServiceCollection AddAsterCore(
             this IServiceCollection services,
+            string version,
             ServiceLifetime? socketClientLifeTime = null)
         {
             services.AddHttpClient<IAsterRestClient, AsterRestClient>((client, serviceProvider) =>
@@ -103,8 +113,6 @@ namespace Microsoft.Extensions.DependencyInjection
             }).SetHandlerLifetime(Timeout.InfiniteTimeSpan);
             services.Add(new ServiceDescriptor(typeof(IAsterSocketClient), x => { return new AsterSocketClient(x.GetRequiredService<IOptions<AsterSocketOptions>>(), x.GetRequiredService<ILoggerFactory>()); }, socketClientLifeTime ?? ServiceLifetime.Singleton));
 
-            services.AddTransient<ICryptoRestClient, CryptoRestClient>();
-            services.AddSingleton<ICryptoSocketClient, CryptoSocketClient>();
             services.AddTransient<IAsterOrderBookFactory, AsterOrderBookFactory>();
             services.AddTransient<IAsterTrackerFactory, AsterTrackerFactory>();
             services.AddTransient<ITrackerFactory, AsterTrackerFactory>();
@@ -115,10 +123,19 @@ namespace Microsoft.Extensions.DependencyInjection
                     x.GetRequiredService<IOptions<AsterRestOptions>>(),
                     x.GetRequiredService<IOptions<AsterSocketOptions>>()));
 
-            services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedClient);
-            services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().SpotApi.SharedClient);
-            services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedClient);
-            services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().FuturesApi.SharedClient);
+            if (version == "V1")
+            {
+                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedClient);
+                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedClient);
+            }
+            else
+            {
+                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotV3Api.SharedClient);
+                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesV3Api.SharedClient);
+            }
+
+            services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().SpotV3Api.SharedClient);
+            services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().FuturesV3Api.SharedClient);
 
             return services;
         }

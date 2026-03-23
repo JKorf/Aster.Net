@@ -50,20 +50,41 @@ The NuGet package files are added along side the source with the latest GitHub r
 	```csharp
 	// Get the ETH/USDT ticker via rest request
 	var restClient = new AsterRestClient();
-	var tickerResult = await restClient.SpotApi.ExchangeData.GetTickerAsync("ETHUSDT");
+	var tickerResult = await restClient.SpotApiV3.ExchangeData.GetTickerAsync("ETHUSDT");
 	var lastPrice = tickerResult.Data.LastPrice;
 	```
 * Websocket streams
 	```csharp
 	// Subscribe to ETH/USDT ticker updates via the websocket API
 	var socketClient = new AsterSocketClient();
-	var tickerSubscriptionResult = socketClient.SpotApi.SubscribeToTickerUpdatesAsync("ETHUSDT", (update) => 
+	var tickerSubscriptionResult = socketClient.SpotApiV3.SubscribeToTickerUpdatesAsync("ETHUSDT", (update) => 
 	{
 	  var lastPrice = update.Data.LastPrice;
 	});
 	```
 
 For information on the clients, dependency injection, response processing and more see the [documentation](https://cryptoexchange.jkorf.dev/client-libs/getting-started), or have a look at the examples [here](https://github.com/JKorf/Aster.Net/tree/main/Examples) or [here](https://github.com/JKorf/CryptoExchange.Net/tree/master/Examples).
+
+**NOTE**  
+Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
+
+## Authentication
+Depending on the API used different credentials types are required.  
+**SpotV3Api / FuturesV3Api**  
+The V3 API is recommended, API credentials can be provided via the AsterV3Credential overload available on the AsterCredentials object. The private key is the user private key, the private signer key can be obtained via the Aster UI under [Api Management] => [Pro Api]
+```
+var credentials = new AsterCredentials(new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY"));
+var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
+var result = await client.FuturesV3Api.Account.GetBalancesAsync();
+```
+
+**SpotApi / FuturesApi**  
+The API key and secret can be obtained via the Aster UI under [Api Management] => [Api]
+```
+var credentials = new AsterCredentials(new HMACCredential("APIKEY", "APISECRET"));
+var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
+var result = await client.FuturesApi.Account.GetBalancesAsync();
+```
 
 ## CryptoExchange.Net
 Aster.Net is based on the [CryptoExchange.Net](https://github.com/JKorf/CryptoExchange.Net) base library. Other exchange API implementations based on the CryptoExchange.Net base library are available and follow the same logic.
@@ -108,29 +129,53 @@ A Discord server is available [here](https://discord.gg/MSpeEtSY8t). For discuss
 
 ## Supported functionality
 
-### Spot REST
+### Spot V1 REST
 |API|Supported|Location|
 |--|--:|--|
 |Market Data|✓|`restClient.SpotApi.ExchangeData`|
 |Account and Trading|✓|`restClient.SpotApi.Account` / `restClient.SpotApi.Trading`|
 
-### Spot WebSocket
+### Spot V1 WebSocket
 |API|Supported|Location|
 |--|--:|--|
 |Market Data|✓|`socketClient.SpotApi`|
 |Account Information|✓|`socketClient.SpotApi`|
 
+### Spot V3 REST
+|API|Supported|Location|
+|--|--:|--|
+|Market Data|✓|`restClient.SpotV3Api.ExchangeData`|
+|Account and Trading|✓|`restClient.SpotV3Api.Account` / `restClient.SpotV3Api.Trading`|
+
+### Spot V3 WebSocket
+|API|Supported|Location|
+|--|--:|--|
+|Market Data|✓|`socketClient.SpotV3Api`|
+|Account Information|✓|`socketClient.SpotV3Api`|
+
 ### Futures REST
 |API|Supported|Location|
 |--|--:|--|
 |Market Data|✓|`restClient.FuturesApi.ExchangeData`|
-|Account and Trading|✓|`restClient.FuturesApi.Account` / `restClient.SpotApi.Trading`|
+|Account and Trading|✓|`restClient.FuturesApi.Account` / `restClient.FuturesV3Api.Trading`|
 
 ### Futures WebSocket
 |API|Supported|Location|
 |--|--:|--|
 |Market Data|✓|`socketClient.FuturesApi`|
 |Account Information|✓|`socketClient.FuturesApi`|
+
+### Futures V3 REST
+|API|Supported|Location|
+|--|--:|--|
+|Market Data|✓|`restClient.FuturesV3Api.ExchangeData`|
+|Account and Trading|✓|`restClient.FuturesV3Api.Account` / `restClient.FuturesV3Api.Trading`|
+
+### Futures V3 WebSocket
+|API|Supported|Location|
+|--|--:|--|
+|Market Data|✓|`socketClient.FuturesV3Api`|
+|Account Information|✓|`socketClient.FuturesV3Api`|
 
 ## Support the project
 Any support is greatly appreciated.

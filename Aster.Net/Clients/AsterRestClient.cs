@@ -1,28 +1,38 @@
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System;
-using CryptoExchange.Net.Authentication;
 using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net.Clients;
 using Microsoft.Extensions.Options;
 using CryptoExchange.Net.Objects.Options;
 using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Clients.FuturesApi;
 using Aster.Net.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotApi;
+using CryptoExchange.Net.Authentication;
+using Aster.Net.Interfaces.Clients.SpotV3Api;
+using Aster.Net.Clients.FuturesV3Api;
+using Aster.Net.Clients.SpotV3Api;
 
 namespace Aster.Net.Clients
 {
     /// <inheritdoc cref="IAsterRestClient" />
-    public class AsterRestClient : BaseRestClient, IAsterRestClient
+    public class AsterRestClient : BaseRestClient<AsterEnvironment, AsterCredentials>, IAsterRestClient
     {
+        internal new AsterRestOptions ClientOptions => (AsterRestOptions)base.ClientOptions;
+
         #region Api clients
 
         /// <inheritdoc />
         public IAsterRestClientSpotApi SpotApi { get; }
         /// <inheritdoc />
+        public IAsterRestClientSpotV3Api SpotV3Api { get; }
+        /// <inheritdoc />
         public IAsterRestClientFuturesApi FuturesApi { get; }
+        /// <inheritdoc />
+        public IAsterRestClientFuturesV3Api FuturesV3Api { get; }
 
         #endregion
 
@@ -48,17 +58,12 @@ namespace Aster.Net.Clients
             Initialize(options.Value);
             
             SpotApi = AddApiClient(new AsterRestClientSpotApi(_logger, httpClient, options.Value));
+            SpotV3Api = AddApiClient(new AsterRestClientSpotV3Api(this, _logger, httpClient, options.Value));
             FuturesApi = AddApiClient(new AsterRestClientFuturesApi(_logger, httpClient, options.Value));
+            FuturesV3Api = AddApiClient(new AsterRestClientFuturesV3Api(this, _logger, httpClient, options.Value));
         }
 
         #endregion
-
-        /// <inheritdoc />
-        public void SetOptions(UpdateOptions options)
-        {
-            SpotApi.SetOptions(options);
-            FuturesApi.SetOptions(options);
-        }
 
         /// <summary>
         /// Set the default options to be used when creating new clients
@@ -67,13 +72,6 @@ namespace Aster.Net.Clients
         public static void SetDefaultOptions(Action<AsterRestOptions> optionsDelegate)
         {
             AsterRestOptions.Default = ApplyOptionsDelegate(optionsDelegate);
-        }
-
-        /// <inheritdoc />
-        public void SetApiCredentials(ApiCredentials credentials)
-        {   
-            SpotApi.SetApiCredentials(credentials);
-            FuturesApi.SetApiCredentials(credentials);
         }
     }
 }

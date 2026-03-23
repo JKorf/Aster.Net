@@ -63,6 +63,8 @@ namespace Aster.Net
         public static ExchangeType Type { get; } = ExchangeType.DEX;
 
         internal static JsonSerializerOptions _serializerContext = SerializerOptions.WithConverters(JsonSerializerContextCache.GetOrCreate<AsterSourceGenerationContext>());
+        internal static uint _mainnetChainId = 1666;
+        internal static uint _testnetChainId = 714;
 
         /// <summary>
         /// Aliases for Aster assets

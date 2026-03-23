@@ -5,7 +5,7 @@ namespace Aster.Net.Objects.Options
     /// <summary>
     /// Options for the AsterSocketClient
     /// </summary>
-    public class AsterSocketOptions : SocketExchangeOptions<AsterEnvironment>
+    public class AsterSocketOptions : SocketExchangeOptions<AsterEnvironment, AsterCredentials>
     {
         /// <summary>
         /// Default options for new clients

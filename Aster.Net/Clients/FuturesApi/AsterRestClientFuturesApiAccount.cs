@@ -123,7 +123,7 @@ namespace Aster.Net.Clients.FuturesApi
             var parameters = new ParameterCollection();
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v2/balance", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v1/balance", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterBalance[]>(request, parameters, ct).ConfigureAwait(false);
         }
 

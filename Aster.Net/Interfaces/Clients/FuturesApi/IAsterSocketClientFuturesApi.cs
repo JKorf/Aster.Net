@@ -13,7 +13,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
     /// <summary>
     /// Aster Futures streams
     /// </summary>
-    public interface IAsterSocketClientFuturesApi : ISocketApiClient, IDisposable
+    public interface IAsterSocketClientFuturesApi : ISocketApiClient<AsterCredentials>, IDisposable
     {
         /// <summary>
         /// Subscribe to aggregated trade updates
