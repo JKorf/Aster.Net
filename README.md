@@ -2,7 +2,7 @@
 
 [![.NET](https://img.shields.io/github/actions/workflow/status/JKorf/Aster.Net/dotnet.yml?style=for-the-badge)](https://github.com/JKorf/Aster.Net/actions/workflows/dotnet.yml) ![License](https://img.shields.io/github/license/JKorf/Aster.Net?style=for-the-badge)
 
-Aster.Net is a client library for accessing the [Aster DEX REST and Websocket API](https://github.com/asterdex/api-docs/blob/master/README.md). 
+Aster.Net is a client library for accessing the [Aster DEX REST and Websocket API](https://asterdex.github.io/aster-api-website/futures-v3/general-info/). 
 
 ## Features
 * Response data is mapped to descriptive models
@@ -46,22 +46,39 @@ Aster.Net is available on [GitHub packages](https://github.com/JKorf/Aster.Net/p
 The NuGet package files are added along side the source with the latest GitHub release which can found [here](https://github.com/JKorf/Aster.Net/releases).
 
 ## How to use
-* REST Endpoints
-	```csharp
-	// Get the ETH/USDT ticker via rest request
-	var restClient = new AsterRestClient();
-	var tickerResult = await restClient.SpotApiV3.ExchangeData.GetTickerAsync("ETHUSDT");
-	var lastPrice = tickerResult.Data.LastPrice;
-	```
-* Websocket streams
-	```csharp
-	// Subscribe to ETH/USDT ticker updates via the websocket API
-	var socketClient = new AsterSocketClient();
-	var tickerSubscriptionResult = socketClient.SpotApiV3.SubscribeToTickerUpdatesAsync("ETHUSDT", (update) => 
-	{
-	  var lastPrice = update.Data.LastPrice;
-	});
-	```
+*Basic request:*
+```csharp
+// Get the ETH/USDT ticker via rest request
+var restClient = new AsterRestClient();
+var tickerResult = await restClient.SpotApiV3.ExchangeData.GetTickerAsync("ETHUSDT");
+var lastPrice = tickerResult.Data.LastPrice;	
+```
+
+*Place order:*
+```csharp
+var restClient = new AsterRestClient(opts => {
+	opts.ApiCredentials = new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY");
+});
+
+// Place Limit order to go long for 0.1 ETH at 2000
+var orderResult = await asterRestClient.FuturesV3Api.Trading.PlaceOrderAsync(
+	"ETHUSDT",
+	OrderSide.Buy,
+	OrderType.Limit,
+	0.1m,
+	2000,
+	positionSide: PositionSide.Long);
+```
+
+*WebSocket subscription:*
+```csharp
+// Subscribe to ETH/USDT ticker updates via the websocket API
+var socketClient = new AsterSocketClient();
+var tickerSubscriptionResult = socketClient.SpotApiV3.SubscribeToTickerUpdatesAsync("ETHUSDT", (update) => 
+{
+  var lastPrice = update.Data.LastPrice;
+});
+```
 
 For information on the clients, dependency injection, response processing and more see the [documentation](https://cryptoexchange.jkorf.dev/client-libs/getting-started), or have a look at the examples [here](https://github.com/JKorf/Aster.Net/tree/main/Examples) or [here](https://github.com/JKorf/CryptoExchange.Net/tree/master/Examples).
 
