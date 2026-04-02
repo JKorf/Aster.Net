@@ -307,7 +307,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         /// <inheritdoc />
         public async Task<WebCallResult<string>> StartUserStreamAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
             var result = await _baseClient.SendAsync<AsterListenKey>(request, null, ct).ConfigureAwait(false);
             return result.As(result.Data?.ListenKey!);
         }
@@ -326,7 +326,7 @@ namespace Aster.Net.Clients.FuturesV3Api
                 { "listenKey", listenKey }
             };
 
-            var request = _definitions.GetOrCreate(HttpMethod.Put, "fapi/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Put, "fapi/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -343,7 +343,7 @@ namespace Aster.Net.Clients.FuturesV3Api
                 { "listenKey", listenKey }
             };
 
-            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
         }
 
