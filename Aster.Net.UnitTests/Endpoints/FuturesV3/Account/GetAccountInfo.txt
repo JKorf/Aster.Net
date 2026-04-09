@@ -1,5 +1,5 @@
 GET
-/fapi/v3/account
+/fapi/v3/accountWithJoinMargin
 true
 {
    "feeTier": 0, 

@@ -140,7 +140,7 @@ namespace Aster.Net.Clients.FuturesV3Api
             var parameters = new ParameterCollection();
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v3/account", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v3/accountWithJoinMargin", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterAccountInfo>(request, parameters, ct).ConfigureAwait(false);
         }
 
