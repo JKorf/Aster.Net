@@ -1,4 +1,5 @@
-﻿using CryptoExchange.Net.Converters.SystemTextJson;
+﻿using CryptoExchange.Net.Attributes;
+using CryptoExchange.Net.Converters.SystemTextJson;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Enums
@@ -12,14 +13,17 @@ namespace Aster.Net.Enums
         /// <summary>
         /// Seconds
         /// </summary>
+        [Map("SECOND")]
         Second,
         /// <summary>
         /// Minutes
         /// </summary>
+        [Map("MINUTE")]
         Minute,
         /// <summary>
         /// Days
         /// </summary>
+        [Map("DAY")]
         Day
     }
 }

@@ -33,7 +33,7 @@ namespace Aster.Net.Enums
         /// <summary>
         /// ["<c>Trade</c>"] Trade
         /// </summary>
-        [Map("Trade")]
+        [Map("Trade", "TRADE")]
         Trade
     }
 }

@@ -13,12 +13,12 @@ namespace Aster.Net.Enums
         /// <summary>
         /// ["<c>CROSSED</c>"] Cross margin
         /// </summary>
-        [Map("CROSSED")]
+        [Map("CROSSED", "crossed")]
         Cross,
         /// <summary>
         /// ["<c>ISOLATED</c>"] Isolated margin
         /// </summary>
-        [Map("ISOLATED")]
+        [Map("ISOLATED", "isolated")]
         Isolated
     }
 }
