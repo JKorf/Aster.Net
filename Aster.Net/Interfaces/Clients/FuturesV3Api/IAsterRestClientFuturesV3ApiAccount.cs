@@ -342,5 +342,30 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterBuilder[]>> GetApprovedBuildersAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Get withdrawal info
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/deposit%26withdrawal/#get-user-withdraw-infov3" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/aster/user-withdraw-info<br />
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterWithdrawInfo>> GetWithdrawInfoAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Get deposit and withdraw history
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/deposit%26withdrawal/#get-deposit-and-withdraw-historyv3" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/aster/deposit-withdraw-history<br />
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterDepositWithdrawal[]>> GetDepositWithdrawHistoryAsync(CancellationToken ct = default);
+
     }
 }

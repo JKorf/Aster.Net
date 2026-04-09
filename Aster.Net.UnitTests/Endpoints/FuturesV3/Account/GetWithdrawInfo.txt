@@ -1,0 +1,26 @@
+POST
+/fapi/v3/aster/user-withdraw-info
+true
+{
+    "userDailyLimit": "10000",
+    "userRemainingDailyLimit": "9000",
+    "totalDailyLimit": "1000000",
+    "totalRemainingDailyLimit": "980000",
+    "balances": {
+        "USDT": {
+            "currency": "USDT",
+            "spotTotalWithdrawAmount": "500",
+            "perpTotalWithdrawAmount": "300",
+            "dailyLimit": "9000",
+            "chainBalances": {
+                "56": {
+                    "chainId": 56,
+                    "spotMaxWithdrawAmount": "500",
+                    "perpMaxWithdrawAmount": "300",
+                    "chainLimit": "800",
+                    "withdrawFee": "0.5"
+                }
+            }
+        }
+    }
+}

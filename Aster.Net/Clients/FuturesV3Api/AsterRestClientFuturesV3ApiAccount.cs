@@ -430,5 +430,30 @@ namespace Aster.Net.Clients.FuturesV3Api
         }
 
         #endregion
+
+        #region Get Withdraw Info
+
+        /// <inheritdoc />
+        public async Task<WebCallResult<AsterWithdrawInfo>> GetWithdrawInfoAsync(CancellationToken ct = default)
+        {
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "/fapi/v3/aster/user-withdraw-info", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterWithdrawInfo>(request, null, ct).ConfigureAwait(false);
+            return result;
+        }
+
+        #endregion
+
+        #region Get Deposit Withdraw History
+
+        /// <inheritdoc />
+        public async Task<WebCallResult<AsterDepositWithdrawal[]>> GetDepositWithdrawHistoryAsync(CancellationToken ct = default)
+        {
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "/fapi/v3/aster/deposit-withdraw-history", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterDepositWithdrawal[]>(request, null, ct).ConfigureAwait(false);
+            return result;
+        }
+
+        #endregion
+
     }
 }

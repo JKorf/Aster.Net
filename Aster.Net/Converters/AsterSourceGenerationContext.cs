@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 namespace Aster.Net.Converters
 {
     [JsonSerializable(typeof(AsterBuilder[]))]
+    [JsonSerializable(typeof(AsterDepositWithdrawal[]))]
+    [JsonSerializable(typeof(AsterWithdrawInfo))]
     [JsonSerializable(typeof(IDictionary<string, object>))]
     [JsonSerializable(typeof(SymbolFilterType))]
     [JsonSerializable(typeof(AsterServerTime))]

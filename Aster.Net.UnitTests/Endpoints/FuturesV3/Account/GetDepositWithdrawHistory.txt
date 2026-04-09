@@ -1,0 +1,16 @@
+POST
+/fapi/v3/aster/deposit-withdraw-history
+true
+[
+    {
+        "id": "1234567",
+        "type": "DEPOSIT",
+        "asset": "USDT",
+        "amount": "100",
+        "state": "SUCCESS",
+        "txHash": "0x9a40f0119b670fb6b155744b51981f91c4c4c8a20c333441a63853fe7d055c90",
+        "time": 1742198400000,
+        "chainId": 56,
+        "accountType": "spot"
+    }
+]

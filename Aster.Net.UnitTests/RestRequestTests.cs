@@ -176,6 +176,8 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.FuturesV3Api.Account.GetLeverageBracketsAsync("ETHUSDT"), "GetLeverageBrackets");
             await tester.ValidateAsync(client => client.FuturesV3Api.Account.GetPositionAdlQuantileEstimationAsync(), "GetPositionAdlQuantileEstimation");
             await tester.ValidateAsync(client => client.FuturesV3Api.Account.GetUserCommissionRateAsync("ETHUSDT"), "GetUserCommissionRate");
+            await tester.ValidateAsync(client => client.FuturesV3Api.Account.GetWithdrawInfoAsync(), "GetWithdrawInfo");
+            await tester.ValidateAsync(client => client.FuturesV3Api.Account.GetDepositWithdrawHistoryAsync(), "GetDepositWithdrawHistory");
         }
 
         [Test]
