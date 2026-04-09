@@ -208,6 +208,12 @@ Make a one time donation in a crypto currency of your choice. If you prefer to d
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Release notes
+* Version 3.1.0 - 09 Apr 2026
+    * Updated CryptoExchange.Net to version 11.1.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
+    * Updated restClient.FuturesV3Api.Account.GetAccountInfoAsync path from /account to /accountWithJoinMargin
+    * Added client.FuturesV3Api.Account.GetWithdrawInfoAsync endpoint
+    * Added client.FuturesV3Api.Account.GetDepositWithdrawHistoryAsync endpoint
+
 * Version 3.0.1 - 02 Apr 2026
     * Updated CryptoExchange.Net to version 11.0.3, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
     * Fixed FuturesV3 UserStream endpoints
