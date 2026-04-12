@@ -30,14 +30,20 @@ namespace Aster.Net.Clients.MessageHandlers
 
             int? code = document!.RootElement.TryGetProperty("code", out var codeProp) ? codeProp.GetInt32() : null;
             string? msg = document.RootElement.TryGetProperty("msg", out var msgProp) ? msgProp.GetString() : null;
-            if (msg == null)
-                return new ServerError(ErrorInfo.Unknown);
+            string? errorMsg = document.RootElement.TryGetProperty("error", out var errorProp) ? errorProp.GetString() : null;
+            if (msg != null && code != null)
+            {
+                var errorInfo = _errorMapping.GetErrorInfo(code.ToString()!, msg);
+                return new ServerError(code.Value.ToString(), errorInfo);
+            }
 
-            if (code == null)
-                return new ServerError(new ErrorInfo(ErrorType.Unknown, false, msg));
+            if (msg != null)
+                return new ServerError(ErrorInfo.Unknown with { Message = msg });
 
-            var errorInfo = _errorMapping.GetErrorInfo(code.ToString()!, msg);
-            return new ServerError(code.Value.ToString(), errorInfo);
+            if (errorMsg != null)
+                return new ServerError(ErrorInfo.Unknown with { Message = errorMsg });
+
+            return new ServerError(ErrorInfo.Unknown);
         }
     }
 }

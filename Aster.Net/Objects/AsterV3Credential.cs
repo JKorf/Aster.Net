@@ -7,7 +7,7 @@ using System;
 namespace Aster.Net.Objects
 {
     /// <summary>
-    /// Aster V3 credentials, used for the V3 Spot and Futures API
+    /// Aster V3 credentials, allows for full functionality for the V3 Spot and Futures API
     /// </summary>
     public class AsterV3Credential : CredentialSet
     {
@@ -16,7 +16,7 @@ namespace Aster.Net.Objects
         /// <summary>
         /// Private key
         /// </summary>
-        public string PrivateKey { get; set; }
+        public string? PrivateKey { get; set; }
 
         /// <summary>
         /// Public signer address key
@@ -29,7 +29,7 @@ namespace Aster.Net.Objects
         public string SignerPrivateKey { get; set; }
 
         /// <summary>
-        /// Aster V3 credentials, used for the V3 Spot and Futures API
+        /// Aster V3 credentials, allows for full functionality for the V3 Spot and Futures API
         /// </summary>
         /// <param name="userPrivateKey">Private key</param>
         /// <param name="signerPrivateKey">Signer private key</param>
@@ -41,6 +41,19 @@ namespace Aster.Net.Objects
         }
 
         /// <summary>
+        /// Aster V3 credentials, allows for full functionality for the V3 Spot and Futures API
+        /// </summary>
+        /// <param name="publicAddress">Public address of the wallet to connect to Aster</param>
+        /// <param name="signerPublicKey">Public API wallet/signer key</param>
+        /// <param name="signerPrivateKey">Private API wallet/signer key</param>
+        public AsterV3Credential(string publicAddress, string signerPublicKey, string signerPrivateKey) : base(publicAddress)
+        {
+            _publicAddress = publicAddress;
+            SignerKey = signerPublicKey;
+            SignerPrivateKey = signerPrivateKey;
+        }
+
+        /// <summary>
         /// Get the public address corresponding to the provided private key
         /// </summary>
         public string GetPublicAddress()
@@ -48,7 +61,7 @@ namespace Aster.Net.Objects
             if (_publicAddress != null)
                 return _publicAddress;
 
-            _publicAddress = GetPublicAddress(PrivateKey);
+            _publicAddress = GetPublicAddress(PrivateKey!);
             return _publicAddress;
         }
 
@@ -67,15 +80,15 @@ namespace Aster.Net.Objects
         }
 
         /// <inheritdoc />
-        public override ApiCredentials Copy() => new AsterV3Credential(PrivateKey, SignerPrivateKey);
+        public override ApiCredentials Copy() => new AsterV3Credential(GetPublicAddress(), SignerKey, SignerPrivateKey)
+        {
+            PrivateKey = PrivateKey
+        };
 
         /// <inheritdoc />
         public override void Validate()
         {
             base.Validate();
-
-            if (string.IsNullOrEmpty(PrivateKey))
-                throw new ArgumentException($"PrivateKey not set on {GetType().Name}", nameof(PrivateKey));
 
             if (string.IsNullOrEmpty(SignerPrivateKey))
                 throw new ArgumentException($"SignerPrivateKey not set on {GetType().Name}", nameof(SignerPrivateKey));

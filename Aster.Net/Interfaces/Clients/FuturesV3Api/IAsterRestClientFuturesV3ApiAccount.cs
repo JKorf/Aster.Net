@@ -298,11 +298,10 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// POST /fapi/v3/approveBuilder
         /// </para>
         /// </summary>
-        /// <param name="builderAddress">The builder address</param>
-        /// <param name="builderName">The builder name</param>
-        /// <param name="maxFeeRate">Max fee rate in percentage the builder can charge. 0.001 = 0.1%</param>
+        /// <param name="builderAddress">["<c>builder</c>"] The builder address</param>
+        /// <param name="maxFeeRate">["<c>maxFeeRate</c>"] Max fee rate in percentage the builder can charge. 0.001 = 0.1%</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult> ApproveBuilderAsync(string builderAddress, string builderName, decimal maxFeeRate, CancellationToken ct = default);
+        Task<WebCallResult> ApproveBuilderAsync(string builderAddress, decimal maxFeeRate, CancellationToken ct = default);
 
         /// <summary>
         /// Update a previously approved builder
@@ -313,8 +312,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// POST /fapi/v3/updateBuilder
         /// </para>
         /// </summary>
-        /// <param name="builderAddress">The builder address</param>
-        /// <param name="newMaxFeeRate">Max new fee rate the builder can charge. 0.001 = 0.1%</param>
+        /// <param name="builderAddress">["<c>builder</c>"] The builder address</param>
+        /// <param name="newMaxFeeRate">["<c>maxFeeRate</c>"] Max new fee rate the builder can charge. 0.001 = 0.1%</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult> UpdateBuilderAsync(string builderAddress, decimal newMaxFeeRate, CancellationToken ct = default);
 
@@ -327,7 +326,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// DELETE /fapi/v3/builder
         /// </para>
         /// </summary>
-        /// <param name="builderAddress">The builder address</param>
+        /// <param name="builderAddress">["<c>builder</c>"] The builder address</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult> DeleteBuilderAsync(string builderAddress, CancellationToken ct = default);
 
@@ -342,6 +341,89 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterBuilder[]>> GetApprovedBuildersAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Create or approve an agent
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#create-approve-agent-trade" /><br />
+        /// Endpoint:<br />
+        /// POST  /fapi/v3/approveAgent
+        /// </para>
+        /// </summary>
+        /// <param name="agentName">["<c>agentName</c>"] Agent name</param>
+        /// <param name="agentAddress">["<c>agentAddress</c>"] The agent address</param>
+        /// <param name="expireTime">["<c>expired</c>"] Expire timestamp</param>
+        /// <param name="ipWhitelist">["<c>ipWhitelist</c>"] IP whitelist</param>
+        /// <param name="canSpotTrade">["<c>canSpotTrade</c>"] Spot trade permission</param>
+        /// <param name="canPerpTrade">["<c>canPerpTrade</c>"] Perp trade permission</param>
+        /// <param name="canWithdraw">["<c>canWithdraw</c>"] Withdraw permission</param>
+        /// <param name="builder">["<c>builder</c>"] Builder address</param>
+        /// <param name="builderMaxFeeRate">["<c>maxFeeRate</c>"] Builder max fee rate</param>
+        /// <param name="builderName">["<c>builderName</c>"] Builder name</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult> CreateOrApproveAgentAsync(
+            string agentName,
+            string agentAddress,
+            string? ipWhitelist,
+            DateTime? expireTime,
+            bool canSpotTrade,
+            bool canPerpTrade,
+            bool canWithdraw,
+            string? builder = null,
+            decimal? builderMaxFeeRate = null,
+            string? builderName = null,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Update an agent
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#update-agent-trade" /><br />
+        /// Endpoint:<br />
+        /// POST  /fapi/v3/updateAgent
+        /// </para>
+        /// </summary>
+        /// <param name="agentAddress">["<c>agentAddress</c>"] The agent address</param>
+        /// <param name="ipWhitelist">["<c>ipWhitelist</c>"] IP whitelist</param>
+        /// <param name="canSpotTrade">["<c>canSpotTrade</c>"] Spot trade permission</param>
+        /// <param name="canPerpTrade">["<c>canPerpTrade</c>"] Perp trade permission</param>
+        /// <param name="canWithdraw">["<c>canWithdraw</c>"] Withdraw permission</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult> UpdateAgentAsync(
+            string agentAddress,
+            string? ipWhitelist,
+            bool canSpotTrade,
+            bool canPerpTrade,
+            bool canWithdraw,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Delete an agent
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#delete-agent-trade" /><br />
+        /// Endpoint:<br />
+        /// DELETE /fapi/v3/agent
+        /// </para>
+        /// </summary>
+        /// <param name="agentAddress">["<c>agentAddress</c>"] The agent address</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult> DeleteAgentAsync(
+            string agentAddress,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Get list of agents
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/endpoints/#get-agents-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v3/agent
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterAgent[]>> GetAgentsAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get withdrawal info

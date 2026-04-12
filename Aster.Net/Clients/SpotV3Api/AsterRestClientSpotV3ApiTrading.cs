@@ -3,6 +3,7 @@ using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
+using Aster.Net.Utils;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
 using Microsoft.Extensions.Logging;
@@ -54,7 +55,9 @@ namespace Aster.Net.Clients.SpotV3Api
             parameters.AddOptional("price", price);
             parameters.AddOptional("newClientOrderId", clientOrderId);
             parameters.AddOptional("stopPrice", stopPrice);
-            if (_baseClient.ClientOptions.BuilderFeePercentage != null)
+            if (_baseClient.ClientOptions.BuilderFeePercentage > 0
+                    && _baseClient.ClientOptions.BuilderAddress != null
+                    && AsterUtils._builderFeeSuccess)
             {
                 parameters.AddOptional("builder", _baseClient.ClientOptions.BuilderAddress);
                 parameters.AddOptional("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);

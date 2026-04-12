@@ -3,6 +3,7 @@ using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
+using Aster.Net.Utils;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Errors;
@@ -72,7 +73,9 @@ namespace Aster.Net.Clients.FuturesV3Api
             parameters.AddOptionalEnum("workingType", workingType);
             parameters.AddOptional("priceProtect", priceProtect);
             parameters.AddOptional("newOrderRespType", "RESULT");
-            if (_baseClient.ClientOptions.BuilderFeePercentage != null)
+            if (_baseClient.ClientOptions.BuilderFeePercentage > 0
+                && _baseClient.ClientOptions.BuilderAddress != null
+                && AsterUtils._builderFeeSuccess)
             {
                 parameters.AddOptional("builder", _baseClient.ClientOptions.BuilderAddress);
                 parameters.AddOptional("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
@@ -116,7 +119,9 @@ namespace Aster.Net.Clients.FuturesV3Api
                 orderParameters.AddOptionalEnum("workingType", order.WorkingType);
                 orderParameters.AddOptionalParameter("reduceOnly", order.ReduceOnly?.ToString().ToLower());
                 orderParameters.AddOptionalParameter("priceProtect", order.PriceProtect?.ToString().ToUpper());
-                if (_baseClient.ClientOptions.BuilderFeePercentage != null)
+                if (_baseClient.ClientOptions.BuilderFeePercentage > 0
+                    && _baseClient.ClientOptions.BuilderAddress != null
+                    && AsterUtils._builderFeeSuccess)
                 {
                     orderParameters.AddOptional("builder", _baseClient.ClientOptions.BuilderAddress);
                     orderParameters.AddOptional("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);

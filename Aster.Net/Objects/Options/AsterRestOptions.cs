@@ -36,11 +36,6 @@ namespace Aster.Net.Objects.Options
         public decimal? BuilderFeePercentage { get; set; } = 0.01m;
 
         /// <summary>
-        /// Name of the builder
-        /// </summary>
-        public string BuilderName { get; set; } = "Aster.Net";
-
-        /// <summary>
         /// Address of the builder
         /// </summary>
         public string BuilderAddress { get; set; } = "0x64E807d36a59E28265167e1473E0DF83821Dc291";
@@ -59,7 +54,6 @@ namespace Aster.Net.Objects.Options
         {
             targetOptions = base.Set<AsterRestOptions>(targetOptions);
             targetOptions.BuilderAddress = BuilderAddress;
-            targetOptions.BuilderName = BuilderName;
             targetOptions.BuilderFeePercentage = BuilderFeePercentage;
             targetOptions.FuturesOptions = FuturesOptions.Set(targetOptions.FuturesOptions);
             targetOptions.SpotOptions = SpotOptions.Set(targetOptions.SpotOptions);

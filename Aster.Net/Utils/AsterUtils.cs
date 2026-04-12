@@ -18,11 +18,13 @@ namespace Aster.Net.Utils
     {
         private static readonly SemaphoreSlim _semaphoreBuilderFee = new SemaphoreSlim(1, 1);
         private static bool _checkedBuilderFee = false;
+        // We should only send builder credentials if the check has succeeded
+        internal static bool _builderFeeSuccess = false;
 
         internal static async Task<CallResult> CheckBuilderFeeAsync(AsterRestClient client)
         {
             var futuresV3Api = (AsterRestClientFuturesV3Api)client.FuturesV3Api;
-            if (futuresV3Api.AuthenticationProvider?.ApiCredentials.V3 == null)
+            if (futuresV3Api.AuthenticationProvider?.ApiCredentials.V3?.PrivateKey == null)
                 // No (V3) credentials provided, no need to check builder fee
                 return CallResult.SuccessResult;
 
@@ -54,10 +56,16 @@ namespace Aster.Net.Utils
                 var builder = approvedBuildersResult.Data.SingleOrDefault(x => x.BuilderAddress.Equals(options.BuilderAddress, StringComparison.OrdinalIgnoreCase));
                 var targetBps = options.BuilderFeePercentage.Value / 100;
                 if (builder != null && builder.MaxFeeRate >= targetBps)
+                {
                     // Builder fee is approved, we're good
+                    _builderFeeSuccess = true;
                     return CallResult.SuccessResult;
+                }
 
                 var approveResult = await client.FuturesV3Api.Account.ApproveBuilderAsync().ConfigureAwait(false);
+                if (approveResult)
+                    _builderFeeSuccess = true;
+
                 return approveResult;
             }
             finally

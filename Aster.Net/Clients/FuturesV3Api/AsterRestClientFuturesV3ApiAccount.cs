@@ -10,6 +10,7 @@ using CryptoExchange.Net.Objects;
 using System;
 using System.Globalization;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -353,15 +354,14 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         /// <inheritdoc />
         public Task<WebCallResult> ApproveBuilderAsync(CancellationToken ct = default)
-            => ApproveBuilderAsync(_baseClient.ClientOptions.BuilderAddress, _baseClient.ClientOptions.BuilderName, (_baseClient.ClientOptions.BuilderFeePercentage ?? 0.01m) / 100, ct);
+            => ApproveBuilderAsync(_baseClient.ClientOptions.BuilderAddress, (_baseClient.ClientOptions.BuilderFeePercentage ?? 0.01m) / 100, ct);
 
         /// <inheritdoc />
-        public async Task<WebCallResult> ApproveBuilderAsync(string builderAddress, string builderName, decimal maxFeeRate, CancellationToken ct = default)
+        public async Task<WebCallResult> ApproveBuilderAsync(string builderAddress, decimal maxFeeRate, CancellationToken ct = default)
         {
             var parameters = new ParameterCollection();
             parameters.Add("builder", builderAddress);
             parameters.AddString("maxFeeRate", maxFeeRate);
-            parameters.Add("builderName", builderName);
             parameters.Add("signaction", "ApproveBuilder");
 
             var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/approveBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
@@ -427,6 +427,116 @@ namespace Aster.Net.Clients.FuturesV3Api
             var parameters = new ParameterCollection();
             var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/builder", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterBuilder[]>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Create Or Approve Builder
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> CreateOrApproveAgentAsync(
+            string agentName,
+            string agentAddress,
+            string? ipWhitelist,
+            DateTime? expireTime,
+            bool canSpotTrade,
+            bool canPerpTrade,
+            bool canWithdraw,
+            string? builder = null,
+            decimal? builderMaxFeeRate = null,
+            string? builderName = null,
+            CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("agentName", agentName);
+            parameters.Add("agentAddress", agentAddress);
+            parameters.Add("ipWhitelist", ipWhitelist ?? "");
+            parameters.AddMilliseconds("expired", expireTime ?? DateTime.UtcNow.AddYears(5));
+            parameters.Add("canSpotTrade", canSpotTrade);
+            parameters.Add("canPerpTrade", canPerpTrade);
+            parameters.Add("canWithdraw", canWithdraw);
+            parameters.AddOptional("builder", builder);
+            parameters.AddOptionalString("maxFeeRate", builderMaxFeeRate);
+            parameters.AddOptional("builderName", builderName);
+
+            parameters.Add("signaction", "ApproveAgent");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/approveAgent", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+            if (!result)
+                return result.AsDataless();
+
+            if (result.Data.Code != 200)
+                return result.AsDatalessError(new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
+            return result.AsDataless();
+        }
+
+        #endregion
+
+        #region Update Agent
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> UpdateAgentAsync(
+            string agentAddress,
+            string? ipWhitelist,
+            bool canSpotTrade,
+            bool canPerpTrade,
+            bool canWithdraw,
+            CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("agentAddress", agentAddress);
+            parameters.Add("ipWhitelist", ipWhitelist ?? "");
+            parameters.Add("canSpotTrade", canSpotTrade);
+            parameters.Add("canPerpTrade", canPerpTrade);
+            parameters.Add("canWithdraw", canWithdraw);
+
+            parameters.Add("signaction", "UpdateAgent");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "fapi/v3/updateAgent", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+            if (!result)
+                return result.AsDataless();
+
+            if (result.Data.Code != 200)
+                return result.AsDatalessError(new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
+            return result.AsDataless();
+        }
+
+        #endregion
+
+        #region Delete Agent
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> DeleteAgentAsync(
+            string agentAddress,
+            CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("agentAddress", agentAddress);
+
+            parameters.Add("signaction", "DelAgent");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, "fapi/v3/agent", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+            if (!result)
+                return result.AsDataless();
+
+            if (result.Data.Code != 200)
+                return result.AsDatalessError(new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
+            return result.AsDataless();
+        }
+
+        #endregion
+
+        #region Get Agents
+
+        /// <inheritdoc />
+        public async Task<WebCallResult<AsterAgent[]>> GetAgentsAsync(CancellationToken ct = default)
+        {
+            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/agent", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterAgent[]>(request, null, ct, checkBuilderFee: false).ConfigureAwait(false);
+            return result;
         }
 
         #endregion

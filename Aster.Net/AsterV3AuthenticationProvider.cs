@@ -34,6 +34,7 @@ namespace Aster.Net
             { typeof(bool), "bool" }
         };
 
+
         public AsterV3AuthenticationProvider(AsterCredentials credentials) : base(credentials, credentials.V3)
         {
         }
@@ -52,6 +53,9 @@ namespace Aster.Net
             string paramString;
             if (parameters.ContainsKey("signaction"))
             {
+                if (Credential.PrivateKey == null)
+                    throw new ArgumentException("Endpoint requires full credentials with private key");
+
                 var signAction = (string)parameters["signaction"];
                 parameters.Remove("signaction");
 
@@ -63,7 +67,7 @@ namespace Aster.Net
                 var messageFields = GetMessageFields(parameters);
                 var message = CeEip712TypedDataEncoder.EncodeEip721(signAction, domainFields, messageFields);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
-                signatureHex = SignRequest(keccakSigned, Credential.PrivateKey).ToLower();
+                signatureHex = SignRequest(keccakSigned, Credential.PrivateKey!).ToLower();
 
                 parameters["signatureChainId"] = 56;
                 paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);
@@ -71,8 +75,8 @@ namespace Aster.Net
             else
             {
                 parameters["nonce"] = nonce;
-                parameters["user"] = Credential!.Key;
-                parameters["signer"] = Credential.SignerKey!;
+                parameters["user"] = Credential.Key;
+                parameters["signer"] = Credential.SignerKey;
 
                 var chainId = apiClient.EnvironmentName == TradeEnvironmentNames.Live ? AsterExchange._mainnetChainId : AsterExchange._testnetChainId;
 
@@ -81,7 +85,7 @@ namespace Aster.Net
                 var typedData = GetTradingTypedData(paramString, chainId);
                 var message = CeEip712TypedDataEncoder.EncodeTypedDataRaw(typedData);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
-                signatureHex = SignRequest(keccakSigned, Credential.SignerPrivateKey!).ToLower();
+                signatureHex = SignRequest(keccakSigned, Credential.SignerPrivateKey).ToLower();
                 parameters["signature"] = signatureHex;
             }
 

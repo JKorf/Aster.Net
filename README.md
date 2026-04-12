@@ -87,16 +87,27 @@ Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which
 
 ## Authentication
 Depending on the API used different credentials types are required.  
-**SpotV3Api / FuturesV3Api**  
-The V3 API is recommended, API credentials can be provided via the AsterV3Credential overload available on the AsterCredentials object. The private key is the user private key, the private signer key can be obtained via the Aster UI under [Api Management] => [Pro Api]
+**V3 | SpotV3Api / FuturesV3Api**  
+The V3 API is recommended, API credentials can be provided via the AsterV3Credential overload available on the AsterCredentials object.  
+There are 2 ways to provide credentials for the V3 API:
+1. Use the private key of your wallet connected to Aster and the private signer key, which can be obtained via the Aster UI under [Api Management] => [Pro Api]  
+This gives access to all endpoints.
 ```
 var credentials = new AsterCredentials(new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY"));
 var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
 var result = await client.FuturesV3Api.Account.GetBalancesAsync();
 ```
 
-**SpotApi / FuturesApi**  
-The API key and secret can be obtained via the Aster UI under [Api Management] => [Api]
+2. Use the public address of your wallet connected to Aster and the public and private signer key which can be obtained via the Aster UI under [Api Management] => [Pro Api]  
+This gives access to most but not all endpoints.
+```
+var credentials = new AsterCredentials(new AsterV3Credential("PUBLICADDRESS", "SIGNERPUBLICKEY", "SIGNERPRIVATEKEY"));
+var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
+var result = await client.FuturesV3Api.Account.GetBalancesAsync();
+```
+
+**V1 | SpotApi / FuturesApi**  
+The V1 API only requires the credentials which can be obtained via the Aster UI under [Api Management] => [Api]
 ```
 var credentials = new AsterCredentials(new HMACCredential("APIKEY", "APISECRET"));
 var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
