@@ -220,6 +220,13 @@ Make a one time donation in a crypto currency of your choice. If you prefer to d
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Release notes
+* Version 3.2.0 - 12 Apr 2026
+    * Added Agent endpoints
+    * Added AsterV3Credentials overload for using public address
+    * Added additional checks for builder parameters
+    * Fix for REST error message parsing
+    * Removed BuilderName option and parameter from ApproveBuilderAsync endpoint
+
 * Version 3.1.0 - 09 Apr 2026
     * Updated CryptoExchange.Net to version 11.1.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
     * Updated restClient.FuturesV3Api.Account.GetAccountInfoAsync path from /account to /accountWithJoinMargin
