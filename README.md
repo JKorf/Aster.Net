@@ -220,6 +220,9 @@ Make a one time donation in a crypto currency of your choice. If you prefer to d
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Release notes
+* Version 3.2.1 - 24 Apr 2026
+    * Fixed restClient.FuturesV3Api.Account.ModifyIsolatedMarginAsync parameter serialization
+
 * Version 3.2.0 - 12 Apr 2026
     * Added Agent endpoints
     * Added AsterV3Credentials overload for using public address
