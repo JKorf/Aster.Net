@@ -193,7 +193,7 @@ namespace Aster.Net.Clients.FuturesV3Api
             var parameters = new ParameterCollection();
             parameters.Add("symbol", symbol);
             parameters.AddEnumAsInt("type", side);
-            parameters.Add("quantity", quantity);
+            parameters.Add("amount", quantity);
             parameters.AddOptionalEnum("positionSide", positionSide);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
