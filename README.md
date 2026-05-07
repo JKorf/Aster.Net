@@ -50,14 +50,14 @@ The NuGet package files are added along side the source with the latest GitHub r
 ```csharp
 // Get the ETH/USDT ticker via rest request
 var restClient = new AsterRestClient();
-var tickerResult = await restClient.SpotApiV3.ExchangeData.GetTickerAsync("ETHUSDT");
+var tickerResult = await restClient.SpotV3Api.ExchangeData.GetTickerAsync("ETHUSDT");
 var lastPrice = tickerResult.Data.LastPrice;	
 ```
 
 *Place order:*
 ```csharp
 var restClient = new AsterRestClient(opts => {
-	opts.ApiCredentials = new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY");
+	opts.ApiCredentials = new AsterCredentials(new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY"));
 });
 
 // Place Limit order to go long for 0.1 ETH at 2000
@@ -74,13 +74,20 @@ var orderResult = await asterRestClient.FuturesV3Api.Trading.PlaceOrderAsync(
 ```csharp
 // Subscribe to ETH/USDT ticker updates via the websocket API
 var socketClient = new AsterSocketClient();
-var tickerSubscriptionResult = socketClient.SpotApiV3.SubscribeToTickerUpdatesAsync("ETHUSDT", (update) => 
+var tickerSubscriptionResult = socketClient.SpotV3Api.SubscribeToTickerUpdatesAsync("ETHUSDT", (update) => 
 {
   var lastPrice = update.Data.LastPrice;
 });
 ```
 
 For information on the clients, dependency injection, response processing and more see the [documentation](https://cryptoexchange.jkorf.dev/client-libs/getting-started), or have a look at the examples [here](https://github.com/JKorf/Aster.Net/tree/main/Examples) or [here](https://github.com/JKorf/CryptoExchange.Net/tree/master/Examples).
+
+## AI documentation
+For AI coding assistants and quick onboarding:
+* [`llms.txt`](llms.txt) provides concise AI context
+* [`llms-full.txt`](llms-full.txt) provides detailed patterns, pitfalls and endpoint routing
+* [`docs/ai-api-map.md`](docs/ai-api-map.md) maps common intents to V3 client members
+* [`Examples/ai-friendly`](Examples/ai-friendly) contains compact examples that are compiled by the test suite
 
 **NOTE**  
 Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.

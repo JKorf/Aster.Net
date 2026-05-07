@@ -1,0 +1,436 @@
+# Aster.Net Full LLM Context
+
+> Detailed AI/LLM reference for generating correct C#/.NET code with Aster.Net. Use this file when `llms.txt` is too brief and the task needs concrete examples, endpoint routing guidance, or anti-hallucination rules.
+
+Aster.Net is a strongly typed .NET client library for the Aster DEX REST and WebSocket APIs. It is part of the CryptoExchange.Net ecosystem and uses the same result, shared API, logging, rate limiting, and socket patterns as the other JKorf exchange libraries.
+
+Current package version in this repository: 3.2.1.
+CryptoExchange.Net dependency: 11.1.0.
+Target frameworks: netstandard2.0, netstandard2.1, net8.0, net9.0, net10.0.
+Native AOT: supported on compatible .NET targets.
+
+Primary documentation:
+- README.md: overview, installation, feature table, release notes, basic examples
+- docs site: https://cryptoexchange.jkorf.dev/Aster.Net/
+- API quick map: `docs/ai-api-map.md`
+- source interfaces: `Aster.Net/Interfaces/Clients/**`
+- AI examples: `Examples/ai-friendly/`
+
+## Golden Rules For AI Code Generation
+
+- Use `AsterRestClient` for REST and `AsterSocketClient` for WebSocket. Do not generate raw `HttpClient` calls to Aster endpoints.
+- Prefer V3 roots: `SpotV3Api` and `FuturesV3Api`.
+- Use `AsterCredentials().WithV3("userPrivateKey", "signerPrivateKey")` for V3 private endpoints.
+- Do not use `new AsterCredentials("key", "secret")` for V3; that overload configures V1 HMAC credentials.
+- Always check `.Success` before reading `.Data`.
+- REST methods return `WebCallResult<T>` or `WebCallResult`.
+- WebSocket subscriptions return `CallResult<UpdateSubscription>`.
+- Reuse clients. Do not instantiate a REST or socket client per request in production code.
+- Prefer dependency injection for long-running services.
+- Store WebSocket subscriptions and unsubscribe during shutdown.
+- Do not call `.Result` or `.Wait()` on async methods.
+- Do not invent endpoint names. If unsure, inspect `Aster.Net/Interfaces/Clients/**`.
+- Do not pass custom client order IDs unless the user explicitly needs correlation with an external system.
+- For multi-exchange code, use `CryptoExchange.Net.SharedApis` interfaces from each exchange's `.SharedClient`.
+
+## Installation
+
+```bash
+dotnet add package Jkorf.Aster.Net
+```
+
+## Required Usings
+
+Typical REST/trading code:
+
+```csharp
+using Aster.Net;
+using Aster.Net.Clients;
+using Aster.Net.Enums;
+```
+
+Shared API code:
+
+```csharp
+using Aster.Net.Clients;
+using CryptoExchange.Net.SharedApis;
+```
+
+Retry/error helper code may also need:
+
+```csharp
+using CryptoExchange.Net.Objects;
+```
+
+Dependency injection setup:
+
+```csharp
+using Aster.Net;
+using Microsoft.Extensions.DependencyInjection;
+```
+
+## Client Setup
+
+Public market data does not require credentials:
+
+```csharp
+var client = new AsterRestClient();
+
+var ticker = await client.SpotV3Api.ExchangeData.GetTickerAsync("BTCUSDT");
+if (!ticker.Success)
+{
+    Console.WriteLine(ticker.Error);
+    return;
+}
+
+Console.WriteLine(ticker.Data.LastPrice);
+```
+
+Private account and trading endpoints require credentials:
+
+```csharp
+var client = new AsterRestClient(options =>
+{
+    options.ApiCredentials = new AsterCredentials()
+        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
+});
+```
+
+Socket client with credentials:
+
+```csharp
+var socketClient = new AsterSocketClient(options =>
+{
+    options.ApiCredentials = new AsterCredentials()
+        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
+});
+```
+
+Environment:
+
+```csharp
+var live = new AsterRestClient(options => options.Environment = AsterEnvironment.Live);
+```
+
+## Dependency Injection
+
+```csharp
+services.AddAster(options =>
+{
+    options.ApiCredentials = new AsterCredentials()
+        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
+});
+```
+
+Inject:
+
+```csharp
+public class MyService
+{
+    private readonly IAsterRestClient _restClient;
+    private readonly IAsterSocketClient _socketClient;
+
+    public MyService(IAsterRestClient restClient, IAsterSocketClient socketClient)
+    {
+        _restClient = restClient;
+        _socketClient = socketClient;
+    }
+}
+```
+
+Interface namespace:
+
+```csharp
+using Aster.Net.Interfaces.Clients;
+```
+
+## Result Handling Pattern
+
+Always branch on `.Success`.
+
+```csharp
+var result = await client.SpotV3Api.ExchangeData.GetTickerAsync("BTCUSDT");
+if (!result.Success)
+{
+    Console.WriteLine($"Code: {result.Error?.Code}");
+    Console.WriteLine($"Message: {result.Error?.Message}");
+    return;
+}
+
+var price = result.Data.LastPrice;
+```
+
+For retry logic, only retry transient errors:
+
+```csharp
+async Task<WebCallResult<T>> WithRetry<T>(Func<Task<WebCallResult<T>>> call, int maxAttempts = 3)
+{
+    WebCallResult<T> last = default!;
+
+    for (var attempt = 1; attempt <= maxAttempts; attempt++)
+    {
+        last = await call();
+        if (last.Success)
+            return last;
+
+        if (last.Error?.IsTransient != true)
+            return last;
+
+        await Task.Delay(TimeSpan.FromMilliseconds(250 * Math.Pow(2, attempt)));
+    }
+
+    return last;
+}
+```
+
+## Main V3 API Surface
+
+REST:
+
+```text
+AsterRestClient
+  .SpotV3Api
+    .ExchangeData
+    .Account
+    .Trading
+    .SharedClient
+  .FuturesV3Api
+    .ExchangeData
+    .Account
+    .Trading
+    .SharedClient
+```
+
+WebSocket:
+
+```text
+AsterSocketClient
+  .SpotV3Api
+    .SharedClient
+    SubscribeToTickerUpdatesAsync(...)
+    SubscribeToKlineUpdatesAsync(...)
+    SubscribeToOrderBookUpdatesAsync(...)
+    SubscribeToUserDataUpdatesAsync(...)
+  .FuturesV3Api
+    .SharedClient
+    SubscribeToTickerUpdatesAsync(...)
+    SubscribeToKlineUpdatesAsync(...)
+    SubscribeToMarkPriceUpdatesAsync(...)
+    SubscribeToUserDataUpdatesAsync(...)
+```
+
+## Intent To Method Map
+
+For a broader quick reference, see `docs/ai-api-map.md`.
+
+Common REST tasks:
+
+```text
+Get spot ticker -> client.SpotV3Api.ExchangeData.GetTickerAsync("BTCUSDT")
+Get spot exchange info -> client.SpotV3Api.ExchangeData.GetExchangeInfoAsync()
+Get account balances -> client.SpotV3Api.Account.GetAccountInfoAsync()
+Place spot order -> client.SpotV3Api.Trading.PlaceOrderAsync(...)
+Get spot order -> client.SpotV3Api.Trading.GetOrderAsync(symbol, orderId)
+Cancel spot order -> client.SpotV3Api.Trading.CancelOrderAsync(symbol, orderId)
+Get futures exchange info -> client.FuturesV3Api.ExchangeData.GetExchangeInfoAsync()
+Set futures leverage -> client.FuturesV3Api.Account.SetLeverageAsync(symbol, leverage)
+Get futures positions -> client.FuturesV3Api.Trading.GetPositionsAsync(symbol)
+Place futures order -> client.FuturesV3Api.Trading.PlaceOrderAsync(...)
+Get futures balances -> client.FuturesV3Api.Account.GetBalancesAsync()
+Transfer spot/futures -> client.SpotV3Api.Account.TransferAsync(...) or client.FuturesV3Api.Account.TransferAsync(...)
+Builder and agent endpoints -> client.FuturesV3Api.Account.*
+```
+
+Common WebSocket tasks:
+
+```text
+Subscribe spot ticker -> socketClient.SpotV3Api.SubscribeToTickerUpdatesAsync(symbol, handler)
+Subscribe spot klines -> socketClient.SpotV3Api.SubscribeToKlineUpdatesAsync(symbol, interval, handler)
+Subscribe spot order book -> socketClient.SpotV3Api.SubscribeToOrderBookUpdatesAsync(symbol, updateInterval, handler)
+Subscribe spot user data -> socketClient.SpotV3Api.SubscribeToUserDataUpdatesAsync(...)
+Subscribe futures ticker -> socketClient.FuturesV3Api.SubscribeToTickerUpdatesAsync(symbol, handler)
+Subscribe futures mark price -> socketClient.FuturesV3Api.SubscribeToMarkPriceUpdatesAsync(symbol, updateInterval, handler)
+Subscribe futures user data -> socketClient.FuturesV3Api.SubscribeToUserDataUpdatesAsync(...)
+```
+
+## Spot Order Example
+
+```csharp
+using Aster.Net;
+using Aster.Net.Clients;
+using Aster.Net.Enums;
+
+var client = new AsterRestClient(options =>
+{
+    options.ApiCredentials = new AsterCredentials()
+        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
+});
+
+var order = await client.SpotV3Api.Trading.PlaceOrderAsync(
+    symbol: "BTCUSDT",
+    side: OrderSide.Buy,
+    type: OrderType.Limit,
+    quantity: 0.001m,
+    price: 50000m,
+    timeInForce: TimeInForce.GoodTillCanceled);
+
+if (!order.Success)
+{
+    Console.WriteLine(order.Error);
+    return;
+}
+
+Console.WriteLine(order.Data.Id);
+```
+
+For market buy orders that specify quote currency amount, use `quoteQuantity`:
+
+```csharp
+var order = await client.SpotV3Api.Trading.PlaceOrderAsync(
+    symbol: "BTCUSDT",
+    side: OrderSide.Buy,
+    type: OrderType.Market,
+    quoteQuantity: 100m);
+```
+
+## Futures Order Example
+
+```csharp
+using Aster.Net;
+using Aster.Net.Clients;
+using Aster.Net.Enums;
+
+var client = new AsterRestClient(options =>
+{
+    options.ApiCredentials = new AsterCredentials()
+        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
+});
+
+var leverage = await client.FuturesV3Api.Account.SetLeverageAsync("ETHUSDT", 5);
+if (!leverage.Success)
+{
+    Console.WriteLine(leverage.Error);
+    return;
+}
+
+var order = await client.FuturesV3Api.Trading.PlaceOrderAsync(
+    symbol: "ETHUSDT",
+    side: OrderSide.Buy,
+    type: OrderType.Market,
+    quantity: 0.01m);
+
+if (!order.Success)
+{
+    Console.WriteLine(order.Error);
+    return;
+}
+```
+
+Hedge mode note: if the account is in hedge mode, add `positionSide: PositionSide.Long` or `positionSide: PositionSide.Short`. In one-way mode, omit `positionSide`.
+
+Use `reduceOnly: true` when closing a futures position if you want to avoid flipping the position.
+
+## WebSocket Subscription Example
+
+```csharp
+using Aster.Net.Clients;
+using Aster.Net.Enums;
+
+var socketClient = new AsterSocketClient();
+
+var tickerSub = await socketClient.SpotV3Api.SubscribeToTickerUpdatesAsync(
+    "BTCUSDT",
+    update => Console.WriteLine(update.Data.LastPrice));
+
+if (!tickerSub.Success)
+{
+    Console.WriteLine(tickerSub.Error);
+    return;
+}
+
+Console.ReadLine();
+
+await socketClient.UnsubscribeAsync(tickerSub.Data);
+```
+
+## SharedApis Multi-Exchange Pattern
+
+Use CryptoExchange.Net.SharedApis when the user asks for code that can work against Aster and other exchanges.
+
+```csharp
+using Aster.Net.Clients;
+using CryptoExchange.Net.SharedApis;
+
+ISpotTickerRestClient tickerClient = new AsterRestClient().SpotV3Api.SharedClient;
+var symbol = new SharedSymbol(TradingMode.Spot, "BTC", "USDT");
+
+var ticker = await tickerClient.GetSpotTickerAsync(new GetTickerRequest(symbol));
+if (!ticker.Success)
+{
+    Console.WriteLine(ticker.Error);
+    return;
+}
+
+Console.WriteLine(ticker.Data.LastPrice);
+```
+
+Shared WebSocket subscriptions return an `UpdateSubscription` in `.Data`. For shared interface variables, unsubscribe through the concrete socket client:
+
+```csharp
+var socketClient = new AsterSocketClient();
+ITickerSocketClient tickerSocket = socketClient.SpotV3Api.SharedClient;
+
+var sub = await tickerSocket.SubscribeToTickerUpdatesAsync(
+    new SubscribeTickerRequest(new SharedSymbol(TradingMode.Spot, "BTC", "USDT")),
+    update => Console.WriteLine(update.Data.LastPrice));
+
+if (!sub.Success)
+{
+    Console.WriteLine(sub.Error);
+    return;
+}
+
+await socketClient.UnsubscribeAsync(sub.Data);
+```
+
+## AI-Friendly Examples
+
+Use these examples when generating code:
+
+```text
+Examples/ai-friendly/01-spot-quickstart.cs
+Examples/ai-friendly/02-futures.cs
+Examples/ai-friendly/03-websocket.cs
+Examples/ai-friendly/04-multi-exchange.cs
+Examples/ai-friendly/05-error-handling.cs
+```
+
+These files are intended to be copied into a console `Program.cs` after `dotnet add package Jkorf.Aster.Net`.
+
+## Anti-Hallucination Checklist
+
+- Does it compile with the current package?
+- Does it use `SpotV3Api` and `FuturesV3Api` for new code?
+- Does it use `AsterCredentials().WithV3(...)` for V3 private endpoints?
+- Does every REST/socket result check `.Success` before `.Data`?
+- Does it avoid raw Aster URLs and manual signing?
+- Does it avoid custom client order IDs unless requested?
+- Does it avoid `.Result` and `.Wait()`?
+- Are WebSocket subscriptions unsubscribed on shutdown?
+- For shared socket interfaces, does it keep the concrete socket client for `UnsubscribeAsync(sub.Data)`?
+- For futures hedge-mode code, is `positionSide` only included when hedge mode is intended?
+
+## Source Of Truth For Method Names
+
+When unsure, inspect these files instead of guessing:
+
+```text
+Aster.Net/Interfaces/Clients/IAsterRestClient.cs
+Aster.Net/Interfaces/Clients/IAsterSocketClient.cs
+Aster.Net/Interfaces/Clients/SpotV3Api/IAsterRestClientSpotApi*.cs
+Aster.Net/Interfaces/Clients/SpotV3Api/IAsterSocketClientSpotApi*.cs
+Aster.Net/Interfaces/Clients/FuturesV3Api/IAsterRestClientFuturesV3Api*.cs
+Aster.Net/Interfaces/Clients/FuturesV3Api/IAsterSocketClientFuturesV3Api*.cs
+```
+
+Prefer the interface files over memory when generating endpoint names, parameters, callback names, and return types.
