@@ -84,6 +84,7 @@ For information on the clients, dependency injection, response processing and mo
 
 ## AI documentation
 For AI coding assistants and quick onboarding:
+* [AGENTS.md](AGENTS.md) skill-style instructions for Aster.Net usage
 * [`llms.txt`](llms.txt) provides concise AI context
 * [`llms-full.txt`](llms-full.txt) provides detailed patterns, pitfalls and endpoint routing
 * [`docs/ai-api-map.md`](docs/ai-api-map.md) maps common intents to V3 client members
