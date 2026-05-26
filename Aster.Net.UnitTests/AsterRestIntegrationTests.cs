@@ -52,7 +52,7 @@ namespace Aster.Net.UnitTests
         public async Task TestSpotExchangeData()
         {
             await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetServerTimeAsync(default), false);
-            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetExchangeInfoAsync(default), false, true);
+            await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetExchangeInfoAsync(default), false, true, ignoreProperties: ["symbolType"]);
             await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetOrderBookAsync("ETHUSDT", default, default), false, true);
             await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetRecentTradesAsync("ETHUSDT", default, default), false, true, ignoreProperties: ["baseQty"]);
             await RunAndCheckResult(client => client.SpotV3Api.ExchangeData.GetTradeHistoryAsync("ETHUSDT", default, default, default), true, true);
