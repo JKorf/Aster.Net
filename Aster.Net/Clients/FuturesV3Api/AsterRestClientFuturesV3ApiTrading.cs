@@ -408,7 +408,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Place Chase Order
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterChaseOrder>> PlaceChaseOrderAsync(
+        public async Task<WebCallResult<AsterStrategyOrderResult>> PlaceChaseOrderAsync(
             string symbol,
             OrderSide side,
             decimal quantity,
@@ -439,7 +439,7 @@ namespace Aster.Net.Clients.FuturesV3Api
             parameters.AddOptionalEnum("timeInForce", timeInForce);
             parameters.AddOptional("clientStrategyId", clientOrderId);
             var request = _definitions.GetOrCreate(HttpMethod.Post, "/fapi/v3/chase", AsterExchange.RateLimiter.RestIp, 1, true);
-            var result = await _baseClient.SendAsync<AsterChaseOrder>(request, parameters, ct).ConfigureAwait(false);
+            var result = await _baseClient.SendAsync<AsterStrategyOrderResult>(request, parameters, ct).ConfigureAwait(false);
             return result;
         }
 

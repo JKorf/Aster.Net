@@ -2,22 +2,4 @@ POST
 /fapi/v3/chase
 true
 BodyParams: {"symbol": "ETHUSDT","side": "BUY","quantity": 0.1,"quantityUnit": "BASE"}
-{
-    "strategyId": 12345,
-    "clientStrategyId": "my_chase_1",
-    "symbol": "BTCUSDT",
-    "side": "BUY",
-    "positionSide": "BOTH",
-    "quantity": "0.1",
-    "quantityUnit": "BASE",
-    "reduceOnly": false,
-    "chaseOffset": "0.5",
-    "chaseOffsetType": "ABSOLUTE",
-    "maxChaseOffset": "10.0",
-    "maxChaseOffsetType": "ABSOLUTE",
-    "priceLimit": "50100.00",
-    "timeInForce": "GTX",
-    "strategyStatus": "NEW",
-    "bookTime": 1747728000000,
-    "updateTime": 1747728000000
-}
+{"strategyId":123,"clientStrategyId":"xyx","strategyType":"CHASE","strategyStatus":"WORKING","updateTime":1779785417130,"failureCode":0,"failureReason":""}

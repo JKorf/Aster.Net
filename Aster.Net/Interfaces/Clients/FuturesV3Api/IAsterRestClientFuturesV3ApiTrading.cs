@@ -282,7 +282,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// <param name="timeInForce">["<c>timeInForce</c>"] Time in force</param>
         /// <param name="clientOrderId">["<c>clientStrategyId</c>"] Client order id</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterChaseOrder>> PlaceChaseOrderAsync(
+        Task<WebCallResult<AsterStrategyOrderResult>> PlaceChaseOrderAsync(
             string symbol,
             OrderSide side,
             decimal quantity,
