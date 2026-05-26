@@ -258,5 +258,45 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterOrder[]>> GetForcedOrdersAsync(string? symbol = null, AutoCloseType? closeType = null,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, int? receiveWindow = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Place a new chase order
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/account%26trades/#place-chase-order-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/chase<br />
+        /// </para>
+        /// </summary>
+        /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
+        /// <param name="side">["<c>side</c>"] Order side</param>
+        /// <param name="quantity">["<c>quantity</c>"] Order quantity</param>
+        /// <param name="quantityUnit">["<c>quantityUnit</c>"] Quantity denotation</param>
+        /// <param name="positionSide">["<c>positionSide</c>"] Position side</param>
+        /// <param name="reduceOnly">["<c>reduceOnly</c>"] Reduce only</param>
+        /// <param name="chaseOffset">["<c>chaseOffset</c>"] Chase offset</param>
+        /// <param name="chaseOffsetType">["<c>chaseOffsetType</c>"] Chase offset type</param>
+        /// <param name="maxChaseOffset">["<c>maxChaseOffset</c>"] Max chase offset</param>
+        /// <param name="maxChaseOffsetType">["<c>maxChaseOffsetType</c>"] Max chase offset type</param>
+        /// <param name="priceLimit">["<c>priceLimit</c>"] Absolute price cap</param>
+        /// <param name="timeInForce">["<c>timeInForce</c>"] Time in force</param>
+        /// <param name="clientOrderId">["<c>clientStrategyId</c>"] Client order id</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterChaseOrder>> PlaceChaseOrderAsync(
+            string symbol,
+            OrderSide side,
+            decimal quantity,
+            QuantityUnit quantityUnit,
+            PositionSide? positionSide = null,
+            bool? reduceOnly = null,
+            decimal? chaseOffset = null,
+            ChaseOffsetType? chaseOffsetType = null,
+            decimal? maxChaseOffset = null,
+            ChaseOffsetType? maxChaseOffsetType = null,
+            decimal? priceLimit = null,
+            TimeInForce? timeInForce = null,
+            string? clientOrderId = null,
+            CancellationToken ct = default);
+
     }
 }

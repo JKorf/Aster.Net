@@ -404,5 +404,46 @@ namespace Aster.Net.Clients.FuturesV3Api
         }
 
         #endregion
+
+        #region Place Chase Order
+
+        /// <inheritdoc />
+        public async Task<WebCallResult<AsterChaseOrder>> PlaceChaseOrderAsync(
+            string symbol,
+            OrderSide side,
+            decimal quantity,
+            QuantityUnit quantityUnit,
+            PositionSide? positionSide = null,
+            bool? reduceOnly = null,
+            decimal? chaseOffset = null,
+            ChaseOffsetType? chaseOffsetType = null,
+            decimal? maxChaseOffset = null,
+            ChaseOffsetType? maxChaseOffsetType = null,
+            decimal? priceLimit = null,
+            TimeInForce? timeInForce = null,
+            string? clientOrderId = null,
+            CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("symbol", symbol);
+            parameters.AddEnum("side", side);
+            parameters.Add("quantity", quantity);
+            parameters.AddEnum("quantityUnit", quantityUnit);
+            parameters.AddOptionalEnum("positionSide", positionSide);
+            parameters.AddOptional("reduceOnly", reduceOnly);
+            parameters.AddOptional("chaseOffset", chaseOffset);
+            parameters.AddOptionalEnum("chaseOffsetType", chaseOffsetType);
+            parameters.AddOptional("maxChaseOffset", maxChaseOffset);
+            parameters.AddOptionalEnum("maxChaseOffsetType", maxChaseOffsetType);
+            parameters.AddOptional("priceLimit", priceLimit);
+            parameters.AddOptionalEnum("timeInForce", timeInForce);
+            parameters.AddOptional("clientStrategyId", clientOrderId);
+            var request = _definitions.GetOrCreate(HttpMethod.Post, "/fapi/v3/chase", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync<AsterChaseOrder>(request, parameters, ct).ConfigureAwait(false);
+            return result;
+        }
+
+        #endregion
+
     }
 }

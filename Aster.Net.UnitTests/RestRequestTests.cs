@@ -9,6 +9,7 @@ using Aster.Net.Objects;
 using Microsoft.Extensions.Logging;
 using Aster.Net.Objects.Options;
 using Microsoft.Extensions.Options;
+using Aster.Net.Enums;
 
 namespace Aster.Net.UnitTests
 {
@@ -236,6 +237,7 @@ namespace Aster.Net.UnitTests
             await tester.ValidateAsync(client => client.FuturesV3Api.Trading.GetPositionsAsync("ETHUSDT"), "GetPositions2");
             await tester.ValidateAsync(client => client.FuturesV3Api.Trading.GetUserTradesAsync("ETHUSDT"), "GetUserTrades");
             await tester.ValidateAsync(client => client.FuturesV3Api.Trading.GetForcedOrdersAsync("ETHUSDT"), "GetForcedOrders");
+            await tester.ValidateAsync(client => client.FuturesV3Api.Trading.PlaceChaseOrderAsync("ETHUSDT", OrderSide.Buy, 0.1m, QuantityUnit.Base), "PlaceChaseOrder");
         }
 
         [Test]

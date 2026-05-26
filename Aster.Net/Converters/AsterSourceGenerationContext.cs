@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Aster.Net.Converters
 {
+    [JsonSerializable(typeof(AsterChaseOrder))]
     [JsonSerializable(typeof(AsterAgent[]))]
     [JsonSerializable(typeof(AsterBuilder[]))]
     [JsonSerializable(typeof(AsterDepositWithdrawal[]))]
