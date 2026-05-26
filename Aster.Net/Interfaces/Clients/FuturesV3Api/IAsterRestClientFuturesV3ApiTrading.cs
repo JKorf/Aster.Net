@@ -37,6 +37,9 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// <param name="callbackRate">["<c>callbackRate</c>"] Callback rate</param>
         /// <param name="workingType">["<c>workingType</c>"] Working price type</param>
         /// <param name="priceProtect">["<c>priceProtect</c>"] Price protect</param>
+        /// <param name="pegPriceType">["<c>pegPriceType</c>"] BBO peg mode</param>
+        /// <param name="pegOffset">["<c>pegOffset</c>"] Peg offset, BUY orders should use a non-positive value (e.g. -0.5); SELL non-negative. Units: same scale as price (must be a tickSize multiple).</param>
+        /// <param name="priceLimit">["<c>priceLimit</c>"] Absolute price cap for BBO-pegged orders. BUY: ceiling — peg never resolves above this; SELL: floor. Must be > 0 and a multiple of tickSize. Defaults to no cap.</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebCallResult<AsterOrder>> PlaceOrderAsync(
@@ -55,6 +58,9 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
             decimal? callbackRate = null,
             WorkingType? workingType = null,
             bool? priceProtect = null,
+            PegPriceType? pegPriceType = null,
+            decimal? pegOffset = null,
+            decimal? priceLimit = null,
             long? receiveWindow = null,
             CancellationToken ct = default);
 

@@ -51,6 +51,9 @@ namespace Aster.Net.Clients.FuturesV3Api
             decimal? callbackRate = null,
             WorkingType? workingType = null,
             bool? priceProtect = null,
+            PegPriceType? pegPriceType = null,
+            decimal? pegOffset = null,
+            decimal? priceLimit = null,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
@@ -72,7 +75,11 @@ namespace Aster.Net.Clients.FuturesV3Api
             parameters.AddOptional("callbackRate", callbackRate);
             parameters.AddOptionalEnum("workingType", workingType);
             parameters.AddOptional("priceProtect", priceProtect);
+            parameters.AddOptionalEnum("pegPriceType", pegPriceType);
+            parameters.AddOptional("pegOffset", pegOffset);
+            parameters.AddOptional("priceLimit", priceLimit);
             parameters.AddOptional("newOrderRespType", "RESULT");
+
             if (_baseClient.ClientOptions.BuilderFeePercentage > 0
                 && _baseClient.ClientOptions.BuilderAddress != null
                 && AsterUtils._builderFeeSuccess)
