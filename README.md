@@ -1,6 +1,6 @@
 # ![Aster.Net](https://raw.githubusercontent.com/JKorf/Aster.Net/main/Aster.Net/Icon/icon.png) Aster.Net  
 
-[![.NET](https://img.shields.io/github/actions/workflow/status/JKorf/Aster.Net/dotnet.yml?style=for-the-badge)](https://github.com/JKorf/Aster.Net/actions/workflows/dotnet.yml) ![License](https://img.shields.io/github/license/JKorf/Aster.Net?style=for-the-badge)
+[![.NET](https://img.shields.io/github/actions/workflow/status/JKorf/Aster.Net/dotnet.yml?style=for-the-badge)](https://github.com/JKorf/Aster.Net/actions/workflows/dotnet.yml) ![License](https://img.shields.io/github/license/JKorf/Aster.Net?style=for-the-badge) ![Since](https://img.shields.io/badge/since-2025-brightgreen?style=for-the-badge)
 
 Aster.Net is a client library for accessing the [Aster DEX REST and Websocket API](https://asterdex.github.io/aster-api-website/futures-v3/general-info/). 
 
