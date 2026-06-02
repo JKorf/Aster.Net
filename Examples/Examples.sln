@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aster.Examples.OrderBook", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aster.Examples.Tracker", "Aster.Examples.Tracker\Aster.Examples.Tracker.csproj", "{42497D03-064D-4EB8-8EC8-E592E97761E3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aster.Examples.V3OrderPlacement", "Aster.Examples.V3OrderPlacement\Aster.Examples.V3OrderPlacement.csproj", "{0E50FD58-38A0-4C38-BFD5-3EC266D0A3F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{42497D03-064D-4EB8-8EC8-E592E97761E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42497D03-064D-4EB8-8EC8-E592E97761E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42497D03-064D-4EB8-8EC8-E592E97761E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E50FD58-38A0-4C38-BFD5-3EC266D0A3F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E50FD58-38A0-4C38-BFD5-3EC266D0A3F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E50FD58-38A0-4C38-BFD5-3EC266D0A3F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E50FD58-38A0-4C38-BFD5-3EC266D0A3F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

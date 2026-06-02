@@ -4,6 +4,12 @@ using Aster.Net.Clients;
 // REST
 var restClient = new AsterRestClient();
 var ticker = await restClient.SpotV3Api.ExchangeData.GetTickerAsync("ASTERUSDT");
+if (!ticker.Success)
+{
+    Console.WriteLine($"Failed to get ticker: {ticker.Error}");
+    return;
+}
+
 Console.WriteLine($"Rest client ticker price for ASTERUSDT: {ticker.Data.LastPrice}");
 
 Console.WriteLine();
@@ -16,5 +22,11 @@ var subscription = await socketClient.SpotV3Api.SubscribeToTickerUpdatesAsync("A
 {
     Console.WriteLine($"Websocket client ticker price for ASTERUSDT: {update.Data.LastPrice}");
 });
+
+if (!subscription.Success)
+{
+    Console.WriteLine($"Failed to subscribe to ticker updates: {subscription.Error}");
+    return;
+}
 
 Console.ReadLine();
