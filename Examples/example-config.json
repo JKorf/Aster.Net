@@ -4,10 +4,8 @@
 		// API credentials for both REST and Websocket client
 		"ApiCredentials": {
 			"V3": {
-				"Key": "PUBLICKEY",
 				"PrivateKey": "PRIVATEKEY",
-				"SignerKey": "SIGNERPUBLICKEY",
-				"SignerPrivateKey": "SIGNERPRIVATEKEY",
+				"SignerPrivateKey": "SIGNERPRIVATEKEY"
 			}
 		},
 		// Set the environment by name

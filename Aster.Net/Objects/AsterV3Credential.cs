@@ -12,11 +12,30 @@ namespace Aster.Net.Objects
     public class AsterV3Credential : CredentialSet
     {
         private string? _publicAddress;
+        private string? _privateKey;
+        private string _privateSignerKey;
 
         /// <summary>
         /// Private key
         /// </summary>
-        public string? PrivateKey { get; set; }
+        public string? PrivateKey
+        {
+            get => _privateKey;
+            set
+            {
+                _privateKey = value;
+                if (value != null)
+                {
+                    _publicAddress = GetPublicAddress(value);
+                    Key = _publicAddress;
+                }
+                else
+                {
+                    _publicAddress = null;
+                    Key = null!;
+                }
+            }
+        }
 
         /// <summary>
         /// Public signer address key
@@ -26,17 +45,30 @@ namespace Aster.Net.Objects
         /// <summary>
         /// Private signer key
         /// </summary>
-        public string SignerPrivateKey { get; set; }
+        public string SignerPrivateKey
+        {
+            get => _privateSignerKey;
+            set
+            {
+                _privateSignerKey = value;
+                SignerKey = GetPublicAddress(value);
+            }
+        }
+
+        /// <summary>
+        /// Options binding constructor, not intended for direct use. Use the constructor with parameters or the ApiCredentials builder methods instead.
+        /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+        public AsterV3Credential() { }
 
         /// <summary>
         /// Aster V3 credentials, allows for full functionality for the V3 Spot and Futures API
         /// </summary>
-        /// <param name="userPrivateKey">Private key</param>
+        /// <param name="privateKey">Private key</param>
         /// <param name="signerPrivateKey">Signer private key</param>
-        public AsterV3Credential(string userPrivateKey, string signerPrivateKey): base(GetPublicAddress(userPrivateKey))
+        public AsterV3Credential(string privateKey, string signerPrivateKey): base(GetPublicAddress(privateKey))
         {
-            PrivateKey = userPrivateKey;
-            SignerKey = GetPublicAddress(signerPrivateKey);
+            PrivateKey = privateKey;
             SignerPrivateKey = signerPrivateKey;
         }
 
@@ -52,6 +84,7 @@ namespace Aster.Net.Objects
             SignerKey = signerPublicKey;
             SignerPrivateKey = signerPrivateKey;
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
         /// <summary>
         /// Get the public address corresponding to the provided private key
