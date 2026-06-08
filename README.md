@@ -228,6 +228,12 @@ Make a one time donation in a crypto currency of your choice. If you prefer to d
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Release notes
+* Version 3.4.0 - 08 Jun 2026
+    * Updated CryptoExchange.Net to version 11.2.2
+    * Added restClient.FuturesV3Api.Trading.EditOrderAsync endpoint
+    * Updated V3 credentials logic for configuration binding
+    * Fixed user client provider not caching new client when previous client was disposed
+
 * Version 3.3.0 - 26 May 2026
     * Updated CryptoExchange.Net to version 11.2.0
     * Added restClient.FuturesV3Api.Trading.PlaceChaseOrderAsync endpoint
