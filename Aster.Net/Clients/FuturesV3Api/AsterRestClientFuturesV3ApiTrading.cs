@@ -166,6 +166,34 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #endregion
 
+        #region Edit Order
+
+        /// <inheritdoc />
+        public async Task<WebCallResult<AsterOrder>> EditOrderAsync(
+            string symbol,
+            long? orderId = null,
+            string? clientOrderId = null,
+            decimal? quantity = null,
+            decimal? price = null,
+            long? receiveWindow = null,
+            CancellationToken ct = default)
+        {
+            var parameters = new ParameterCollection
+            {
+                { "symbol", symbol }
+            };
+            parameters.AddOptional("quantity", quantity);
+            parameters.AddOptional("price", price);
+            parameters.AddOptional("orderId", orderId);
+            parameters.AddOptional("origClientOrderId", clientOrderId);
+            parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+
+            var request = _definitions.GetOrCreate(HttpMethod.Put, "fapi/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
+            return await _baseClient.SendAsync<AsterOrder>(request, parameters, ct).ConfigureAwait(false);
+        }
+
+        #endregion
+
         #region Get Order
 
         /// <inheritdoc />

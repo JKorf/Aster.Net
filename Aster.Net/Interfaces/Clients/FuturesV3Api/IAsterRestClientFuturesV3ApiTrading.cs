@@ -82,6 +82,31 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
             CancellationToken ct = default);
 
         /// <summary>
+        /// Edit an active limit order
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/account%26trades/#modify-order-trade" /><br />
+        /// Endpoint:<br />
+        /// PUT /fapi/v3/order
+        /// </para>
+        /// </summary>
+        /// <param name="symbol">Symbol of the order</param>
+        /// <param name="orderId">Order id, either this or clientOrderId should be provided</param>
+        /// <param name="clientOrderId">Client order id, either this or orderId should be provided</param>
+        /// <param name="quantity">New quantity</param>
+        /// <param name="price">New price</param>
+        /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<WebCallResult<AsterOrder>> EditOrderAsync(
+           string symbol,
+           long? orderId = null,
+           string? clientOrderId = null,
+           decimal? quantity = null,
+           decimal? price = null,
+           long? receiveWindow = null,
+           CancellationToken ct = default);
+
+        /// <summary>
         /// Get order info by id or clientOrderId
         /// <para>
         /// Docs:<br />
