@@ -48,11 +48,11 @@ namespace Aster.Net.Objects.Sockets
             _lk = listenKey;
 
             MessageRouter = MessageRouter.Create([
-                MessageRoute<AsterCombinedStream<AsterConfigUpdate>>.CreateWithoutTopicFilter("ACCOUNT_CONFIG_UPDATE", DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterMarginUpdate>>.CreateWithoutTopicFilter("MARGIN_CALL", DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterAccountUpdate>>.CreateWithoutTopicFilter("ACCOUNT_UPDATE", DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterOrderUpdate>>.CreateWithoutTopicFilter("ORDER_TRADE_UPDATE", DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterSocketEvent>>.CreateWithoutTopicFilter("listenKeyExpired", DoHandleMessage)
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterConfigUpdate>>("ACCOUNT_CONFIG_UPDATE", DoHandleMessage),
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterMarginUpdate>>("MARGIN_CALL", DoHandleMessage),
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterAccountUpdate>>("ACCOUNT_UPDATE", DoHandleMessage),
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterOrderUpdate>>("ORDER_TRADE_UPDATE", DoHandleMessage),
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterSocketEvent>>("listenKeyExpired", DoHandleMessage)
                 ]);
         }
 
@@ -89,7 +89,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterMarginUpdate> message)
@@ -103,7 +103,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterAccountUpdate> message)
@@ -117,7 +117,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterOrderUpdate> message)
@@ -132,7 +132,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithSymbol(message.Data.UpdateData.Symbol)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSocketEvent> message)
@@ -145,7 +145,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
     }
 }

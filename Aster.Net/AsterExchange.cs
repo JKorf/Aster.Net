@@ -63,6 +63,12 @@ namespace Aster.Net
         public static ExchangeType Type { get; } = ExchangeType.DEX;
 
         internal static JsonSerializerOptions _serializerContext = SerializerOptions.WithConverters(JsonSerializerContextCache.GetOrCreate<AsterSourceGenerationContext>());
+        internal static readonly ParameterSerializationSettings _parameterSerializationSettings = new ParameterSerializationSettings()
+        {
+            Decimal = DecimalSerialization.Number,
+            DateTimes = DateTimeSerialization.MillisecondsNumber,
+            Sort = false
+        };
         internal static uint _mainnetChainId = 1666;
         internal static uint _testnetChainId = 714;
 

@@ -41,8 +41,8 @@ namespace Aster.Net.Objects.Sockets
             _lk = listenKey;
 
             MessageRouter = MessageRouter.Create([
-                MessageRoute<AsterCombinedStream<AsterSpotAccountUpdate>>.CreateWithoutTopicFilter("outboundAccountPosition", DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterSpotOrderUpdate>>.CreateWithoutTopicFilter("executionReport", DoHandleMessage)
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterSpotAccountUpdate>>("outboundAccountPosition", DoHandleMessage),
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterSpotOrderUpdate>>("executionReport", DoHandleMessage)
                 ]);
         }
 
@@ -79,7 +79,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotOrderUpdate> message)
@@ -94,7 +94,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithSymbol(message.Data.Symbol)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
     }
 }

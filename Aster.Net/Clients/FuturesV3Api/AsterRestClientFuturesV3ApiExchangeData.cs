@@ -28,11 +28,14 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Server Time
 
         /// <inheritdoc />
-        public async Task<WebCallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default)
+        public async Task<HttpResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v3/time", AsterExchange.RateLimiter.RestIp, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"/fapi/v3/time", AsterExchange.RateLimiter.RestIp, 1, false);
             var result = await _baseClient.SendAsync<AsterServerTime>(request, null, ct).ConfigureAwait(false);
-            return result.As(result.Data?.ServerTime ?? default);
+            if (!result.Success)
+                return HttpResult.Fail<DateTime>(result);
+
+            return HttpResult.Ok(result, result.Data.ServerTime);
         }
 
         #endregion
@@ -40,9 +43,9 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Exchange Information
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
+        public async Task<HttpResult<AsterExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/exchangeInfo", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/exchangeInfo", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterExchangeInfo>(request, null, ct).ConfigureAwait(false);
         }
 
@@ -51,47 +54,48 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Order Book
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default)
+        public async Task<HttpResult<AsterOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default)
         {
             limit?.ValidateIntValues(nameof(limit), 5, 10, 20, 50, 100, 500, 1000);
-            var parameters = new ParameterCollection { { "symbol", symbol } };
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) { { "symbol", symbol } };
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
             var requestWeight = limit == null ? 10 : limit <= 50 ? 2 : limit == 100 ? 5 : limit == 500 ? 10 : 20;
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/depth", AsterExchange.RateLimiter.RestIp, requestWeight);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/depth", AsterExchange.RateLimiter.RestIp, requestWeight);
             var result = await _baseClient.SendAsync<AsterOrderBook>(request, parameters, ct, requestWeight).ConfigureAwait(false);
-            if (result && string.IsNullOrEmpty(result.Data.Symbol))
+            if (result.Success && string.IsNullOrEmpty(result.Data.Symbol))
                 result.Data.Symbol = symbol;
-            return result.As(result.Data);
+
+            return result;
         }
 
         #endregion
 
         #region Get Recent Trades
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterRecentTrade[]>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
+        public async Task<HttpResult<AsterRecentTrade[]>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default)
         {
             limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
-            var parameters = new ParameterCollection { { "symbol", symbol } };
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) { { "symbol", symbol } };
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/trades", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/trades", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterRecentTrade[]>(request, parameters, ct).ConfigureAwait(false);
         }
         #endregion
 
         #region Get Trade History
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterRecentTrade[]>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null,
+        public async Task<HttpResult<AsterRecentTrade[]>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null,
             CancellationToken ct = default)
         {
             limit?.ValidateIntBetween(nameof(limit), 1, 1000);
-            var parameters = new ParameterCollection { { "symbol", symbol } };
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) { { "symbol", symbol } };
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/historicalTrades", AsterExchange.RateLimiter.RestIp, 20, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/historicalTrades", AsterExchange.RateLimiter.RestIp, 20, true);
             return await _baseClient.SendAsync<AsterRecentTrade[]>(request, parameters, ct).ConfigureAwait(false);
         }
         #endregion
@@ -99,17 +103,17 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Aggregate Trades List
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterAggregateTrade[]>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+        public async Task<HttpResult<AsterAggregateTrade[]>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
         {
             limit?.ValidateIntBetween(nameof(limit), 1, 1000);
 
-            var parameters = new ParameterCollection { { "symbol", symbol } };
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) { { "symbol", symbol } };
             parameters.AddOptionalParameter("fromId", fromId?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/aggTrades", AsterExchange.RateLimiter.RestIp, 20);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/aggTrades", AsterExchange.RateLimiter.RestIp, 20);
             return await _baseClient.SendAsync<AsterAggregateTrade[]>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -118,19 +122,19 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Klines
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterKline[]>> GetKlinesAsync(string symbol, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+        public async Task<HttpResult<AsterKline[]>> GetKlinesAsync(string symbol, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
         {
             limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-            var parameters = new ParameterCollection {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) {
                 { "symbol", symbol },
             };
-            parameters.AddEnum("interval", interval);
+            parameters.Add("interval", interval);
             parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
             var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/klines", AsterExchange.RateLimiter.RestIp, requestWeight);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/klines", AsterExchange.RateLimiter.RestIp, requestWeight);
             return await _baseClient.SendAsync<AsterKline[]>(request, parameters, ct, requestWeight).ConfigureAwait(false);
         }
 
@@ -139,19 +143,19 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Index Price Klines
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterKline[]>> GetIndexPriceKlinesAsync(string index, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+        public async Task<HttpResult<AsterKline[]>> GetIndexPriceKlinesAsync(string index, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
         {
             limit?.ValidateIntBetween(nameof(limit), 1, 1500);
-            var parameters = new ParameterCollection {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) {
                 { "pair", index },
             };
-            parameters.AddEnum("interval", interval);
+            parameters.Add("interval", interval);
             parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
             var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/indexPriceKlines", AsterExchange.RateLimiter.RestIp, requestWeight);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/indexPriceKlines", AsterExchange.RateLimiter.RestIp, requestWeight);
             return await _baseClient.SendAsync<AsterKline[]>(request, parameters, ct, requestWeight).ConfigureAwait(false);
         }
 
@@ -160,21 +164,21 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Mark Price Klines
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterKline[]>> GetMarkPriceKlinesAsync(string symbol, KlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
+        public async Task<HttpResult<AsterKline[]>> GetMarkPriceKlinesAsync(string symbol, KlineInterval interval, int? limit = null, DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default)
         {
             limit?.ValidateIntBetween(nameof(limit), 1, 1500);
 
-            var parameters = new ParameterCollection {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) {
                 { "symbol", symbol },
             };
 
-            parameters.AddEnum("interval", interval);
+            parameters.Add("interval", interval);
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
 
             var requestWeight = limit == null ? 5 : limit <= 100 ? 1 : limit <= 500 ? 2 : limit <= 1000 ? 5 : 10;
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/markPriceKlines", AsterExchange.RateLimiter.RestIp, requestWeight);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/markPriceKlines", AsterExchange.RateLimiter.RestIp, requestWeight);
             return await _baseClient.SendAsync<AsterKline[]>(request, parameters, ct, requestWeight).ConfigureAwait(false);
         }
 
@@ -183,19 +187,19 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Mark Price
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterMarkPrice>> GetMarkPriceAsync(string symbol, CancellationToken ct = default)
+        public async Task<HttpResult<AsterMarkPrice>> GetMarkPriceAsync(string symbol, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection();
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.AddOptionalParameter("symbol", symbol);
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/premiumIndex", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/premiumIndex", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterMarkPrice>(request, parameters, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterMarkPrice[]>> GetMarkPricesAsync(CancellationToken ct = default)
+        public async Task<HttpResult<AsterMarkPrice[]>> GetMarkPricesAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/premiumIndex", AsterExchange.RateLimiter.RestIp, 10);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/premiumIndex", AsterExchange.RateLimiter.RestIp, 10);
             return await _baseClient.SendAsync<AsterMarkPrice[]>(request, null, ct).ConfigureAwait(false);
         }
         #endregion
@@ -203,17 +207,17 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Funding Rate History
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterFundingRateHistory[]>> GetFundingRatesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+        public async Task<HttpResult<AsterFundingRateHistory[]>> GetFundingRatesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
         {
             limit?.ValidateIntBetween(nameof(limit), 1, 1000);
-            var parameters = new ParameterCollection {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings) {
                 { "symbol", symbol }
             };
             parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/fundingRate", AsterExchange.RateLimiter.RestIp, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/fundingRate", AsterExchange.RateLimiter.RestIp, 1, false);
             return await _baseClient.SendAsync<AsterFundingRateHistory[]>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -222,9 +226,9 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Funding Info
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterFundingInfo[]>> GetFundingInfoAsync(CancellationToken ct = default)
+        public async Task<HttpResult<AsterFundingInfo[]>> GetFundingInfoAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/fundingInfo", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/fundingInfo", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterFundingInfo[]>(request, null, ct).ConfigureAwait(false);
         }
 
@@ -232,19 +236,19 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #region Get Ticker
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterTicker>> GetTickerAsync(string symbol, CancellationToken ct = default)
+        public async Task<HttpResult<AsterTicker>> GetTickerAsync(string symbol, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection();
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.AddOptionalParameter("symbol", symbol);
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/ticker/24hr", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/ticker/24hr", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterTicker>(request, parameters, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterTicker[]>> GetTickersAsync(CancellationToken ct = default)
+        public async Task<HttpResult<AsterTicker[]>> GetTickersAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/ticker/24hr", AsterExchange.RateLimiter.RestIp, 40);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/ticker/24hr", AsterExchange.RateLimiter.RestIp, 40);
             return await _baseClient.SendAsync<AsterTicker[]>(request, null, ct).ConfigureAwait(false);
         }
         #endregion
@@ -252,21 +256,21 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get price
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterPrice>> GetPriceAsync(string symbol, CancellationToken ct = default)
+        public async Task<HttpResult<AsterPrice>> GetPriceAsync(string symbol, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings)
             {
                 { "symbol", symbol }
             };
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/ticker/price", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/ticker/price", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterPrice>(request, parameters, ct, 1).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterPrice[]>> GetPricesAsync(CancellationToken ct = default)
+        public async Task<HttpResult<AsterPrice[]>> GetPricesAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/ticker/price", AsterExchange.RateLimiter.RestIp, 2);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/ticker/price", AsterExchange.RateLimiter.RestIp, 2);
             return await _baseClient.SendAsync<AsterPrice[]>(request, null, ct, 2).ConfigureAwait(false);
         }
         #endregion
@@ -274,21 +278,21 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region Get Book Ticker
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterBookTicker>> GetBookTickerAsync(string symbol, CancellationToken ct = default)
+        public async Task<HttpResult<AsterBookTicker>> GetBookTickerAsync(string symbol, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings)
             {
                 { "symbol", symbol }
             };
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/fapi/v3/ticker/bookTicker", AsterExchange.RateLimiter.RestIp, 1);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"/fapi/v3/ticker/bookTicker", AsterExchange.RateLimiter.RestIp, 1);
             return await _baseClient.SendAsync<AsterBookTicker>(request, parameters, ct, 1).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterBookTicker[]>> GetBookTickersAsync(CancellationToken ct = default)
+        public async Task<HttpResult<AsterBookTicker[]>> GetBookTickersAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "fapi/v3/ticker/bookTicker", AsterExchange.RateLimiter.RestIp, 2);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"fapi/v3/ticker/bookTicker", AsterExchange.RateLimiter.RestIp, 2);
             return await _baseClient.SendAsync<AsterBookTicker[]>(request, null, ct, 2).ConfigureAwait(false);
         }
 
