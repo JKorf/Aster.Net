@@ -67,6 +67,7 @@ namespace Aster.Net
         {
             Decimal = DecimalSerialization.Number,
             DateTimes = DateTimeSerialization.MillisecondsNumber,
+            Array = ArrayParametersSerialization.MultipleValues,
             Sort = false
         };
         internal static uint _mainnetChainId = 1666;

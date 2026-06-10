@@ -62,7 +62,6 @@ namespace Aster.Net.Clients.SpotV3Api
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;
-            ArraySerialization = ArrayParametersSerialization.MultipleValues;
 
             StandardRequestHeaders = new Dictionary<string, string>
             {

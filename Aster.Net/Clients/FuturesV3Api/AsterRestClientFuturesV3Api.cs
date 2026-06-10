@@ -66,7 +66,6 @@ namespace Aster.Net.Clients.FuturesV3Api
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;
-            ArraySerialization = ArrayParametersSerialization.MultipleValues;
         }
         #endregion
 
