@@ -81,7 +81,7 @@ namespace Aster.Net.Clients.SpotApi
         {
             var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("asset", asset);
-            parameters.AddAsInt("chainId", network);
+            parameters.Add("chainId", network, EnumSerialization.Number);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
             var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"/api/v1/aster/withdraw/estimateFee", AsterExchange.RateLimiter.RestIp, 5, true);

@@ -191,7 +191,7 @@ namespace Aster.Net.Clients.FuturesApi
         {
             var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("symbol", symbol);
-            parameters.AddAsInt("type", side);
+            parameters.Add("type", side, EnumSerialization.Number);
             parameters.Add("quantity", quantity);
             parameters.Add("positionSide", positionSide);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
@@ -217,7 +217,7 @@ namespace Aster.Net.Clients.FuturesApi
         {
             var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("symbol", symbol);
-            parameters.AddAsInt("type", side);
+            parameters.Add("type", side, EnumSerialization.Number);
             parameters.Add("startTime", startTime);
             parameters.Add("endTime", endTime);
             parameters.Add("limit", limit);

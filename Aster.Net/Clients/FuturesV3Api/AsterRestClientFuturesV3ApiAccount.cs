@@ -221,7 +221,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         {
             var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("symbol", symbol);
-            parameters.AddAsInt("type", side);
+            parameters.Add("type", side, EnumSerialization.Number);
             parameters.Add("startTime", startTime);
             parameters.Add("endTime", endTime);
             parameters.Add("limit", limit);
@@ -368,7 +368,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         {
             var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("builder", builderAddress);
-            parameters.AddAsString("maxFeeRate", maxFeeRate);
+            parameters.Add("maxFeeRate", maxFeeRate, DecimalSerialization.String);
             parameters.Add("signaction", "ApproveBuilder");
 
             var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress,"fapi/v3/approveBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
@@ -391,7 +391,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         {
             var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("builder", builderAddress);
-            parameters.AddAsString("maxFeeRate", newMaxFeeRate / 100);
+            parameters.Add("maxFeeRate", newMaxFeeRate / 100, DecimalSerialization.String);
             parameters.Add("signaction", "UpdateBuilder");
 
             var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress,"fapi/v3/updateBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
@@ -466,7 +466,7 @@ namespace Aster.Net.Clients.FuturesV3Api
             parameters.Add("canPerpTrade", canPerpTrade);
             parameters.Add("canWithdraw", canWithdraw);
             parameters.Add("builder", builder);
-            parameters.AddAsString("maxFeeRate", builderMaxFeeRate);
+            parameters.Add("maxFeeRate", builderMaxFeeRate, DecimalSerialization.String);
             parameters.Add("builderName", builderName);
 
             parameters.Add("signaction", "ApproveAgent");
