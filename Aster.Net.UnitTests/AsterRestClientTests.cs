@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Net.Http;
 using Aster.Net.Clients;
+using CryptoExchange.Net.Objects;
 
 namespace Aster.Net.UnitTests
 {
@@ -27,12 +28,11 @@ namespace Aster.Net.UnitTests
                     return bodyParams["signature"].ToString();
                 },
                 "D8931A9A64A70323E272938E34E56EA63FF665AA44AC8A9A7AA4BDFF74614816",
-                new Dictionary<string, object>
+                new Parameters(AsterExchange._parameterSerializationSettings)
                 {
                     { "symbol", "LTCBTC" },
                 },
                 DateTimeConverter.ParseFromDouble(1499827320559),
-                true,
                 false);
         }
 
