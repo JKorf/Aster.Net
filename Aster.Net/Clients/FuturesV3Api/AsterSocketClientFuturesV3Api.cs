@@ -46,8 +46,8 @@ namespace Aster.Net.Clients.FuturesV3Api
         /// <summary>
         /// ctor
         /// </summary>
-        internal AsterSocketClientFuturesV3Api(ILogger logger, AsterSocketOptions options) :
-            base(logger, AsterExchange.Metadata.Id, options.Environment.FuturesSocketClientAddress!, options, options.FuturesOptions)
+        internal AsterSocketClientFuturesV3Api(ILoggerFactory? loggerFactory, AsterSocketOptions options) :
+            base(loggerFactory, AsterExchange.Metadata.Id, options.Environment.FuturesSocketClientAddress!, options, options.FuturesOptions)
         {
             RateLimiter = AsterExchange.RateLimiter.Socket;
         }

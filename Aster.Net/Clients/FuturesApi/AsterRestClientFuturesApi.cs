@@ -42,8 +42,8 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region constructor/destructor
-        internal AsterRestClientFuturesApi(ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger,
+        internal AsterRestClientFuturesApi(ILoggerFactory? loggerFactory, HttpClient? httpClient, AsterRestOptions options)
+            : base(loggerFactory,
                   AsterExchange.Metadata.Id,
                   httpClient,
                   options.Environment.FuturesRestClientAddress,
@@ -51,8 +51,8 @@ namespace Aster.Net.Clients.FuturesApi
                   options.FuturesOptions)
         {
             Account = new AsterRestClientFuturesApiAccount(this);
-            ExchangeData = new AsterRestClientFuturesApiExchangeData(logger, this);
-            Trading = new AsterRestClientFuturesApiTrading(logger, this);
+            ExchangeData = new AsterRestClientFuturesApiExchangeData(_logger, this);
+            Trading = new AsterRestClientFuturesApiTrading(_logger, this);
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;

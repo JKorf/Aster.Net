@@ -46,8 +46,8 @@ namespace Aster.Net.Clients.SpotV3Api
         /// <summary>
         /// ctor
         /// </summary>
-        internal AsterSocketClientSpotV3Api(ILogger logger, AsterSocketOptions options) :
-            base(logger, AsterExchange.Metadata.Id, options.Environment.SpotSocketClientAddress!, options, options.SpotOptions)
+        internal AsterSocketClientSpotV3Api(ILoggerFactory? loggerFactory, AsterSocketOptions options) :
+            base(loggerFactory, AsterExchange.Metadata.Id, options.Environment.SpotSocketClientAddress!, options, options.SpotOptions)
         {
             RateLimiter = AsterExchange.RateLimiter.Socket;
         }

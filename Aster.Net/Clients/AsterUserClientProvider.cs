@@ -1,6 +1,7 @@
 using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Clients;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -10,18 +11,17 @@ using System.Net.Http;
 namespace Aster.Net.Clients
 {
     /// <inheritdoc />
-    public class AsterUserClientProvider : IAsterUserClientProvider
+    public class AsterUserClientProvider : UserClientProvider<
+        IAsterRestClient,
+        IAsterSocketClient,
+        AsterRestOptions,
+        AsterSocketOptions,
+        AsterCredentials,
+        AsterEnvironment
+        >, IAsterUserClientProvider
     {
-        private ConcurrentDictionary<string, IAsterRestClient> _restClients = new ConcurrentDictionary<string, IAsterRestClient>();
-        private ConcurrentDictionary<string, IAsterSocketClient> _socketClients = new ConcurrentDictionary<string, IAsterSocketClient>();
-        
-        private readonly IOptions<AsterRestOptions> _restOptions;
-        private readonly IOptions<AsterSocketOptions> _socketOptions;
-        private readonly HttpClient _httpClient;
-        private readonly ILoggerFactory? _loggerFactory;
-
         /// <inheritdoc />
-        public string ExchangeName => AsterExchange.ExchangeName;
+        public override string ExchangeName => AsterExchange.ExchangeName;
 
         /// <summary>
         /// ctor
@@ -40,99 +40,15 @@ namespace Aster.Net.Clients
             ILoggerFactory? loggerFactory,
             IOptions<AsterRestOptions> restOptions,
             IOptions<AsterSocketOptions> socketOptions)
+            : base(httpClient, loggerFactory, restOptions, socketOptions)
         {
-            _httpClient = httpClient ?? new HttpClient();
-            _httpClient.Timeout = restOptions.Value.RequestTimeout;
-            
-
-            _loggerFactory = loggerFactory;
-            _restOptions = restOptions;
-            _socketOptions = socketOptions;
         }
 
         /// <inheritdoc />
-        public void InitializeUserClient(string userIdentifier, AsterCredentials credentials, AsterEnvironment? environment = null)
-        {
-            CreateRestClient(userIdentifier, credentials, environment);
-            CreateSocketClient(userIdentifier, credentials, environment);
-        }
-
+        protected override IAsterRestClient ConstructRestClient(HttpClient client, ILoggerFactory? loggerFactory, IOptions<AsterRestOptions> options)
+            => new AsterRestClient(client, loggerFactory, options);
         /// <inheritdoc />
-        public void ClearUserClients(string userIdentifier)
-        {
-            _restClients.TryRemove(userIdentifier, out _);
-            _socketClients.TryRemove(userIdentifier, out _);
-        }
-
-        /// <inheritdoc />
-        public IAsterRestClient GetRestClient(string userIdentifier, AsterCredentials? credentials = null, AsterEnvironment? environment = null)
-        {
-            if (!_restClients.TryGetValue(userIdentifier, out var client) || client.Disposed)
-                client = CreateRestClient(userIdentifier, credentials, environment);
-
-            return client;
-        }
-
-        /// <inheritdoc />
-        public IAsterSocketClient GetSocketClient(string userIdentifier, AsterCredentials? credentials = null, AsterEnvironment? environment = null)
-        {
-            if (!_socketClients.TryGetValue(userIdentifier, out var client) || client.Disposed)
-                client = CreateSocketClient(userIdentifier, credentials, environment);
-
-            return client;
-        }
-
-        private IAsterRestClient CreateRestClient(string userIdentifier, AsterCredentials? credentials, AsterEnvironment? environment)
-        {
-            var clientRestOptions = SetRestEnvironment(environment);
-            var client = new AsterRestClient(_httpClient, _loggerFactory, clientRestOptions);
-            if (credentials != null)
-            {
-                client.SetApiCredentials(credentials);
-                _restClients[userIdentifier] = client;
-            }
-            return client;
-        }
-
-        private IAsterSocketClient CreateSocketClient(string userIdentifier, AsterCredentials? credentials, AsterEnvironment? environment)
-        {
-            var clientSocketOptions = SetSocketEnvironment(environment);
-            var client = new AsterSocketClient(clientSocketOptions!, _loggerFactory);
-            if (credentials != null)
-            {
-                client.SetApiCredentials(credentials);
-                _socketClients[userIdentifier] = client;
-            }
-            return client;
-        }
-
-        private IOptions<AsterRestOptions> SetRestEnvironment(AsterEnvironment? environment)
-        {
-            if (environment == null)
-                return _restOptions;
-
-            var newRestClientOptions = new AsterRestOptions();
-            var restOptions = _restOptions.Value.Set(newRestClientOptions);
-            newRestClientOptions.Environment = environment;
-            return Options.Create(newRestClientOptions);
-        }
-
-        private IOptions<AsterSocketOptions> SetSocketEnvironment(AsterEnvironment? environment)
-        {
-            if (environment == null)
-                return _socketOptions;
-
-            var newSocketClientOptions = new AsterSocketOptions();
-            var restOptions = _socketOptions.Value.Set(newSocketClientOptions);
-            newSocketClientOptions.Environment = environment;
-            return Options.Create(newSocketClientOptions);
-        }
-
-        private static T ApplyOptionsDelegate<T>(Action<T>? del) where T : new()
-        {
-            var opts = new T();
-            del?.Invoke(opts);
-            return opts;
-        }
+        protected override IAsterSocketClient ConstructSocketClient(ILoggerFactory? loggerFactory, IOptions<AsterSocketOptions> options)
+            => new AsterSocketClient(options, loggerFactory);
     }
 }

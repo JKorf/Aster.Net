@@ -46,8 +46,8 @@ namespace Aster.Net.Clients.SpotV3Api
         #endregion
 
         #region constructor/destructor
-        internal AsterRestClientSpotV3Api(AsterRestClient baseClient, ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger, 
+        internal AsterRestClientSpotV3Api(AsterRestClient baseClient, ILoggerFactory? loggerFactory, HttpClient? httpClient, AsterRestOptions options)
+            : base(loggerFactory, 
                   AsterExchange.Metadata.Id,
                   httpClient,
                   options.Environment.SpotRestClientAddress, 
@@ -57,8 +57,8 @@ namespace Aster.Net.Clients.SpotV3Api
             BaseClient = baseClient;
 
             Account = new AsterRestClientSpotV3ApiAccount(this);
-            ExchangeData = new AsterRestClientSpotV3ApiExchangeData(logger, this);
-            Trading = new AsterRestClientSpotV3ApiTrading(logger, this);
+            ExchangeData = new AsterRestClientSpotV3ApiExchangeData(_logger, this);
+            Trading = new AsterRestClientSpotV3ApiTrading(_logger, this);
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;

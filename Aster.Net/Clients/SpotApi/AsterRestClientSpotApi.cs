@@ -42,8 +42,8 @@ namespace Aster.Net.Clients.SpotApi
         #endregion
 
         #region constructor/destructor
-        internal AsterRestClientSpotApi(ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger, 
+        internal AsterRestClientSpotApi(ILoggerFactory? loggerFactory, HttpClient? httpClient, AsterRestOptions options)
+            : base(loggerFactory, 
                   AsterExchange.Metadata.Id,
                   httpClient,
                   options.Environment.SpotRestClientAddress, 
@@ -51,8 +51,8 @@ namespace Aster.Net.Clients.SpotApi
                   options.SpotOptions)
         {
             Account = new AsterRestClientSpotApiAccount(this);
-            ExchangeData = new AsterRestClientSpotApiExchangeData(logger, this);
-            Trading = new AsterRestClientSpotApiTrading(logger, this);
+            ExchangeData = new AsterRestClientSpotApiExchangeData(_logger, this);
+            Trading = new AsterRestClientSpotApiTrading(_logger, this);
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;

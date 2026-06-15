@@ -45,8 +45,8 @@ namespace Aster.Net.Clients.FuturesV3Api
         #endregion
 
         #region constructor/destructor
-        internal AsterRestClientFuturesV3Api(AsterRestClient baseClient, ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger,
+        internal AsterRestClientFuturesV3Api(AsterRestClient baseClient, ILoggerFactory? loggerFactory, HttpClient? httpClient, AsterRestOptions options)
+            : base(loggerFactory,
                   AsterExchange.Metadata.Id,
                   httpClient,
                   options.Environment.FuturesRestClientAddress,
@@ -56,8 +56,8 @@ namespace Aster.Net.Clients.FuturesV3Api
             BaseClient = baseClient;
 
             Account = new AsterRestClientFuturesV3ApiAccount(this);
-            ExchangeData = new AsterRestClientFuturesV3ApiExchangeData(logger, this);
-            Trading = new AsterRestClientFuturesV3ApiTrading(logger, this);
+            ExchangeData = new AsterRestClientFuturesV3ApiExchangeData(_logger, this);
+            Trading = new AsterRestClientFuturesV3ApiTrading(_logger, this);
 
             StandardRequestHeaders = new Dictionary<string, string>
             {
