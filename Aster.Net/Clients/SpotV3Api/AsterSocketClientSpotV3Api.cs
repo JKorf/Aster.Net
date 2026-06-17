@@ -415,7 +415,7 @@ namespace Aster.Net.Clients.SpotV3Api
                 var leaseResult = await TokenManager.AcquireAsync(new TokenScope(
                     AsterExchange.Metadata.Id,
                     EnvironmentName,
-                    "Futures",
+                    "Spot",
                     ApiCredentials!.V3!.Key), ct).ConfigureAwait(false);
                 if (!leaseResult.Success)
                     return WebSocketResult.Fail<UpdateSubscription>(Exchange, leaseResult.Error);

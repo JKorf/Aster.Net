@@ -15,7 +15,6 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         ISpotSymbolRestClient,
         ISpotTickerRestClient,
         ITradeHistoryRestClient,
-        IListenKeyRestClient,
         IFeeRestClient,
         ISpotOrderClientIdRestClient,
         ISpotTriggerOrderRestClient,

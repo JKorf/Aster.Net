@@ -20,7 +20,9 @@ using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default;
 using CryptoExchange.Net.Sockets.HighPerf;
+using CryptoExchange.Net.TokenManagement;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,6 +40,27 @@ namespace Aster.Net.Clients.SpotApi
     {
         #region fields
         protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
+        private readonly ILoggerFactory? _loggerFactory;
+        private AsterRestClient? _tokenClient;
+        internal TokenManager TokenManager { get; }
+        private AsterRestClient TokenClient
+        {
+            get
+            {
+                if (_tokenClient == null)
+                {
+                    _tokenClient = new AsterRestClient(null, _loggerFactory, Options.Create(new AsterRestOptions
+                    {
+                        ApiCredentials = ApiCredentials,
+                        Environment = ClientOptions.Environment,
+                        Proxy = ClientOptions.Proxy,
+                        OutputOriginalData = ClientOptions.OutputOriginalData
+                    }));
+                }
+
+                return _tokenClient;
+            }
+        }
         #endregion
 
         #region constructor/destructor
@@ -48,7 +71,18 @@ namespace Aster.Net.Clients.SpotApi
         internal AsterSocketClientSpotApi(ILoggerFactory? loggerFactory, AsterSocketOptions options) :
             base(loggerFactory, AsterExchange.Metadata.Id, options.Environment.SpotSocketClientAddress!, options, options.SpotOptions)
         {
+            _loggerFactory = loggerFactory;
+
             RateLimiter = AsterExchange.RateLimiter.Socket;
+
+            TokenManager = new TokenManager(
+                AsterExchange.Metadata.Id,
+                loggerFactory,
+                TimeSpan.FromMinutes(30),
+                TimeSpan.FromMinutes(60),
+                startToken: StartListenKeyAsync,
+                keepAliveToken: KeepAliveListenKeyAsync,
+                stopToken: StopListenKeyAsync);
         }
         #endregion
 
@@ -359,15 +393,44 @@ namespace Aster.Net.Clients.SpotApi
 
         /// <inheritdoc />
         public async Task<WebSocketResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
-            string listenKey,
+            Action<DataEvent<AsterSpotAccountUpdate>>? onAccountUpdate = null,
+            Action<DataEvent<AsterSpotOrderUpdate>>? onOrderUpdate = null,
+            CancellationToken ct = default)
+            => await SubscribeToUserDataUpdatesAsync(null, onAccountUpdate, onOrderUpdate, ct).ConfigureAwait(false);
+
+        /// <inheritdoc />
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
+            string? listenKey,
             Action<DataEvent<AsterSpotAccountUpdate>>? onAccountUpdate = null,
             Action<DataEvent<AsterSpotOrderUpdate>>? onOrderUpdate = null,
             CancellationToken ct = default)
         {
-            listenKey.ValidateNotNull(nameof(listenKey));
+            if (listenKey == null && ApiCredentials!.V1 == null)
+                return WebSocketResult.Fail<UpdateSubscription>(Exchange, new NoApiCredentialsError());
 
-            var subscription = new AsterSpotUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onAccountUpdate);
-            return await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
+            TokenLease? lease = null;
+            if (listenKey == null)
+            {
+                var leaseResult = await TokenManager.AcquireAsync(new TokenScope(
+                    AsterExchange.Metadata.Id,
+                    EnvironmentName,
+                    "SpotV1",
+                    ApiCredentials!.V1!.Key), ct).ConfigureAwait(false);
+                if (!leaseResult.Success)
+                    return WebSocketResult.Fail<UpdateSubscription>(Exchange, leaseResult.Error);
+
+                lease = leaseResult.Data;
+            }
+
+            var subscription = new AsterSpotUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onAccountUpdate)
+            {
+                TokenLease = lease
+            };
+            var result = await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
+            if (!result.Success && lease != null)
+                await lease.ReleaseAsync().ConfigureAwait(false);
+
+            return result;
         }
 
         #endregion
@@ -413,5 +476,46 @@ namespace Aster.Net.Clients.SpotApi
         /// <inheritdoc />
         public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null)
             => AsterExchange.FormatSymbol(baseAsset, quoteAsset, tradingMode, deliverDate);
+
+        protected override async Task<CallResult> RevitalizeRequestAsync(Subscription subscription)
+        {
+            if (subscription.TokenLease == null)
+                return CallResult.Ok(); // Not an authenticated subscription, no need to revitalize
+
+            var scope = new TokenScope(
+                    AsterExchange.Metadata.Id,
+                    EnvironmentName,
+                    "SpotV1",
+                    ApiCredentials!.V1!.Key);
+
+            return await TokenManager.AcquireAndReplaceAsync(subscription, scope).ConfigureAwait(false);
+        }
+
+        private async Task<CallResult<string>> StartListenKeyAsync(TokenScope tokenScope, CancellationToken ct)
+        {
+            var result = await TokenClient.SpotApi.Account.StartUserStreamAsync(ct).ConfigureAwait(false);
+            if (!result.Success)
+                return CallResult.Fail<string>(result.Error);
+
+            return CallResult.Ok(result.Data);
+        }
+
+        private async Task<CallResult> KeepAliveListenKeyAsync(TokenInfo token, CancellationToken ct)
+        {
+            var result = await TokenClient.SpotApi.Account.KeepAliveUserStreamAsync(token.Token, ct).ConfigureAwait(false);
+            if (!result.Success)
+                return CallResult.Fail<string>(result.Error);
+
+            return CallResult.Ok();
+        }
+
+        private async Task<CallResult> StopListenKeyAsync(TokenInfo token, CancellationToken ct)
+        {
+            var result = await TokenClient.SpotApi.Account.StopUserStreamAsync(token.Token, ct).ConfigureAwait(false);
+            if (!result.Success)
+                return CallResult.Fail<string>(result.Error);
+
+            return CallResult.Ok();
+        }
     }
 }
