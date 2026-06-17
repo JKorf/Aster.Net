@@ -389,6 +389,24 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         Task<WebSocketResult<HighPerfUpdateSubscription>> SubscribeToOrderBookUpdatesPerfAsync(IEnumerable<string> symbols, int? updateInterval, Action<AsterOrderBookUpdate> onMessage, CancellationToken ct);
 
         /// <summary>
+        /// Subscribes to the account update stream. Listen key is automatically obtained by the client and will be renewed as needed
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://github.com/asterdex/api-docs/blob/master/aster-finance-spot-api.md#payload-account_update" /><br />
+        /// Endpoint:<br />
+        /// &lt;listenKey&gt;
+        /// </para>
+        /// </summary>
+        /// <param name="onAccountUpdate">The event handler for whenever an account update is received</param>
+        /// <param name="onOrderUpdate">The event handler for whenever an order status update is received</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
+            Action<DataEvent<AsterSpotAccountUpdate>>? onAccountUpdate = null,
+            Action<DataEvent<AsterSpotOrderUpdate>>? onOrderUpdate = null,
+            CancellationToken ct = default);
+
+        /// <summary>
         /// Subscribes to the account update stream. Prior to using this, the <see cref="IAsterRestClientSpotV3ApiAccount.StartUserStreamAsync(CancellationToken)">restClient.SpotApi.Account.StartUserStreamAsync</see> method should be called to start the stream and obtaining a listen key.
         /// <para>
         /// Docs:<br />
