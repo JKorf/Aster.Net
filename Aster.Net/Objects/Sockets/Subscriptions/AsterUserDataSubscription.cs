@@ -16,7 +16,7 @@ namespace Aster.Net.Objects.Sockets
     /// <inheritdoc />
     internal class AsterUserDataSubscription : Subscription
     {
-        private readonly string _lk;
+        private readonly string? _lk;
         private readonly SocketApiClient _client;
 
         private readonly Action<DataEvent<AsterOrderUpdate>>? _orderHandler;
@@ -31,7 +31,7 @@ namespace Aster.Net.Objects.Sockets
         public AsterUserDataSubscription(
             ILogger logger,
             SocketApiClient client,
-            string listenKey,
+            string? listenKey,
             Action<DataEvent<AsterOrderUpdate>>? orderHandler,
             Action<DataEvent<AsterConfigUpdate>>? configHandler,
             Action<DataEvent<AsterMarginUpdate>>? marginHandler,
@@ -62,7 +62,7 @@ namespace Aster.Net.Objects.Sockets
             return new AsterSystemQuery<AsterSocketQueryResponse>(new AsterSocketRequest
             {
                 Method = "SUBSCRIBE",
-                Params = [_lk],
+                Params = [_lk ?? TokenLease!.Token.Token],
                 Id = ExchangeHelpers.NextId()
             }, false);
         }
@@ -73,7 +73,7 @@ namespace Aster.Net.Objects.Sockets
             return new AsterSystemQuery<AsterSocketQueryResponse>(new AsterSocketRequest
             {
                 Method = "UNSUBSCRIBE",
-                Params = [_lk],
+                Params = [_lk ?? TokenLease!.Token.Token],
                 Id = ExchangeHelpers.NextId()
             }, false);
         }

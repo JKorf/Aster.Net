@@ -21,7 +21,9 @@ using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default;
 using CryptoExchange.Net.Sockets.HighPerf;
+using CryptoExchange.Net.TokenManagement;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -39,6 +41,28 @@ namespace Aster.Net.Clients.FuturesV3Api
     {
         #region fields
         protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
+
+        private readonly ILoggerFactory? _loggerFactory;
+        private AsterRestClient? _tokenClient;
+        internal TokenManager TokenManager { get; }
+        private AsterRestClient TokenClient
+        {
+            get
+            {
+                if (_tokenClient == null)
+                {
+                    _tokenClient = new AsterRestClient(null, _loggerFactory, Options.Create(new AsterRestOptions
+                    {
+                        ApiCredentials = ApiCredentials,
+                        Environment = ClientOptions.Environment,
+                        Proxy = ClientOptions.Proxy,
+                        OutputOriginalData = ClientOptions.OutputOriginalData
+                    }));
+                }
+
+                return _tokenClient;
+            }
+        }
         #endregion
 
         #region constructor/destructor
@@ -49,7 +73,18 @@ namespace Aster.Net.Clients.FuturesV3Api
         internal AsterSocketClientFuturesV3Api(ILoggerFactory? loggerFactory, AsterSocketOptions options) :
             base(loggerFactory, AsterExchange.Metadata.Id, options.Environment.FuturesSocketClientAddress!, options, options.FuturesOptions)
         {
+            _loggerFactory = loggerFactory;
+
             RateLimiter = AsterExchange.RateLimiter.Socket;
+
+            TokenManager = new TokenManager(
+                AsterExchange.Metadata.Id,
+                loggerFactory,
+                TimeSpan.FromMinutes(30),
+                TimeSpan.FromMinutes(60),
+                startToken: StartListenKeyAsync,
+                keepAliveToken: KeepAliveListenKeyAsync,
+                stopToken: StopListenKeyAsync);
         }
         #endregion
 
@@ -455,8 +490,18 @@ namespace Aster.Net.Clients.FuturesV3Api
         #region User Data Streams
 
         /// <inheritdoc />
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
+            Action<DataEvent<AsterConfigUpdate>>? onConfigUpdate = null,
+            Action<DataEvent<AsterMarginUpdate>>? onMarginUpdate = null,
+            Action<DataEvent<AsterAccountUpdate>>? onAccountUpdate = null,
+            Action<DataEvent<AsterOrderUpdate>>? onOrderUpdate = null,
+            Action<DataEvent<AsterSocketEvent>>? onListenKeyExpired = null,
+            CancellationToken ct = default)
+            => SubscribeToUserDataUpdatesAsync(null, onConfigUpdate, onMarginUpdate, onAccountUpdate, onOrderUpdate, onListenKeyExpired, ct);
+
+        /// <inheritdoc />
         public async Task<WebSocketResult<UpdateSubscription>> SubscribeToUserDataUpdatesAsync(
-            string listenKey,
+            string? listenKey,
             Action<DataEvent<AsterConfigUpdate>>? onConfigUpdate = null,
             Action<DataEvent<AsterMarginUpdate>>? onMarginUpdate = null,
             Action<DataEvent<AsterAccountUpdate>>? onAccountUpdate = null,
@@ -464,10 +509,32 @@ namespace Aster.Net.Clients.FuturesV3Api
             Action<DataEvent<AsterSocketEvent>>? onListenKeyExpired = null,
             CancellationToken ct = default)
         {
-            listenKey.ValidateNotNull(nameof(listenKey));
+            if (listenKey == null && ApiCredentials!.V3 == null)
+                return WebSocketResult.Fail<UpdateSubscription>(Exchange, new NoApiCredentialsError());
 
-            var subscription = new AsterUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onConfigUpdate, onMarginUpdate, onAccountUpdate, onListenKeyExpired);
-            return await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
+            TokenLease? lease = null;
+            if (listenKey == null)
+            {
+                var leaseResult = await TokenManager.AcquireAsync(new TokenScope(
+                    AsterExchange.Metadata.Id,
+                    EnvironmentName,
+                    "Futures",
+                    ApiCredentials!.V3!.Key), ct).ConfigureAwait(false);
+                if (!leaseResult.Success)
+                    return WebSocketResult.Fail<UpdateSubscription>(Exchange, leaseResult.Error);
+
+                lease = leaseResult.Data;
+            }
+
+            var subscription = new AsterUserDataSubscription(_logger, this, listenKey, onOrderUpdate, onConfigUpdate, onMarginUpdate, onAccountUpdate, onListenKeyExpired)
+            {
+                TokenLease = lease
+            };
+            var result = await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
+            if (!result.Success && lease != null)
+                await lease.ReleaseAsync().ConfigureAwait(false);
+
+            return result;
         }
 
         #endregion
@@ -512,5 +579,47 @@ namespace Aster.Net.Clients.FuturesV3Api
         /// <inheritdoc />
         public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null)
             => AsterExchange.FormatSymbol(baseAsset, quoteAsset, tradingMode, deliverDate);
+
+
+        protected override async Task<CallResult> RevitalizeRequestAsync(Subscription subscription)
+        {
+            if (subscription.TokenLease == null)
+                return CallResult.Ok(); // Not an authenticated subscription, no need to revitalize
+
+            var scope = new TokenScope(
+                    AsterExchange.Metadata.Id,
+                    EnvironmentName,
+                    "Futures",
+                    ApiCredentials!.V3!.Key);
+
+            return await TokenManager.AcquireAndReplaceAsync(subscription, scope).ConfigureAwait(false);
+        }
+
+        private async Task<CallResult<string>> StartListenKeyAsync(TokenScope tokenScope, CancellationToken ct)
+        {
+            var result = await TokenClient.FuturesV3Api.Account.StartUserStreamAsync(ct).ConfigureAwait(false);
+            if (!result.Success)
+                return CallResult.Fail<string>(result.Error);
+
+            return CallResult.Ok(result.Data);
+        }
+
+        private async Task<CallResult> KeepAliveListenKeyAsync(TokenInfo token, CancellationToken ct)
+        {
+            var result = await TokenClient.FuturesV3Api.Account.KeepAliveUserStreamAsync(token.Token, ct).ConfigureAwait(false);
+            if (!result.Success)
+                return CallResult.Fail<string>(result.Error);
+
+            return CallResult.Ok();
+        }
+
+        private async Task<CallResult> StopListenKeyAsync(TokenInfo token, CancellationToken ct)
+        {
+            var result = await TokenClient.FuturesV3Api.Account.StopUserStreamAsync(token.Token, ct).ConfigureAwait(false);
+            if (!result.Success)
+                return CallResult.Fail<string>(result.Error);
+
+            return CallResult.Ok();
+        }
     }
 }
