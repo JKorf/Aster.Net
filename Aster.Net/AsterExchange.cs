@@ -103,7 +103,7 @@ namespace Aster.Net
         /// <summary>
         /// Rate limiter configuration for the Aster API
         /// </summary>
-        public static AsterRateLimiters RateLimiter { get; } = new AsterRateLimiters();
+        public static AsterRateLimiters RateLimiter { get; set; } = new AsterRateLimiters();
     }
 
     /// <summary>
@@ -121,13 +121,19 @@ namespace Aster.Net
         public event Action<RateLimitUpdateEvent> RateLimitUpdated;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        internal AsterRateLimiters()
+        /// <summary>
+        /// ctor
+        /// </summary>
+        public AsterRateLimiters()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             Initialize();
         }
 
-        private void Initialize()
+        /// <summary>
+        /// Initialize the rate limits
+        /// </summary>
+        protected virtual void Initialize()
         {
             RestIp = new RateLimitGate("Spot Rest")
                                             .AddGuard(new RateLimitGuard(RateLimitGuard.PerHost, new PathStartFilter("api"), 6000, TimeSpan.FromMinutes(1), RateLimitWindowType.Fixed)) // IP limit of 6000 request weight per minute to /api endpoints
