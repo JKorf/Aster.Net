@@ -27,7 +27,8 @@ namespace Aster.Net
                 "https://www.asterdex.com/",
                 ["https://github.com/asterdex/api-docs/blob/master/README.md"],
                 PlatformType.CryptoCurrencyExchange,
-                CentralizationType.Decentralized
+                CentralizationType.Decentralized,
+                AsterEnvironment.All
                 );
 
         /// <summary>
