@@ -124,7 +124,12 @@ namespace Aster.Net.Clients.SpotV3Api
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var result = await SubscribeToUserDataUpdatesAsync(
-                onAccountUpdate: update => handler(update.ToType(update.Data.Balances.Select(x => new SharedBalance(x.Asset, x.Free, x.Free + x.Locked)).ToArray())),
+                onAccountUpdate: update => handler(update.ToType(update.Data.Balances.Select(x => 
+                    new SharedBalance(
+                        SupportedTradingModes, 
+                        x.Asset,
+                        x.Free,
+                        x.Free + x.Locked)).ToArray())),
                 ct: ct).ConfigureAwait(false);
 
             return result;

@@ -128,7 +128,12 @@ namespace Aster.Net.Clients.FuturesV3Api
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var result = await SubscribeToUserDataUpdatesAsync(
-                onAccountUpdate: update => handler(update.ToType(update.Data.UpdateData.Balances.Select(x => new SharedBalance(x.Asset, x.WalletBalance, x.WalletBalance)).ToArray())),
+                onAccountUpdate: update => handler(update.ToType(update.Data.UpdateData.Balances.Select(x => 
+                    new SharedBalance(
+                        SupportedTradingModes,
+                        x.Asset,
+                        x.WalletBalance,
+                        x.WalletBalance)).ToArray())),
                 ct: ct).ConfigureAwait(false);
 
             return result;

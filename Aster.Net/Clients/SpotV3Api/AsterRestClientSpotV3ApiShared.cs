@@ -318,7 +318,12 @@ namespace Aster.Net.Clients.SpotV3Api
             if (!result.Success)
                 return HttpResult.Fail<SharedBalance[]>(result);
 
-            return HttpResult.Ok(result, result.Data.Balances.Select(x => new SharedBalance(x.Asset, x.Free, x.Free + x.Locked)).ToArray());
+            return HttpResult.Ok(result, result.Data.Balances.Select(x => 
+                new SharedBalance(
+                    SupportedTradingModes, 
+                    x.Asset,
+                    x.Free,
+                    x.Free + x.Locked)).ToArray());
         }
 
         #endregion

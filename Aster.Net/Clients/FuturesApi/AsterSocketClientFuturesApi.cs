@@ -528,11 +528,7 @@ namespace Aster.Net.Clients.FuturesApi
             {
                 TokenLease = lease
             };
-            var result = await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
-            if (!result.Success && lease != null)
-                await lease.ReleaseAsync().ConfigureAwait(false);
-
-            return result;
+            return await SubscribeInternalAsync(BaseAddress, subscription, ct).ConfigureAwait(false);
         }
 
         #endregion
