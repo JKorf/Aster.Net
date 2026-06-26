@@ -99,10 +99,10 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         /// <param name="ct">Cancellation token</param>
         Task<HttpResult<AsterOrder>> EditOrderAsync(
            string symbol,
-           long? orderId = null,
-           string? clientOrderId = null,
-           decimal? quantity = null,
-           decimal? price = null,
+           long? orderId,
+           string? clientOrderId,
+           decimal quantity,
+           decimal price,
            long? receiveWindow = null,
            CancellationToken ct = default);
 
