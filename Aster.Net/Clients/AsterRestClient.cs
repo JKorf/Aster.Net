@@ -57,10 +57,10 @@ namespace Aster.Net.Clients
         {
             Initialize(options.Value);
             
-            SpotApi = AddApiClient(new AsterRestClientSpotApi(_logger, httpClient, options.Value));
-            SpotV3Api = AddApiClient(new AsterRestClientSpotV3Api(this, _logger, httpClient, options.Value));
-            FuturesApi = AddApiClient(new AsterRestClientFuturesApi(_logger, httpClient, options.Value));
-            FuturesV3Api = AddApiClient(new AsterRestClientFuturesV3Api(this, _logger, httpClient, options.Value));
+            SpotApi = AddApiClient(new AsterRestClientSpotApi(loggerFactory, httpClient, options.Value));
+            SpotV3Api = AddApiClient(new AsterRestClientSpotV3Api(this, loggerFactory, httpClient, options.Value));
+            FuturesApi = AddApiClient(new AsterRestClientFuturesApi(loggerFactory, httpClient, options.Value));
+            FuturesV3Api = AddApiClient(new AsterRestClientFuturesV3Api(this, loggerFactory, httpClient, options.Value));
         }
 
         #endregion

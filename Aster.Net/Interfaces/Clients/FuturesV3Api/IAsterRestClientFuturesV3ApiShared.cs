@@ -19,7 +19,6 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         IOrderBookRestClient,
         IFundingRateRestClient,
         IPositionModeRestClient,
-        IListenKeyRestClient,
         IFeeRestClient,
         IFuturesOrderClientIdRestClient,
         IFuturesTriggerOrderRestClient,

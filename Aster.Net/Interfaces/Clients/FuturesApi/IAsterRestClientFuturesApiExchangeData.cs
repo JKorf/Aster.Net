@@ -22,7 +22,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default);
+        Task<HttpResult<DateTime>> GetServerTimeAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get symbol and asset information
@@ -34,7 +34,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
+        Task<HttpResult<AsterExchangeInfo>> GetExchangeInfoAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get a snapshot of the current order book
@@ -48,7 +48,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
         /// <param name="limit">["<c>limit</c>"] Number of rows in the orderbook. 5, 10, 20, 50, 100, 500 or 1000</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default);
+        Task<HttpResult<AsterOrderBook>> GetOrderBookAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get list of the most recent trades
@@ -62,7 +62,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
         /// <param name="limit">["<c>limit</c>"] Number of rows to return, max 1000</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterRecentTrade[]>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
+        Task<HttpResult<AsterRecentTrade[]>> GetRecentTradesAsync(string symbol, int? limit = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get trade history
@@ -77,7 +77,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="limit">["<c>limit</c>"] Number of rows to return, max 1000</param>
         /// <param name="fromId">["<c>fromId</c>"] Return from this id</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterRecentTrade[]>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null,
+        Task<HttpResult<AsterRecentTrade[]>> GetTradeHistoryAsync(string symbol, int? limit = null, long? fromId = null,
             CancellationToken ct = default);
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
         /// <param name="limit">["<c>limit</c>"] Number of rows to return, max 1000</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterAggregateTrade[]>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, 
+        Task<HttpResult<AsterAggregateTrade[]>> GetAggregatedTradeHistoryAsync(string symbol, long? fromId = null, 
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
         /// <param name="limit">["<c>limit</c>"] Number of rows to return, max 1500</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterKline[]>> GetKlinesAsync(string symbol, KlineInterval interval,
+        Task<HttpResult<AsterKline[]>> GetKlinesAsync(string symbol, KlineInterval interval,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
         /// <param name="limit">["<c>limit</c>"] Number of rows to return, max 1500</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterKline[]>> GetIndexPriceKlinesAsync(string index, KlineInterval interval, 
+        Task<HttpResult<AsterKline[]>> GetIndexPriceKlinesAsync(string index, KlineInterval interval, 
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
         /// <param name="limit">["<c>limit</c>"] Number of rows to return, max 1500</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterKline[]>> GetMarkPriceKlinesAsync(string symbol, KlineInterval interval, int? limit = null,
+        Task<HttpResult<AsterKline[]>> GetMarkPriceKlinesAsync(string symbol, KlineInterval interval, int? limit = null,
             DateTime? startTime = null, DateTime? endTime = null, CancellationToken ct = default);
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterMarkPrice>> GetMarkPriceAsync(string symbol, CancellationToken ct = default);
+        Task<HttpResult<AsterMarkPrice>> GetMarkPriceAsync(string symbol, CancellationToken ct = default);
 
         /// <summary>
         /// Get mark price for all symbols
@@ -175,7 +175,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterMarkPrice[]>> GetMarkPricesAsync(CancellationToken ct = default);
+        Task<HttpResult<AsterMarkPrice[]>> GetMarkPricesAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get funding rate history
@@ -191,7 +191,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// <param name="endTime">["<c>endTime</c>"] Filter by end time</param>
         /// <param name="limit">["<c>limit</c>"] Number of rows to return, max 1000</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterFundingRateHistory[]>> GetFundingRatesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
+        Task<HttpResult<AsterFundingRateHistory[]>> GetFundingRatesAsync(string symbol, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get funding rate configuration
@@ -203,7 +203,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterFundingInfo[]>> GetFundingInfoAsync(CancellationToken ct = default);
+        Task<HttpResult<AsterFundingInfo[]>> GetFundingInfoAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get price ticker info
@@ -216,7 +216,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterTicker>> GetTickerAsync(string symbol, CancellationToken ct = default);
+        Task<HttpResult<AsterTicker>> GetTickerAsync(string symbol, CancellationToken ct = default);
 
         /// <summary>
         /// Get price ticker info
@@ -228,7 +228,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterTicker[]>> GetTickersAsync(CancellationToken ct = default);
+        Task<HttpResult<AsterTicker[]>> GetTickersAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get last price
@@ -241,7 +241,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterPrice>> GetPriceAsync(string symbol, CancellationToken ct = default);
+        Task<HttpResult<AsterPrice>> GetPriceAsync(string symbol, CancellationToken ct = default);
 
         /// <summary>
         /// Get last prices
@@ -253,7 +253,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterPrice[]>> GetPricesAsync(CancellationToken ct = default);
+        Task<HttpResult<AsterPrice[]>> GetPricesAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get book ticker
@@ -266,7 +266,7 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </summary>
         /// <param name="symbol">["<c>symbol</c>"] The symbol, for example `ETHUSDT`</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterBookTicker>> GetBookTickerAsync(string symbol, CancellationToken ct = default);
+        Task<HttpResult<AsterBookTicker>> GetBookTickerAsync(string symbol, CancellationToken ct = default);
 
         /// <summary>
         /// Get book tickers
@@ -278,6 +278,6 @@ namespace Aster.Net.Interfaces.Clients.FuturesApi
         /// </para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterBookTicker[]>> GetBookTickersAsync(CancellationToken ct = default);
+        Task<HttpResult<AsterBookTicker[]>> GetBookTickersAsync(CancellationToken ct = default);
     }
 }

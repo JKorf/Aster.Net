@@ -2,6 +2,7 @@ using Aster.Net.Enums;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using Aster.Net.Objects.Sockets;
+using CryptoExchange.Net.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -100,6 +101,8 @@ namespace Aster.Net.Converters
     [JsonSerializable(typeof(DateTime?))]
     [JsonSerializable(typeof(List<Dictionary<string, object>>))]
     [JsonSerializable(typeof(Dictionary<string, object>))]
+    [JsonSerializable(typeof(Parameters))]
+    [JsonSerializable(typeof(Parameters[]))]
     internal partial class AsterSourceGenerationContext : JsonSerializerContext
     {
     }

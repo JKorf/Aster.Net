@@ -32,7 +32,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="stopPrice">["<c>stopPrice</c>"] Stop price</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterSpotOrder>> PlaceOrderAsync(string symbol,
+        Task<HttpResult<AsterSpotOrder>> PlaceOrderAsync(string symbol,
             Enums.OrderSide side,
             OrderType type,
             decimal? quantity = null,
@@ -58,7 +58,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="clientOrderId">["<c>origClientOrderId</c>"] Cancel by client order id</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterSpotOrder>> CancelOrderAsync(
+        Task<HttpResult<AsterSpotOrder>> CancelOrderAsync(
             string symbol,
             long? orderId = null,
             string? clientOrderId = null,
@@ -79,7 +79,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="clientOrderId">["<c>origClientOrderId</c>"] Cancel by client order id</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterSpotOrder>> GetOrderAsync(
+        Task<HttpResult<AsterSpotOrder>> GetOrderAsync(
             string symbol,
             long? orderId = null,
             string? clientOrderId = null,
@@ -98,7 +98,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="symbol">["<c>symbol</c>"] Symbol name, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterSpotOrder[]>> GetOpenOrdersAsync(
+        Task<HttpResult<AsterSpotOrder[]>> GetOpenOrdersAsync(
             string? symbol = null,
             long? receiveWindow = null,
             CancellationToken ct = default);
@@ -115,7 +115,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="symbol">["<c>symbol</c>"] Symbol, for example `ETHUSDT`</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult> CancelAllOrdersAsync(
+        Task<HttpResult> CancelAllOrdersAsync(
             string symbol,
             long? receiveWindow = null,
             CancellationToken ct = default);
@@ -136,7 +136,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="limit">["<c>limit</c>"] Max number of results, max 1000</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterSpotOrder[]>> GetOrdersAsync(
+        Task<HttpResult<AsterSpotOrder[]>> GetOrdersAsync(
             string symbol,
             long? orderId = null,
             DateTime? startTime = null,
@@ -162,7 +162,7 @@ namespace Aster.Net.Interfaces.Clients.SpotApi
         /// <param name="limit">["<c>limit</c>"] Max number of results, max 1000</param>
         /// <param name="receiveWindow">["<c>recvWindow</c>"] The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<AsterSpotUserTrade[]>> GetUserTradesAsync(string? symbol = null, long? orderId = null, long? fromId = null,
+        Task<HttpResult<AsterSpotUserTrade[]>> GetUserTradesAsync(string? symbol = null, long? orderId = null, long? fromId = null,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default);
     }
 }

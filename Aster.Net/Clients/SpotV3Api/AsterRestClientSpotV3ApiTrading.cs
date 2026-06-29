@@ -31,7 +31,7 @@ namespace Aster.Net.Clients.SpotV3Api
         #region New Order
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterSpotOrder>> PlaceOrderAsync(string symbol,
+        public async Task<HttpResult<AsterSpotOrder>> PlaceOrderAsync(string symbol,
             Enums.OrderSide side,
             OrderType type,
             decimal? quantity = null,
@@ -43,28 +43,28 @@ namespace Aster.Net.Clients.SpotV3Api
             int? receiveWindow = null,
             CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings)
             {
                 { "symbol", symbol }
             };
-            parameters.AddEnum("side", side);
-            parameters.AddEnum("type", type);
-            parameters.AddOptional("quantity", quantity);
-            parameters.AddOptional("quoteOrderQty", quoteQuantity);
-            parameters.AddOptionalEnum("timeInForce", timeInForce);
-            parameters.AddOptional("price", price);
-            parameters.AddOptional("newClientOrderId", clientOrderId);
-            parameters.AddOptional("stopPrice", stopPrice);
+            parameters.Add("side", side);
+            parameters.Add("type", type);
+            parameters.Add("quantity", quantity);
+            parameters.Add("quoteOrderQty", quoteQuantity);
+            parameters.Add("timeInForce", timeInForce);
+            parameters.Add("price", price);
+            parameters.Add("newClientOrderId", clientOrderId);
+            parameters.Add("stopPrice", stopPrice);
             if (_baseClient.ClientOptions.BuilderFeePercentage > 0
                     && _baseClient.ClientOptions.BuilderAddress != null
                     && AsterUtils._builderFeeSuccess)
             {
-                parameters.AddOptional("builder", _baseClient.ClientOptions.BuilderAddress);
-                parameters.AddOptional("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
+                parameters.Add("builder", _baseClient.ClientOptions.BuilderAddress);
+                parameters.Add("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
             }
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Post, "api/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress,"api/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterSpotOrder>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -73,22 +73,22 @@ namespace Aster.Net.Clients.SpotV3Api
         #region Cancel Order
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterSpotOrder>> CancelOrderAsync(
+        public async Task<HttpResult<AsterSpotOrder>> CancelOrderAsync(
             string symbol,
             long? orderId = null,
             string? clientOrderId = null,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings)
             {
                 { "symbol", symbol }
             };
-            parameters.AddOptional("orderId", orderId);
-            parameters.AddOptional("origClientOrderId", clientOrderId);
+            parameters.Add("orderId", orderId);
+            parameters.Add("origClientOrderId", clientOrderId);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Delete, "api/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, _baseClient.BaseAddress,"api/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterSpotOrder>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -97,22 +97,22 @@ namespace Aster.Net.Clients.SpotV3Api
         #region Get Order
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterSpotOrder>> GetOrderAsync(
+        public async Task<HttpResult<AsterSpotOrder>> GetOrderAsync(
             string symbol,
             long? orderId = null,
             string? clientOrderId = null,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings)
             {
                 { "symbol", symbol }
             };
-            parameters.AddOptional("orderId", orderId);
-            parameters.AddOptional("origClientOrderId", clientOrderId);
+            parameters.Add("orderId", orderId);
+            parameters.Add("origClientOrderId", clientOrderId);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "api/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"api/v3/order", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterSpotOrder>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -121,16 +121,16 @@ namespace Aster.Net.Clients.SpotV3Api
         #region Get Open Orders
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterSpotOrder[]>> GetOpenOrdersAsync(
+        public async Task<HttpResult<AsterSpotOrder[]>> GetOpenOrdersAsync(
             string? symbol = null,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection();
-            parameters.AddOptional("symbol", symbol);
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("symbol", symbol);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "api/v3/openOrders", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"api/v3/openOrders", AsterExchange.RateLimiter.RestIp, 1, true);
             return await _baseClient.SendAsync<AsterSpotOrder[]>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -139,25 +139,26 @@ namespace Aster.Net.Clients.SpotV3Api
         #region Cancel All Order
 
         /// <inheritdoc />
-        public async Task<WebCallResult> CancelAllOrdersAsync(
+        public async Task<HttpResult> CancelAllOrdersAsync(
             string symbol,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings)
             {
                 { "symbol", symbol }
             };
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Delete, "api/v3/allOpenOrders", AsterExchange.RateLimiter.RestIp, 1, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, _baseClient.BaseAddress,"api/v3/allOpenOrders", AsterExchange.RateLimiter.RestIp, 1, true);
             var result = await _baseClient.SendAsync<AsterResult>(request, parameters, ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsDataless();
+            if (!result.Success)
+                return HttpResult.Fail(result);
 
             if (result.Data.Code != 200)
-                return result.AsDatalessError(new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
-            return result.AsDataless();
+                return HttpResult.Fail(result, new ServerError(result.Data.Code, _baseClient.GetErrorInfo(result.Data.Code, result.Data.Message)));
+
+            return HttpResult.Ok(result);
         }
 
         #endregion
@@ -165,7 +166,7 @@ namespace Aster.Net.Clients.SpotV3Api
         #region Get Orders
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterSpotOrder[]>> GetOrdersAsync(
+        public async Task<HttpResult<AsterSpotOrder[]>> GetOrdersAsync(
             string symbol,
             long? orderId = null,
             DateTime? startTime = null,
@@ -174,15 +175,15 @@ namespace Aster.Net.Clients.SpotV3Api
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection();
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("symbol", symbol);
-            parameters.AddOptional("orderId", orderId);
-            parameters.AddOptionalMilliseconds("startTime", startTime);
-            parameters.AddOptionalMilliseconds("endTime", endTime);
-            parameters.AddOptional("limit", limit);
+            parameters.Add("orderId", orderId);
+            parameters.Add("startTime", startTime);
+            parameters.Add("endTime", endTime);
+            parameters.Add("limit", limit);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "api/v3/allOrders", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"api/v3/allOrders", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterSpotOrder[]>(request, parameters, ct).ConfigureAwait(false);
         }
 
@@ -191,19 +192,19 @@ namespace Aster.Net.Clients.SpotV3Api
         #region Get User Trades
 
         /// <inheritdoc />
-        public async Task<WebCallResult<AsterSpotUserTrade[]>> GetUserTradesAsync(string? symbol = null, long? orderId = null, long? fromId = null,
+        public async Task<HttpResult<AsterSpotUserTrade[]>> GetUserTradesAsync(string? symbol = null, long? orderId = null, long? fromId = null,
             DateTime? startTime = null, DateTime? endTime = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection();
-            parameters.AddOptional("symbol", symbol);
-            parameters.AddOptionalMilliseconds("startTime", startTime);
-            parameters.AddOptionalMilliseconds("endTime", endTime);
-            parameters.AddOptional("orderId", orderId);
-            parameters.AddOptional("fromId", fromId);
-            parameters.AddOptional("limit", limit);
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("symbol", symbol);
+            parameters.Add("startTime", startTime);
+            parameters.Add("endTime", endTime);
+            parameters.Add("orderId", orderId);
+            parameters.Add("fromId", fromId);
+            parameters.Add("limit", limit);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/api/v3/userTrades", AsterExchange.RateLimiter.RestIp, 5, true);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress,"/api/v3/userTrades", AsterExchange.RateLimiter.RestIp, 5, true);
             return await _baseClient.SendAsync<AsterSpotUserTrade[]>(request, parameters, ct).ConfigureAwait(false);
         }
 

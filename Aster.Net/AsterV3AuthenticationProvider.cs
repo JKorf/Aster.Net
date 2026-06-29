@@ -41,7 +41,7 @@ namespace Aster.Net
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
-            if (!request.Authenticated)
+            if (!request.RequestDefinition.Authenticated)
                 return;
 
             request.Headers ??= new Dictionary<string, string>();

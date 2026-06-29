@@ -17,6 +17,11 @@ namespace Aster.Net.Interfaces.Clients
         void InitializeUserClient(string userIdentifier, AsterCredentials credentials, AsterEnvironment? environment = null);
 
         /// <summary>
+        /// Clear all client from the cache
+        /// </summary>
+        void Clear();
+
+        /// <summary>
         /// Reset the cached clients for a user. This can be useful when a user changes API credentials.
         /// </summary>
         public void ClearUserClients(string userIdentifier);

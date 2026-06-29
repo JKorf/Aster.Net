@@ -17,7 +17,7 @@ namespace Aster.Net.Objects.Sockets
     /// <inheritdoc />
     internal class AsterSpotUserDataSubscription : Subscription
     {
-        private readonly string _lk;
+        private readonly string? _lk;
         private readonly SocketApiClient _client;
 
         private readonly Action<DataEvent<AsterSpotOrderUpdate>>? _orderHandler;
@@ -29,7 +29,7 @@ namespace Aster.Net.Objects.Sockets
         public AsterSpotUserDataSubscription(
             ILogger logger,
             SocketApiClient client,
-            string listenKey,
+            string? listenKey,
             Action<DataEvent<AsterSpotOrderUpdate>>? orderHandler,
             Action<DataEvent<AsterSpotAccountUpdate>>? accountHandler) : base(logger, false)
         {
@@ -41,8 +41,8 @@ namespace Aster.Net.Objects.Sockets
             _lk = listenKey;
 
             MessageRouter = MessageRouter.Create([
-                MessageRoute<AsterCombinedStream<AsterSpotAccountUpdate>>.CreateWithoutTopicFilter("outboundAccountPosition", DoHandleMessage),
-                MessageRoute<AsterCombinedStream<AsterSpotOrderUpdate>>.CreateWithoutTopicFilter("executionReport", DoHandleMessage)
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterSpotAccountUpdate>>("outboundAccountPosition", DoHandleMessage),
+                MessageRoute.CreateForEvent<AsterCombinedStream<AsterSpotOrderUpdate>>("executionReport", DoHandleMessage)
                 ]);
         }
 
@@ -52,7 +52,7 @@ namespace Aster.Net.Objects.Sockets
             return new AsterSystemQuery<AsterSocketQueryResponse>(new AsterSocketRequest
             {
                 Method = "SUBSCRIBE",
-                Params = [_lk],
+                Params = [_lk ?? TokenLease!.Token.Token],
                 Id = ExchangeHelpers.NextId()
             }, false);
         }
@@ -63,7 +63,7 @@ namespace Aster.Net.Objects.Sockets
             return new AsterSystemQuery<AsterSocketQueryResponse>(new AsterSocketRequest
             {
                 Method = "UNSUBSCRIBE",
-                Params = [_lk],
+                Params = [_lk ?? TokenLease!.Token.Token],
                 Id = ExchangeHelpers.NextId()
             }, false);
         }
@@ -79,7 +79,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithStreamId(message.Stream)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
 
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, AsterCombinedStream<AsterSpotOrderUpdate> message)
@@ -94,7 +94,7 @@ namespace Aster.Net.Objects.Sockets
                     .WithSymbol(message.Data.Symbol)
                     .WithDataTimestamp(message.Data.EventTime, _client.GetTimeOffset())
                 );
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
     }
 }

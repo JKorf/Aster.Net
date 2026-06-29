@@ -23,11 +23,11 @@ namespace Aster.Net
             request.Headers ??= new Dictionary<string, string>();
             request.Headers.Add("X-MBX-APIKEY", ApiCredentials.V1!.Key);
 
-            if (!request.Authenticated)
+            if (!request.RequestDefinition.Authenticated)
                 return;
 
             var timestamp = GetMillisecondTimestamp(apiClient);
-            var parameters = request.GetPositionParameters() ?? new Dictionary<string, object>();
+            var parameters = request.GetPositionParameters() ?? new Parameters(AsterExchange._parameterSerializationSettings);
             parameters.Add("timestamp", timestamp);
 
             if (request.ParameterPosition == HttpMethodParameterPosition.InUri)

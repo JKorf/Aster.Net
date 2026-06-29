@@ -7,7 +7,7 @@ namespace Aster.Net.Objects.Sockets
     {
         public AsterSystemQuery(AsterSocketRequest request, bool authenticated, int weight = 1) : base(request, authenticated, weight)
         {
-            MessageRouter = MessageRouter.CreateWithoutHandler<T>(request.Id.ToString());
+            MessageRouter = MessageRouter.CreateVoid<T>(request.Id.ToString());
         }
     }
 }

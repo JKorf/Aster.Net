@@ -42,20 +42,20 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region constructor/destructor
-        internal AsterRestClientFuturesApi(ILogger logger, HttpClient? httpClient, AsterRestOptions options)
-            : base(logger,
+        internal AsterRestClientFuturesApi(ILoggerFactory? loggerFactory, HttpClient? httpClient, AsterRestOptions options)
+            : base(loggerFactory,
+                  AsterExchange.Metadata.Id,
                   httpClient,
                   options.Environment.FuturesRestClientAddress,
                   options,
                   options.FuturesOptions)
         {
             Account = new AsterRestClientFuturesApiAccount(this);
-            ExchangeData = new AsterRestClientFuturesApiExchangeData(logger, this);
-            Trading = new AsterRestClientFuturesApiTrading(logger, this);
+            ExchangeData = new AsterRestClientFuturesApiExchangeData(_logger, this);
+            Trading = new AsterRestClientFuturesApiTrading(_logger, this);
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;
-            ArraySerialization = ArrayParametersSerialization.MultipleValues;
         }
         #endregion
 
@@ -66,10 +66,10 @@ namespace Aster.Net.Clients.FuturesApi
         protected override AsterV1AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
             => new AsterV1AuthenticationProvider(credentials);
 
-        internal async Task<WebCallResult> SendAsync(RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null)
+        internal async Task<HttpResult> SendAsync(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null)
         {
-            var result = await base.SendAsync(BaseAddress, definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
-            if (!result && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
+            var result = await base.SendAsync<Unit>(definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
+            if (!result.Success && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
                 _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
                 TimeOffsetManager.ResetRestUpdateTime(ClientName);
@@ -77,13 +77,10 @@ namespace Aster.Net.Clients.FuturesApi
             return result;
         }
 
-        internal Task<WebCallResult<T>> SendAsync<T>(RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
-            => SendToAddressAsync<T>(BaseAddress, definition, parameters, cancellationToken, weight);
-
-        internal async Task<WebCallResult<T>> SendToAddressAsync<T>(string baseAddress, RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
+        internal async Task<HttpResult<T>> SendAsync<T>(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
         {
-            var result = await base.SendAsync<T>(baseAddress, definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
-            if (!result && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
+            var result = await base.SendAsync<T>(definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
+            if (!result.Success && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
                 _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
                 TimeOffsetManager.ResetRestUpdateTime(ClientName);
@@ -92,7 +89,7 @@ namespace Aster.Net.Clients.FuturesApi
         }
 
         /// <inheritdoc />
-        protected override Task<WebCallResult<DateTime>> GetServerTimestampAsync()
+        protected override Task<HttpResult<DateTime>> GetServerTimestampAsync()
             => ExchangeData.GetServerTimeAsync();
 
         /// <inheritdoc />

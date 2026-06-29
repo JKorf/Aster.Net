@@ -16,27 +16,27 @@ namespace Aster.Net.Clients.SpotV3Api
     internal partial class AsterRestClientSpotV3Api : IAsterRestClientSpotV3ApiShared
     {
         private const string _topicId = "AsterSpot";
-        public string Exchange => AsterExchange.ExchangeName;
-
+        private const string _exchangeName = "Aster";
         public TradingMode[] SupportedTradingModes => new[] { TradingMode.Spot };
 
         public void SetDefaultExchangeParameter(string key, object value) => ExchangeParameters.SetStaticParameter(Exchange, key, value);
         public void ResetDefaultExchangeParameters() => ExchangeParameters.ResetStaticParameters();
+        public SharedClientInfo Discover() => SharedUtils.GetClientInfo(AsterExchange.Metadata, this);
 
 
         #region Klines Client
 
-        GetKlinesOptions IKlineRestClient.GetKlinesOptions { get; } = new GetKlinesOptions(true, true, true, 1000, false);
+        GetKlinesOptions IKlineRestClient.GetKlinesOptions { get; } = new GetKlinesOptions(_exchangeName, true, true, true, 1000, false);
 
-        async Task<ExchangeWebResult<SharedKline[]>> IKlineRestClient.GetKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
+        async Task<HttpResult<SharedKline[]>> IKlineRestClient.GetKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
             var interval = (Enums.KlineInterval)request.Interval;
             if (!Enum.IsDefined(typeof(Enums.KlineInterval), interval))
-                return new ExchangeWebResult<SharedKline[]>(Exchange, ArgumentError.Invalid(nameof(GetKlinesRequest.Interval), "Interval not supported"));
+                return HttpResult.Fail<SharedKline[]>(Exchange, ArgumentError.Invalid(nameof(GetKlinesRequest.Interval), "Interval not supported"));
 
-            var validationError = ((IKlineRestClient)this).GetKlinesOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetKlinesOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedKline[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedKline[]>(Exchange, validationError);
 
             var direction = request.Direction ?? DataDirection.Descending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
@@ -52,8 +52,8 @@ namespace Aster.Net.Clients.SpotV3Api
                 limit: limit,
                 ct: ct
                 ).ConfigureAwait(false);
-            if (!result)
-                return new ExchangeWebResult<SharedKline[]>(Exchange, TradingMode.Spot, result.As<SharedKline[]>(default));
+            if (!result.Success)
+                return HttpResult.Fail<SharedKline[]>(result);
 
             var nextPageRequest = Pagination.GetNextPageRequest(
                     () => direction == DataDirection.Ascending
@@ -65,10 +65,7 @@ namespace Aster.Net.Clients.SpotV3Api
                     request.EndTime ?? DateTime.UtcNow,
                     pageParams);
 
-            return result.AsExchangeResult(
-                   Exchange,
-                   TradingMode.Spot,
-                   ExchangeHelpers.ApplyFilter(result.Data, x => x.OpenTime, request.StartTime, request.EndTime, direction)
+            return HttpResult.Ok(result, ExchangeHelpers.ApplyFilter(result.Data, x => x.OpenTime, request.StartTime, request.EndTime, direction)
                    .Select(x => 
                         new SharedKline(
                             request.Symbol,
@@ -85,19 +82,19 @@ namespace Aster.Net.Clients.SpotV3Api
         #endregion
 
         #region Spot Symbol client
-        EndpointOptions<GetSymbolsRequest> ISpotSymbolRestClient.GetSpotSymbolsOptions { get; } = new EndpointOptions<GetSymbolsRequest>(false);
+        GetSpotSymbolsOptions ISpotSymbolRestClient.GetSpotSymbolsOptions { get; } = new GetSpotSymbolsOptions(_exchangeName, false);
 
-        async Task<ExchangeWebResult<SharedSpotSymbol[]>> ISpotSymbolRestClient.GetSpotSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
+        async Task<HttpResult<SharedSpotSymbol[]>> ISpotSymbolRestClient.GetSpotSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotSymbolRestClient)this).GetSpotSymbolsOptions.ValidateRequest(Exchange, request, TradingMode.Spot, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotSymbolsOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotSymbol[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotSymbol[]>(Exchange, validationError);
 
             var result = await ExchangeData.GetExchangeInfoAsync(ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedSpotSymbol[]>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedSpotSymbol[]>(result);
 
-            var resultData = result.AsExchangeResult(Exchange, TradingMode.Spot, result.Data.Symbols.Select(s => new SharedSpotSymbol(s.BaseAsset, s.QuoteAsset, s.Name, s.Status == SymbolStatus.Trading)
+            var resultData = HttpResult.Ok(result, result.Data.Symbols.Select(s => new SharedSpotSymbol(s.BaseAsset, s.QuoteAsset, s.Name, s.Status == SymbolStatus.Trading)
             {
                 MinTradeQuantity = s.LotSizeFilter?.MinQuantity,
                 MaxTradeQuantity = s.LotSizeFilter?.MaxQuantity,
@@ -106,82 +103,82 @@ namespace Aster.Net.Clients.SpotV3Api
                 PriceStep = s.PriceFilter?.TickSize
             }).ToArray());
 
-            ExchangeSymbolCache.UpdateSymbolInfo(_topicId, resultData.Data);
+            ExchangeSymbolCache.UpdateSymbolInfo(_topicId, EnvironmentName, null, resultData.Data!);
             return resultData;
         }
 
-        async Task<ExchangeResult<SharedSymbol[]>> ISpotSymbolRestClient.GetSpotSymbolsForBaseAssetAsync(string baseAsset)
+        async Task<ExchangeCallResult<SharedSymbol[]>> ISpotSymbolRestClient.GetSpotSymbolsForBaseAssetAsync(string baseAsset)
         {
-            if (!ExchangeSymbolCache.HasCached(_topicId))
+            if (!ExchangeSymbolCache.HasCached(_topicId, EnvironmentName, null))
             {
                 var symbols = await ((ISpotSymbolRestClient)this).GetSpotSymbolsAsync(new GetSymbolsRequest()).ConfigureAwait(false);
-                if (!symbols)
-                    return new ExchangeResult<SharedSymbol[]>(Exchange, symbols.Error!);
+                if (!symbols.Success)
+                    return ExchangeCallResult<SharedSymbol[]>.Fail(Exchange, symbols.Error!);
             }
 
-            return new ExchangeResult<SharedSymbol[]>(Exchange, ExchangeSymbolCache.GetSymbolsForBaseAsset(_topicId, baseAsset));
+            return ExchangeCallResult<SharedSymbol[]>.Ok(Exchange, ExchangeSymbolCache.GetSymbolsForBaseAsset(_topicId, EnvironmentName, null, baseAsset));
         }
 
-        async Task<ExchangeResult<bool>> ISpotSymbolRestClient.SupportsSpotSymbolAsync(SharedSymbol symbol)
+        async Task<ExchangeCallResult<bool>> ISpotSymbolRestClient.SupportsSpotSymbolAsync(SharedSymbol symbol)
         {
             if (symbol.TradingMode != TradingMode.Spot)
                 throw new ArgumentException(nameof(symbol), "Only Spot symbols allowed");
 
-            if (!ExchangeSymbolCache.HasCached(_topicId))
+            if (!ExchangeSymbolCache.HasCached(_topicId, EnvironmentName, null))
             {
                 var symbols = await ((ISpotSymbolRestClient)this).GetSpotSymbolsAsync(new GetSymbolsRequest()).ConfigureAwait(false);
-                if (!symbols)
-                    return new ExchangeResult<bool>(Exchange, symbols.Error!);
+                if (!symbols.Success)
+                    return ExchangeCallResult<bool>.Fail(Exchange, symbols.Error!);
             }
 
-            return new ExchangeResult<bool>(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, symbol));
+            return ExchangeCallResult<bool>.Ok(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, EnvironmentName, null, symbol));
         }
 
-        async Task<ExchangeResult<bool>> ISpotSymbolRestClient.SupportsSpotSymbolAsync(string symbolName)
+        async Task<ExchangeCallResult<bool>> ISpotSymbolRestClient.SupportsSpotSymbolAsync(string symbolName)
         {
-            if (!ExchangeSymbolCache.HasCached(_topicId))
+            if (!ExchangeSymbolCache.HasCached(_topicId, EnvironmentName, null))
             {
                 var symbols = await ((ISpotSymbolRestClient)this).GetSpotSymbolsAsync(new GetSymbolsRequest()).ConfigureAwait(false);
-                if (!symbols)
-                    return new ExchangeResult<bool>(Exchange, symbols.Error!);
+                if (!symbols.Success)
+                    return ExchangeCallResult<bool>.Fail(Exchange, symbols.Error!);
             }
 
-            return new ExchangeResult<bool>(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, symbolName));
+            return ExchangeCallResult<bool>.Ok(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, EnvironmentName, null, symbolName));
         }
         #endregion
 
         #region Ticker client
 
-        GetTickerOptions ISpotTickerRestClient.GetSpotTickerOptions { get; } = new GetTickerOptions();
-        async Task<ExchangeWebResult<SharedSpotTicker>> ISpotTickerRestClient.GetSpotTickerAsync(GetTickerRequest request, CancellationToken ct)
+        GetSpotTickerOptions ISpotTickerRestClient.GetSpotTickerOptions { get; } = new GetSpotTickerOptions(_exchangeName);
+        async Task<HttpResult<SharedSpotTicker>> ISpotTickerRestClient.GetSpotTickerAsync(GetTickerRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotTickerRestClient)this).GetSpotTickerOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotTickerOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotTicker>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotTicker>(Exchange, validationError);
 
             var result = await ExchangeData.GetTickerAsync(request.Symbol!.GetSymbol(FormatSymbol), ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedSpotTicker>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedSpotTicker>(result);
 
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, result.Data.Symbol), result.Data.Symbol, result.Data.LastPrice, result.Data.HighPrice, result.Data.LowPrice, result.Data.Volume, result.Data.PriceChangePercent)
+            return HttpResult.Ok(result, new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, result.Data.Symbol), result.Data.Symbol, result.Data.LastPrice, result.Data.HighPrice, result.Data.LowPrice, result.Data.Volume, result.Data.PriceChangePercent)
             {
                 QuoteVolume = result.Data.QuoteVolume
             });
         }
 
-        GetTickersOptions ISpotTickerRestClient.GetSpotTickersOptions { get; } = new GetTickersOptions();
-        async Task<ExchangeWebResult<SharedSpotTicker[]>> ISpotTickerRestClient.GetSpotTickersAsync(GetTickersRequest request, CancellationToken ct)
+        GetSpotTickersOptions ISpotTickerRestClient.GetSpotTickersOptions { get; } = new GetSpotTickersOptions(_exchangeName);
+        async Task<HttpResult<SharedSpotTicker[]>> ISpotTickerRestClient.GetSpotTickersAsync(GetTickersRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotTickerRestClient)this).GetSpotTickersOptions.ValidateRequest(Exchange, request, TradingMode.Spot, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotTickersOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotTicker[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotTicker[]>(Exchange, validationError);
 
             var result = await ExchangeData.GetTickersAsync(ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedSpotTicker[]>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedSpotTicker[]>(result);
 
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, result.Data.Select(x =>
-                new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, x.Symbol), x.Symbol, x.LastPrice, x.HighPrice, x.LowPrice, x.Volume, x.PriceChangePercent)
+            return HttpResult.Ok(result, result.Data.Select(x =>
+                new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol, x.LastPrice, x.HighPrice, x.LowPrice, x.Volume, x.PriceChangePercent)
                 {
                     QuoteVolume = x.QuoteVolume
                 }).ToArray());
@@ -191,19 +188,19 @@ namespace Aster.Net.Clients.SpotV3Api
 
         #region Book Ticker client
 
-        EndpointOptions<GetBookTickerRequest> IBookTickerRestClient.GetBookTickerOptions { get; } = new EndpointOptions<GetBookTickerRequest>(false);
-        async Task<ExchangeWebResult<SharedBookTicker>> IBookTickerRestClient.GetBookTickerAsync(GetBookTickerRequest request, CancellationToken ct)
+        GetBookTickerOptions IBookTickerRestClient.GetBookTickerOptions { get; } = new GetBookTickerOptions(_exchangeName, false);
+        async Task<HttpResult<SharedBookTicker>> IBookTickerRestClient.GetBookTickerAsync(GetBookTickerRequest request, CancellationToken ct)
         {
-            var validationError = ((IBookTickerRestClient)this).GetBookTickerOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetBookTickerOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedBookTicker>(Exchange, validationError);
+                return HttpResult.Fail<SharedBookTicker>(Exchange, validationError);
 
             var resultTicker = await ExchangeData.GetBookTickerAsync(request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
-            if (!resultTicker)
-                return resultTicker.AsExchangeResult<SharedBookTicker>(Exchange, null, default);
+            if (!resultTicker.Success)
+                return HttpResult.Fail<SharedBookTicker>(resultTicker);
 
-            return resultTicker.AsExchangeResult(Exchange, request.Symbol!.TradingMode, new SharedBookTicker(
-                ExchangeSymbolCache.ParseSymbol(_topicId, resultTicker.Data.Symbol),
+            return HttpResult.Ok(resultTicker, new SharedBookTicker(
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, resultTicker.Data.Symbol),
                 resultTicker.Data.Symbol,
                 resultTicker.Data.BestAskPrice,
                 resultTicker.Data.BestAskQuantity,
@@ -214,13 +211,13 @@ namespace Aster.Net.Clients.SpotV3Api
         #endregion
 
         #region Recent Trades client
-        GetRecentTradesOptions IRecentTradeRestClient.GetRecentTradesOptions { get; } = new GetRecentTradesOptions(1000, false);
+        GetRecentTradesOptions IRecentTradeRestClient.GetRecentTradesOptions { get; } = new GetRecentTradesOptions(_exchangeName, 1000, false);
 
-        async Task<ExchangeWebResult<SharedTrade[]>> IRecentTradeRestClient.GetRecentTradesAsync(GetRecentTradesRequest request, CancellationToken ct)
+        async Task<HttpResult<SharedTrade[]>> IRecentTradeRestClient.GetRecentTradesAsync(GetRecentTradesRequest request, CancellationToken ct)
         {
-            var validationError = ((IRecentTradeRestClient)this).GetRecentTradesOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetRecentTradesOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedTrade[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedTrade[]>(Exchange, validationError);
 
             // Get data
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
@@ -228,11 +225,11 @@ namespace Aster.Net.Clients.SpotV3Api
                 symbol,
                 limit: request.Limit,
                 ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedTrade[]>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedTrade[]>(result);
 
             // Return
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, result.Data.Select(x => 
+            return HttpResult.Ok(result, result.Data.Select(x => 
             new SharedTrade(request.Symbol, symbol, x.BaseQuantity, x.Price, x.TradeTime)
             {
                 Side = x.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
@@ -241,13 +238,13 @@ namespace Aster.Net.Clients.SpotV3Api
         #endregion
 
         #region Trade History client
-        GetTradeHistoryOptions ITradeHistoryRestClient.GetTradeHistoryOptions { get; } = new GetTradeHistoryOptions(true, true, true, 1000, false);
+        GetTradeHistoryOptions ITradeHistoryRestClient.GetTradeHistoryOptions { get; } = new GetTradeHistoryOptions(_exchangeName, true, true, true, 1000, false);
 
-        async Task<ExchangeWebResult<SharedTrade[]>> ITradeHistoryRestClient.GetTradeHistoryAsync(GetTradeHistoryRequest request, PageRequest? pageRequest, CancellationToken ct)
+        async Task<HttpResult<SharedTrade[]>> ITradeHistoryRestClient.GetTradeHistoryAsync(GetTradeHistoryRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = ((ITradeHistoryRestClient)this).GetTradeHistoryOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetTradeHistoryOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedTrade[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedTrade[]>(Exchange, validationError);
 
             var direction = request.Direction ?? DataDirection.Ascending;
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
@@ -264,8 +261,8 @@ namespace Aster.Net.Clients.SpotV3Api
                 fromId: pageParams.FromId != null ? long.Parse(pageParams.FromId) : null,
                 limit: limit,
                 ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedTrade[]>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedTrade[]>(result);
 
             var nextPageRequest = Pagination.GetNextPageRequest(
                 () => direction == DataDirection.Ascending
@@ -278,10 +275,7 @@ namespace Aster.Net.Clients.SpotV3Api
                 pageParams);
 
             // Return
-            return result.AsExchangeResult(
-                Exchange,
-                TradingMode.Spot,
-                ExchangeHelpers.ApplyFilter(result.Data, x => x.TradeTime, request.StartTime, request.EndTime, direction)
+            return HttpResult.Ok(result, ExchangeHelpers.ApplyFilter(result.Data, x => x.TradeTime, request.StartTime, request.EndTime, direction)
                     .Select(x => 
                         new SharedTrade(request.Symbol, symbol, x.Quantity, x.Price, x.TradeTime)
                         {
@@ -292,39 +286,44 @@ namespace Aster.Net.Clients.SpotV3Api
         #endregion
 
         #region Order Book client
-        GetOrderBookOptions IOrderBookRestClient.GetOrderBookOptions { get; } = new GetOrderBookOptions(1, 5000, false);
-        async Task<ExchangeWebResult<SharedOrderBook>> IOrderBookRestClient.GetOrderBookAsync(GetOrderBookRequest request, CancellationToken ct)
+        GetOrderBookOptions IOrderBookRestClient.GetOrderBookOptions { get; } = new GetOrderBookOptions(_exchangeName, 1, 5000, false);
+        async Task<HttpResult<SharedOrderBook>> IOrderBookRestClient.GetOrderBookAsync(GetOrderBookRequest request, CancellationToken ct)
         {
-            var validationError = ((IOrderBookRestClient)this).GetOrderBookOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetOrderBookOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedOrderBook>(Exchange, validationError);
+                return HttpResult.Fail<SharedOrderBook>(Exchange, validationError);
 
             var result = await ExchangeData.GetOrderBookAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 limit: request.Limit,
                 ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedOrderBook>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedOrderBook>(result);
 
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, new SharedOrderBook(result.Data.Asks, result.Data.Bids));
+            return HttpResult.Ok(result, new SharedOrderBook(result.Data.Asks, result.Data.Bids));
         }
 
         #endregion
 
         #region Balance Client
-        GetBalancesOptions IBalanceRestClient.GetBalancesOptions { get; } = new GetBalancesOptions(AccountTypeFilter.Spot);
+        GetBalancesOptions IBalanceRestClient.GetBalancesOptions { get; } = new GetBalancesOptions(_exchangeName, AccountTypeFilter.Spot);
 
-        async Task<ExchangeWebResult<SharedBalance[]>> IBalanceRestClient.GetBalancesAsync(GetBalancesRequest request, CancellationToken ct)
+        async Task<HttpResult<SharedBalance[]>> IBalanceRestClient.GetBalancesAsync(GetBalancesRequest request, CancellationToken ct)
         {
-            var validationError = ((IBalanceRestClient)this).GetBalancesOptions.ValidateRequest(Exchange, request, SupportedTradingModes);
+            var validationError = SharedClient.GetBalancesOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedBalance[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedBalance[]>(Exchange, validationError);
 
             var result = await Account.GetAccountInfoAsync(ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedBalance[]>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedBalance[]>(result);
 
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, result.Data.Balances.Select(x => new SharedBalance(x.Asset, x.Free, x.Free + x.Locked)).ToArray());
+            return HttpResult.Ok(result, result.Data.Balances.Select(x => 
+                new SharedBalance(
+                    SupportedTradingModes, 
+                    x.Asset,
+                    x.Free,
+                    x.Free + x.Locked)).ToArray());
         }
 
         #endregion
@@ -343,19 +342,12 @@ namespace Aster.Net.Clients.SpotV3Api
 
         string ISpotOrderRestClient.GenerateClientOrderId() => ExchangeHelpers.RandomString(20);
 
-        PlaceSpotOrderOptions ISpotOrderRestClient.PlaceSpotOrderOptions { get; } = new PlaceSpotOrderOptions();
-        async Task<ExchangeWebResult<SharedId>> ISpotOrderRestClient.PlaceSpotOrderAsync(PlaceSpotOrderRequest request, CancellationToken ct)
+        PlaceSpotOrderOptions ISpotOrderRestClient.PlaceSpotOrderOptions { get; } = new PlaceSpotOrderOptions(_exchangeName);
+        async Task<HttpResult<SharedId>> ISpotOrderRestClient.PlaceSpotOrderAsync(PlaceSpotOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).PlaceSpotOrderOptions.ValidateRequest(
-                Exchange,
-                request,
-                request.Symbol!.TradingMode,
-                SupportedTradingModes,
-                ((ISpotOrderRestClient)this).SpotSupportedOrderTypes,
-                ((ISpotOrderRestClient)this).SpotSupportedTimeInForce,
-                ((ISpotOrderRestClient)this).SpotSupportedOrderQuantity);
+            var validationError = SharedClient.PlaceSpotOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedId>(Exchange, validationError);
+                return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             var result = await Trading.PlaceOrderAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
@@ -368,28 +360,28 @@ namespace Aster.Net.Clients.SpotV3Api
                 clientOrderId: request.ClientOrderId,
                 ct: ct).ConfigureAwait(false);
 
-            if (!result)
-                return result.AsExchangeResult<SharedId>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedId>(result);
 
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, new SharedId(result.Data.Id.ToString()));
+            return HttpResult.Ok(result, new SharedId(result.Data.Id.ToString()));
         }
 
-        EndpointOptions<GetOrderRequest> ISpotOrderRestClient.GetSpotOrderOptions { get; } = new EndpointOptions<GetOrderRequest>(true);
-        async Task<ExchangeWebResult<SharedSpotOrder>> ISpotOrderRestClient.GetSpotOrderAsync(GetOrderRequest request, CancellationToken ct)
+        GetSpotOrderOptions ISpotOrderRestClient.GetSpotOrderOptions { get; } = new GetSpotOrderOptions(_exchangeName, true);
+        async Task<HttpResult<SharedSpotOrder>> ISpotOrderRestClient.GetSpotOrderAsync(GetOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).GetSpotOrderOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotOrder>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotOrder>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
-                return new ExchangeWebResult<SharedSpotOrder>(Exchange, ArgumentError.Invalid(nameof(GetOrderRequest.OrderId), "Invalid order id"));
+                return HttpResult.Fail<SharedSpotOrder>(Exchange, ArgumentError.Invalid(nameof(GetOrderRequest.OrderId), "Invalid order id"));
 
             var order = await Trading.GetOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
-            if (!order)
-                return order.AsExchangeResult<SharedSpotOrder>(Exchange, null, default);
+            if (!order.Success)
+                return HttpResult.Fail<SharedSpotOrder>(order);
 
-            return order.AsExchangeResult(Exchange, TradingMode.Spot, new SharedSpotOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, order.Data.Symbol),
+            return HttpResult.Ok(order, new SharedSpotOrder(
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, order.Data.Symbol),
                 order.Data.Symbol,
                 order.Data.Id.ToString(),
                 ParseOrderType(order.Data.Type),
@@ -409,20 +401,20 @@ namespace Aster.Net.Clients.SpotV3Api
             });
         }
 
-        EndpointOptions<GetOpenOrdersRequest> ISpotOrderRestClient.GetOpenSpotOrdersOptions { get; } = new EndpointOptions<GetOpenOrdersRequest>(true);
-        async Task<ExchangeWebResult<SharedSpotOrder[]>> ISpotOrderRestClient.GetOpenSpotOrdersAsync(GetOpenOrdersRequest request, CancellationToken ct)
+        GetOpenSpotOrdersOptions ISpotOrderRestClient.GetOpenSpotOrdersOptions { get; } = new GetOpenSpotOrdersOptions(_exchangeName, true);
+        async Task<HttpResult<SharedSpotOrder[]>> ISpotOrderRestClient.GetOpenSpotOrdersAsync(GetOpenOrdersRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).GetOpenSpotOrdersOptions.ValidateRequest(Exchange, request, request.Symbol?.TradingMode ?? request.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetOpenSpotOrdersOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotOrder[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotOrder[]>(Exchange, validationError);
 
             var symbol = request.Symbol?.GetSymbol(FormatSymbol);
             var orders = await Trading.GetOpenOrdersAsync(symbol, ct: ct).ConfigureAwait(false);
-            if (!orders)
-                return orders.AsExchangeResult<SharedSpotOrder[]>(Exchange, null, default);
+            if (!orders.Success)
+                return HttpResult.Fail<SharedSpotOrder[]>(orders);
 
-            return orders.AsExchangeResult(Exchange, TradingMode.Spot, orders.Data.Select(x => new SharedSpotOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, x.Symbol),
+            return HttpResult.Ok(orders, orders.Data.Select(x => new SharedSpotOrder(
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
                 x.Symbol,
                 x.Id.ToString(),
                 ParseOrderType(x.Type),
@@ -442,12 +434,12 @@ namespace Aster.Net.Clients.SpotV3Api
             }).ToArray());
         }
 
-        GetClosedOrdersOptions ISpotOrderRestClient.GetClosedSpotOrdersOptions { get; } = new GetClosedOrdersOptions(true, true, true, 1000);
-        async Task<ExchangeWebResult<SharedSpotOrder[]>> ISpotOrderRestClient.GetClosedSpotOrdersAsync(GetClosedOrdersRequest request, PageRequest? pageRequest, CancellationToken ct)
+        GetSpotClosedOrdersOptions ISpotOrderRestClient.GetClosedSpotOrdersOptions { get; } = new GetSpotClosedOrdersOptions(_exchangeName, true, true, true, 1000);
+        async Task<HttpResult<SharedSpotOrder[]>> ISpotOrderRestClient.GetClosedSpotOrdersAsync(GetClosedOrdersRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).GetClosedSpotOrdersOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetClosedSpotOrdersOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotOrder[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotOrder[]>(Exchange, validationError);
 
             var direction = request.Direction ?? DataDirection.Ascending;
             var limit = request.Limit ?? 1000;
@@ -463,8 +455,8 @@ namespace Aster.Net.Clients.SpotV3Api
                 limit: limit,
                 orderId: pageParams.FromId == null ? null : long.Parse(pageParams.FromId),
                 ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedSpotOrder[]>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedSpotOrder[]>(result);
 
             var nextPageRequest = Pagination.GetNextPageRequest(
                 () => direction == DataDirection.Ascending
@@ -476,13 +468,10 @@ namespace Aster.Net.Clients.SpotV3Api
                 request.EndTime ?? DateTime.UtcNow,
                 pageParams);
 
-            return result.AsExchangeResult(
-                    Exchange,
-                    TradingMode.Spot,
-                    ExchangeHelpers.ApplyFilter(result.Data, x => x.CreateTime, request.StartTime, request.EndTime, direction)
+            return HttpResult.Ok(result, ExchangeHelpers.ApplyFilter(result.Data, x => x.CreateTime, request.StartTime, request.EndTime, direction)
                     .Where(x => x.Status == OrderStatus.Filled || x.Status == OrderStatus.Canceled || x.Status == OrderStatus.Expired).Select(x => 
                         new SharedSpotOrder(
-                            ExchangeSymbolCache.ParseSymbol(_topicId, x.Symbol),
+                            ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
                             x.Symbol,
                             x.Id.ToString(),
                             ParseOrderType(x.Type),
@@ -503,22 +492,22 @@ namespace Aster.Net.Clients.SpotV3Api
                     .ToArray(), nextPageRequest);
         }
 
-        EndpointOptions<GetOrderTradesRequest> ISpotOrderRestClient.GetSpotOrderTradesOptions { get; } = new EndpointOptions<GetOrderTradesRequest>(true);
-        async Task<ExchangeWebResult<SharedUserTrade[]>> ISpotOrderRestClient.GetSpotOrderTradesAsync(GetOrderTradesRequest request, CancellationToken ct)
+        GetSpotOrderTradesOptions ISpotOrderRestClient.GetSpotOrderTradesOptions { get; } = new GetSpotOrderTradesOptions(_exchangeName, true);
+        async Task<HttpResult<SharedUserTrade[]>> ISpotOrderRestClient.GetSpotOrderTradesAsync(GetOrderTradesRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).GetSpotOrderTradesOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotOrderTradesOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedUserTrade[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedUserTrade[]>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
-                return new ExchangeWebResult<SharedUserTrade[]>(Exchange, ArgumentError.Invalid(nameof(GetOrderTradesRequest.OrderId), "Invalid order id"));
+                return HttpResult.Fail<SharedUserTrade[]>(Exchange, ArgumentError.Invalid(nameof(GetOrderTradesRequest.OrderId), "Invalid order id"));
 
             var orders = await Trading.GetUserTradesAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId: orderId, ct: ct).ConfigureAwait(false);
-            if (!orders)
-                return orders.AsExchangeResult<SharedUserTrade[]>(Exchange, null, default);
+            if (!orders.Success)
+                return HttpResult.Fail<SharedUserTrade[]>(orders);
 
-            return orders.AsExchangeResult(Exchange, TradingMode.Spot, orders.Data.Select(x => new SharedUserTrade(
-                ExchangeSymbolCache.ParseSymbol(_topicId, x.Symbol),
+            return HttpResult.Ok(orders, orders.Data.Select(x => new SharedUserTrade(
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
                 x.Symbol,
                 x.OrderId.ToString(),
                 x.Id.ToString(),
@@ -533,12 +522,12 @@ namespace Aster.Net.Clients.SpotV3Api
             }).ToArray());
         }
 
-        GetUserTradesOptions ISpotOrderRestClient.GetSpotUserTradesOptions { get; } = new GetUserTradesOptions(true, true, true, 1000);
-        async Task<ExchangeWebResult<SharedUserTrade[]>> ISpotOrderRestClient.GetSpotUserTradesAsync(GetUserTradesRequest request, PageRequest? pageRequest, CancellationToken ct)
+        GetSpotUserTradesOptions ISpotOrderRestClient.GetSpotUserTradesOptions { get; } = new GetSpotUserTradesOptions(_exchangeName, true, true, true, 1000);
+        async Task<HttpResult<SharedUserTrade[]>> ISpotOrderRestClient.GetSpotUserTradesAsync(GetUserTradesRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).GetSpotUserTradesOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotUserTradesOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedUserTrade[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedUserTrade[]>(Exchange, validationError);
 
             var direction = request.Direction ?? DataDirection.Ascending;
             var limit = request.Limit ?? 1000;
@@ -555,8 +544,8 @@ namespace Aster.Net.Clients.SpotV3Api
                 limit: limit,
                 ct: ct
                 ).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedUserTrade[]>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedUserTrade[]>(result);
 
             var nextPageRequest = Pagination.GetNextPageRequest(
                 () => direction == DataDirection.Ascending
@@ -568,13 +557,10 @@ namespace Aster.Net.Clients.SpotV3Api
                 request.EndTime ?? DateTime.UtcNow,
                 pageParams);
 
-            return result.AsExchangeResult(
-                    Exchange,
-                    TradingMode.Spot,
-                    ExchangeHelpers.ApplyFilter(result.Data, x => x.Timestamp, request.StartTime, request.EndTime, direction)
+            return HttpResult.Ok(result, ExchangeHelpers.ApplyFilter(result.Data, x => x.Timestamp, request.StartTime, request.EndTime, direction)
                     .Select(x =>
                         new SharedUserTrade(
-                            ExchangeSymbolCache.ParseSymbol(_topicId, x.Symbol),
+                            ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
                             x.Symbol,
                             x.OrderId.ToString(),
                             x.Id.ToString(),
@@ -590,21 +576,21 @@ namespace Aster.Net.Clients.SpotV3Api
                     .ToArray(), nextPageRequest);
         }
 
-        EndpointOptions<CancelOrderRequest> ISpotOrderRestClient.CancelSpotOrderOptions { get; } = new EndpointOptions<CancelOrderRequest>(true);
-        async Task<ExchangeWebResult<SharedId>> ISpotOrderRestClient.CancelSpotOrderAsync(CancelOrderRequest request, CancellationToken ct)
+        CancelSpotOrderOptions ISpotOrderRestClient.CancelSpotOrderOptions { get; } = new CancelSpotOrderOptions(_exchangeName, true);
+        async Task<HttpResult<SharedId>> ISpotOrderRestClient.CancelSpotOrderAsync(CancelOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).CancelSpotOrderOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.CancelSpotOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedId>(Exchange, validationError);
+                return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
-                return new ExchangeWebResult<SharedId>(Exchange, ArgumentError.Invalid(nameof(CancelOrderRequest.OrderId), "Invalid order id"));
+                return HttpResult.Fail<SharedId>(Exchange, ArgumentError.Invalid(nameof(CancelOrderRequest.OrderId), "Invalid order id"));
 
             var order = await Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
-            if (!order)
-                return order.AsExchangeResult<SharedId>(Exchange, null, default);
+            if (!order.Success)
+                return HttpResult.Fail<SharedId>(order);
 
-            return order.AsExchangeResult(Exchange, TradingMode.Spot, new SharedId(order.Data.Id.ToString()));
+            return HttpResult.Ok(order, new SharedId(order.Data.Id.ToString()));
         }
 
         private Enums.TimeInForce? GetTimeInForce(SharedTimeInForce? tif, SharedOrderType type)
@@ -651,19 +637,19 @@ namespace Aster.Net.Clients.SpotV3Api
 
         #region Spot Client Id Order Client
 
-        EndpointOptions<GetOrderRequest> ISpotOrderClientIdRestClient.GetSpotOrderByClientOrderIdOptions { get; } = new EndpointOptions<GetOrderRequest>(true);
-        async Task<ExchangeWebResult<SharedSpotOrder>> ISpotOrderClientIdRestClient.GetSpotOrderByClientOrderIdAsync(GetOrderRequest request, CancellationToken ct)
+        GetSpotOrderByClientOrderIdOptions ISpotOrderClientIdRestClient.GetSpotOrderByClientOrderIdOptions { get; } = new GetSpotOrderByClientOrderIdOptions(_exchangeName, true);
+        async Task<HttpResult<SharedSpotOrder>> ISpotOrderClientIdRestClient.GetSpotOrderByClientOrderIdAsync(GetOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).GetSpotOrderOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotOrder>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotOrder>(Exchange, validationError);
 
             var order = await Trading.GetOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), clientOrderId: request.OrderId, ct: ct).ConfigureAwait(false);
-            if (!order)
-                return order.AsExchangeResult<SharedSpotOrder>(Exchange, null, default);
+            if (!order.Success)
+                return HttpResult.Fail<SharedSpotOrder>(order);
 
-            return order.AsExchangeResult(Exchange, TradingMode.Spot, new SharedSpotOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, order.Data.Symbol),
+            return HttpResult.Ok(order, new SharedSpotOrder(
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, order.Data.Symbol),
                 order.Data.Symbol,
                 order.Data.Id.ToString(),
                 ParseOrderType(order.Data.Type),
@@ -683,55 +669,55 @@ namespace Aster.Net.Clients.SpotV3Api
             });
         }
 
-        EndpointOptions<CancelOrderRequest> ISpotOrderClientIdRestClient.CancelSpotOrderByClientOrderIdOptions { get; } = new EndpointOptions<CancelOrderRequest>(true);
-        async Task<ExchangeWebResult<SharedId>> ISpotOrderClientIdRestClient.CancelSpotOrderByClientOrderIdAsync(CancelOrderRequest request, CancellationToken ct)
+        CancelSpotOrderByClientOrderIdOptions ISpotOrderClientIdRestClient.CancelSpotOrderByClientOrderIdOptions { get; } = new CancelSpotOrderByClientOrderIdOptions(_exchangeName, true);
+        async Task<HttpResult<SharedId>> ISpotOrderClientIdRestClient.CancelSpotOrderByClientOrderIdAsync(CancelOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotOrderRestClient)this).CancelSpotOrderOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.CancelSpotOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedId>(Exchange, validationError);
+                return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             var order = await Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), clientOrderId: request.OrderId, ct: ct).ConfigureAwait(false);
-            if (!order)
-                return order.AsExchangeResult<SharedId>(Exchange, null, default);
+            if (!order.Success)
+                return HttpResult.Fail<SharedId>(order);
 
-            return order.AsExchangeResult(Exchange, TradingMode.Spot, new SharedId(order.Data.Id.ToString()));
+            return HttpResult.Ok(order, new SharedId(order.Data.Id.ToString()));
         }
         #endregion
 
         #region Asset client
-        EndpointOptions<GetAssetsRequest> IAssetsRestClient.GetAssetsOptions { get; } = new EndpointOptions<GetAssetsRequest>(false);
+        GetAssetsOptions IAssetsRestClient.GetAssetsOptions { get; } = new GetAssetsOptions(_exchangeName, false);
 
-        async Task<ExchangeWebResult<SharedAsset[]>> IAssetsRestClient.GetAssetsAsync(GetAssetsRequest request, CancellationToken ct)
+        async Task<HttpResult<SharedAsset[]>> IAssetsRestClient.GetAssetsAsync(GetAssetsRequest request, CancellationToken ct)
         {
-            var validationError = ((IAssetsRestClient)this).GetAssetsOptions.ValidateRequest(Exchange, request, TradingMode.Spot, SupportedTradingModes);
+            var validationError = SharedClient.GetAssetsOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedAsset[]>(Exchange, validationError);
+                return HttpResult.Fail<SharedAsset[]>(Exchange, validationError);
 
             var assets = await ExchangeData.GetExchangeInfoAsync(ct: ct).ConfigureAwait(false);
-            if (!assets)
-                return assets.AsExchangeResult<SharedAsset[]>(Exchange, null, default);
+            if (!assets.Success)
+                return HttpResult.Fail<SharedAsset[]>(assets);
 
-            return assets.AsExchangeResult(Exchange, TradingMode.Spot, assets.Data.Assets.Select(x => new SharedAsset(x.Name)
+            return HttpResult.Ok(assets, assets.Data.Assets.Select(x => new SharedAsset(x.Name)
             {
                 Networks = Enum.GetNames(typeof(NetworkType)).Select(x => new SharedAssetNetwork(x)).ToArray()
             }).ToArray());
         }
 
-        EndpointOptions<GetAssetRequest> IAssetsRestClient.GetAssetOptions { get; } = new EndpointOptions<GetAssetRequest>(true);
-        async Task<ExchangeWebResult<SharedAsset>> IAssetsRestClient.GetAssetAsync(GetAssetRequest request, CancellationToken ct)
+        GetAssetOptions IAssetsRestClient.GetAssetOptions { get; } = new GetAssetOptions(_exchangeName, true);
+        async Task<HttpResult<SharedAsset>> IAssetsRestClient.GetAssetAsync(GetAssetRequest request, CancellationToken ct)
         {
-            var validationError = ((IAssetsRestClient)this).GetAssetOptions.ValidateRequest(Exchange, request, TradingMode.Spot, SupportedTradingModes);
+            var validationError = SharedClient.GetAssetOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedAsset>(Exchange, validationError);
+                return HttpResult.Fail<SharedAsset>(Exchange, validationError);
 
             var asset = await ExchangeData.GetExchangeInfoAsync(ct: ct).ConfigureAwait(false);
-            if (!asset)
-                return asset.AsExchangeResult<SharedAsset>(Exchange, null, default);
+            if (!asset.Success)
+                return HttpResult.Fail<SharedAsset>(asset);
 
             if (!asset.Data.Assets.Any(x => x.Name == request.Asset))
-                return new ExchangeWebResult<SharedAsset>(Exchange, new ServerError(new ErrorInfo(ErrorType.UnknownAsset, "Asset not found")));
+                return HttpResult.Fail<SharedAsset>(Exchange, new ServerError(new ErrorInfo(ErrorType.UnknownAsset, "Asset not found")));
 
-            return asset.AsExchangeResult(Exchange, TradingMode.Spot, new SharedAsset(request.Asset)
+            return HttpResult.Ok(asset, new SharedAsset(request.Asset)
             {
                 Networks = Enum.GetNames(typeof(NetworkType)).Select(x => new SharedAssetNetwork(x)).ToArray()
             });
@@ -739,81 +725,34 @@ namespace Aster.Net.Clients.SpotV3Api
 
         #endregion
 
-        #region Listen Key client
-
-        EndpointOptions<StartListenKeyRequest> IListenKeyRestClient.StartOptions { get; } = new EndpointOptions<StartListenKeyRequest>(true);
-        async Task<ExchangeWebResult<string>> IListenKeyRestClient.StartListenKeyAsync(StartListenKeyRequest request, CancellationToken ct)
-        {
-            var validationError = ((IListenKeyRestClient)this).StartOptions.ValidateRequest(Exchange, request, request.TradingMode, SupportedTradingModes);
-            if (validationError != null)
-                return new ExchangeWebResult<string>(Exchange, validationError);
-
-            // Get data
-            var result = await Account.StartUserStreamAsync(ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<string>(Exchange, null, default);
-
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, result.Data);
-        }
-        EndpointOptions<KeepAliveListenKeyRequest> IListenKeyRestClient.KeepAliveOptions { get; } = new EndpointOptions<KeepAliveListenKeyRequest>(true);
-        async Task<ExchangeWebResult<string>> IListenKeyRestClient.KeepAliveListenKeyAsync(KeepAliveListenKeyRequest request, CancellationToken ct)
-        {
-            var validationError = ((IListenKeyRestClient)this).KeepAliveOptions.ValidateRequest(Exchange, request, request.TradingMode, SupportedTradingModes);
-            if (validationError != null)
-                return new ExchangeWebResult<string>(Exchange, validationError);
-
-            // Get data
-            var result = await Account.KeepAliveUserStreamAsync(request.ListenKey, ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<string>(Exchange, null, default);
-
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, request.ListenKey);
-        }
-
-        EndpointOptions<StopListenKeyRequest> IListenKeyRestClient.StopOptions { get; } = new EndpointOptions<StopListenKeyRequest>(true);
-        async Task<ExchangeWebResult<string>> IListenKeyRestClient.StopListenKeyAsync(StopListenKeyRequest request, CancellationToken ct)
-        {
-            var validationError = ((IListenKeyRestClient)this).StopOptions.ValidateRequest(Exchange, request, request.TradingMode, SupportedTradingModes);
-            if (validationError != null)
-                return new ExchangeWebResult<string>(Exchange, validationError);
-
-            // Get data
-            var result = await Account.StopUserStreamAsync(request.ListenKey, ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<string>(Exchange, null, default);
-
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, request.ListenKey);
-        }
-        #endregion
-
         #region Fee Client
-        EndpointOptions<GetFeeRequest> IFeeRestClient.GetFeeOptions { get; } = new EndpointOptions<GetFeeRequest>(true);
+        GetFeeOptions IFeeRestClient.GetFeeOptions { get; } = new GetFeeOptions(_exchangeName, true);
 
-        async Task<ExchangeWebResult<SharedFee>> IFeeRestClient.GetFeesAsync(GetFeeRequest request, CancellationToken ct)
+        async Task<HttpResult<SharedFee>> IFeeRestClient.GetFeesAsync(GetFeeRequest request, CancellationToken ct)
         {
-            var validationError = ((IFeeRestClient)this).GetFeeOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetFeeOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedFee>(Exchange, validationError);
+                return HttpResult.Fail<SharedFee>(Exchange, validationError);
 
             // Get data
             var result = await Account.GetUserCommissionRateAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedFee>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedFee>(result);
 
             // Return
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, new SharedFee(result.Data.MakerRate * 100, result.Data.TakerRate * 100));
+            return HttpResult.Ok(result, new SharedFee(result.Data.MakerRate * 100, result.Data.TakerRate * 100));
         }
         #endregion
 
         #region Trigger Order Client
-        PlaceSpotTriggerOrderOptions ISpotTriggerOrderRestClient.PlaceSpotTriggerOrderOptions { get; } = new PlaceSpotTriggerOrderOptions(true);
-        async Task<ExchangeWebResult<SharedId>> ISpotTriggerOrderRestClient.PlaceSpotTriggerOrderAsync(PlaceSpotTriggerOrderRequest request, CancellationToken ct)
+        PlaceSpotTriggerOrderOptions ISpotTriggerOrderRestClient.PlaceSpotTriggerOrderOptions { get; } = new PlaceSpotTriggerOrderOptions(_exchangeName, true);
+        async Task<HttpResult<SharedId>> ISpotTriggerOrderRestClient.PlaceSpotTriggerOrderAsync(PlaceSpotTriggerOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotTriggerOrderRestClient)this).PlaceSpotTriggerOrderOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes, ((ISpotOrderRestClient)this).SpotSupportedOrderQuantity);
+            var validationError = SharedClient.PlaceSpotTriggerOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedId>(Exchange, validationError);
+                return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             var type = GetTriggerOrderParameters(request.PriceDirection, request.OrderPrice, request.OrderSide);
             var result = await Trading.PlaceOrderAsync(
@@ -826,19 +765,19 @@ namespace Aster.Net.Clients.SpotV3Api
                 clientOrderId: request.ClientOrderId,
                 stopPrice: request.TriggerPrice,
                 ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedId>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedId>(result);
 
             // Return
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, new SharedId(result.Data.Id.ToString()));
+            return HttpResult.Ok(result, new SharedId(result.Data.Id.ToString()));
         }
 
-        EndpointOptions<GetOrderRequest> ISpotTriggerOrderRestClient.GetSpotTriggerOrderOptions { get; } = new EndpointOptions<GetOrderRequest>(true);
-        async Task<ExchangeWebResult<SharedSpotTriggerOrder>> ISpotTriggerOrderRestClient.GetSpotTriggerOrderAsync(GetOrderRequest request, CancellationToken ct)
+        GetSpotTriggerOrderOptions ISpotTriggerOrderRestClient.GetSpotTriggerOrderOptions { get; } = new GetSpotTriggerOrderOptions(_exchangeName, true);
+        async Task<HttpResult<SharedSpotTriggerOrder>> ISpotTriggerOrderRestClient.GetSpotTriggerOrderAsync(GetOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotTriggerOrderRestClient)this).GetSpotTriggerOrderOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.GetSpotTriggerOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedSpotTriggerOrder>(Exchange, validationError);
+                return HttpResult.Fail<SharedSpotTriggerOrder>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var id))
                 throw new ArgumentException($"Invalid order id");
@@ -847,13 +786,13 @@ namespace Aster.Net.Clients.SpotV3Api
                 request.Symbol!.GetSymbol(FormatSymbol),
                 id,
                 ct: ct).ConfigureAwait(false);
-            if (!result)
-                return result.AsExchangeResult<SharedSpotTriggerOrder>(Exchange, null, default);
+            if (!result.Success)
+                return HttpResult.Fail<SharedSpotTriggerOrder>(result);
 
             var (orderType, orderDirection) = ParseTriggerDirections(result.Data.Type, result.Data.Side);
             // Return
-            return result.AsExchangeResult(Exchange, TradingMode.Spot, new SharedSpotTriggerOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, result.Data.Symbol),
+            return HttpResult.Ok(result, new SharedSpotTriggerOrder(
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, result.Data.Symbol),
                 result.Data.Symbol,
                 result.Data.Id.ToString(),
                 orderType,
@@ -888,21 +827,21 @@ namespace Aster.Net.Clients.SpotV3Api
             return SharedTriggerOrderStatus.Unknown;
         }
 
-        EndpointOptions<CancelOrderRequest> ISpotTriggerOrderRestClient.CancelSpotTriggerOrderOptions { get; } = new EndpointOptions<CancelOrderRequest>(true);
-        async Task<ExchangeWebResult<SharedId>> ISpotTriggerOrderRestClient.CancelSpotTriggerOrderAsync(CancelOrderRequest request, CancellationToken ct)
+        CancelSpotTriggerOrderOptions ISpotTriggerOrderRestClient.CancelSpotTriggerOrderOptions { get; } = new CancelSpotTriggerOrderOptions(_exchangeName, true);
+        async Task<HttpResult<SharedId>> ISpotTriggerOrderRestClient.CancelSpotTriggerOrderAsync(CancelOrderRequest request, CancellationToken ct)
         {
-            var validationError = ((ISpotTriggerOrderRestClient)this).CancelSpotTriggerOrderOptions.ValidateRequest(Exchange, request, request.Symbol!.TradingMode, SupportedTradingModes);
+            var validationError = SharedClient.CancelSpotTriggerOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedId>(Exchange, validationError);
+                return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
-                return new ExchangeWebResult<SharedId>(Exchange, ArgumentError.Invalid(nameof(CancelOrderRequest.OrderId), "Invalid order id"));
+                return HttpResult.Fail<SharedId>(Exchange, ArgumentError.Invalid(nameof(CancelOrderRequest.OrderId), "Invalid order id"));
 
             var order = await Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
-            if (!order)
-                return order.AsExchangeResult<SharedId>(Exchange, null, default);
+            if (!order.Success)
+                return HttpResult.Fail<SharedId>(order);
 
-            return order.AsExchangeResult(Exchange, TradingMode.Spot, new SharedId(order.Data.Id.ToString()));
+            return HttpResult.Ok(order, new SharedId(order.Data.Id.ToString()));
         }
 
 
@@ -965,19 +904,19 @@ namespace Aster.Net.Clients.SpotV3Api
 
         #region Transfer client
 
-        TransferOptions ITransferRestClient.TransferOptions { get; } = new TransferOptions([
+        TransferOptions ITransferRestClient.TransferOptions { get; } = new TransferOptions(_exchangeName, [
             SharedAccountType.Spot,
             SharedAccountType.PerpetualLinearFutures
             ]);
-        async Task<ExchangeWebResult<SharedId>> ITransferRestClient.TransferAsync(TransferRequest request, CancellationToken ct)
+        async Task<HttpResult<SharedId>> ITransferRestClient.TransferAsync(TransferRequest request, CancellationToken ct)
         {
-            var validationError = ((ITransferRestClient)this).TransferOptions.ValidateRequest(Exchange, request, TradingMode.Spot, SupportedTradingModes);
+            var validationError = SharedClient.TransferOptions.ValidateRequest(request, this);
             if (validationError != null)
-                return new ExchangeWebResult<SharedId>(Exchange, validationError);
+                return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             var transferType = GetTransferType(request);
             if (transferType == null)
-                return new ExchangeWebResult<SharedId>(Exchange, ArgumentError.Invalid("To/From AccountType", "invalid to/from account combination"));
+                return HttpResult.Fail<SharedId>(Exchange, ArgumentError.Invalid("To/From AccountType", "invalid to/from account combination"));
 
             // Get data
             var transfer = await Account.TransferAsync(
@@ -985,10 +924,10 @@ namespace Aster.Net.Clients.SpotV3Api
                 transferType.Value,
                 request.Quantity,
                 ct: ct).ConfigureAwait(false);
-            if (!transfer)
-                return transfer.AsExchangeResult<SharedId>(Exchange, null, default);
+            if (!transfer.Success)
+                return HttpResult.Fail<SharedId>(transfer);
 
-            return transfer.AsExchangeResult(Exchange, TradingMode.Spot, new SharedId(transfer.Data.TransactionId.ToString()));
+            return HttpResult.Ok(transfer, new SharedId(transfer.Data.TransactionId.ToString()));
         }
 
         private TransferDirection? GetTransferType(TransferRequest request)
