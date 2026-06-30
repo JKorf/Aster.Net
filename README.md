@@ -82,6 +82,9 @@ var tickerSubscriptionResult = socketClient.SpotV3Api.SubscribeToTickerUpdatesAs
 
 For information on the clients, dependency injection, response processing and more see the [documentation](https://cryptoexchange.jkorf.dev/client-libs/getting-started), or have a look at the examples [here](https://github.com/JKorf/Aster.Net/tree/main/Examples) or [here](https://github.com/JKorf/CryptoExchange.Net/tree/master/Examples).
 
+**NOTE**  
+Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
+
 ## AI documentation
 For AI coding assistants and quick onboarding:
 * [AGENTS.md](AGENTS.md) skill-style instructions for Aster.Net usage
@@ -90,8 +93,7 @@ For AI coding assistants and quick onboarding:
 * [`docs/ai-api-map.md`](docs/ai-api-map.md) maps common intents to V3 client members
 * [`Examples/ai-friendly`](Examples/ai-friendly) contains compact examples that are compiled by the test suite
 
-**NOTE**  
-Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
+See [cryptoexchange-skills-hub](https://github.com/JKorf/cryptoexchange-skills-hub) for installable skills.
 
 ## Authentication
 Depending on the API used different credentials types are required.  
@@ -263,136 +265,3 @@ Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/s
     * Updated FuturesV3 EditOrderAsync parameters to non-nullable
     * Various small performance improvements
     * Fixed websocket connection attempts counting towards rate limit even when server could not be reached
-
-* Version 3.4.0 - 08 Jun 2026
-    * Updated CryptoExchange.Net to version 11.2.2
-    * Added restClient.FuturesV3Api.Trading.EditOrderAsync endpoint
-    * Updated V3 credentials logic for configuration binding
-    * Fixed user client provider not caching new client when previous client was disposed
-
-* Version 3.3.0 - 26 May 2026
-    * Updated CryptoExchange.Net to version 11.2.0
-    * Added restClient.FuturesV3Api.Trading.PlaceChaseOrderAsync endpoint
-    * Added pegPriceType, pegOffset and priceLimit parameters on FuturesV3.PlaceOrderAsync endpoint
-
-* Version 3.2.1 - 24 Apr 2026
-    * Fixed restClient.FuturesV3Api.Account.ModifyIsolatedMarginAsync parameter serialization
-
-* Version 3.2.0 - 12 Apr 2026
-    * Added Agent endpoints
-    * Added AsterV3Credentials overload for using public address
-    * Added additional checks for builder parameters
-    * Fix for REST error message parsing
-    * Removed BuilderName option and parameter from ApproveBuilderAsync endpoint
-
-* Version 3.1.0 - 09 Apr 2026
-    * Updated CryptoExchange.Net to version 11.1.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Updated restClient.FuturesV3Api.Account.GetAccountInfoAsync path from /account to /accountWithJoinMargin
-    * Added client.FuturesV3Api.Account.GetWithdrawInfoAsync endpoint
-    * Added client.FuturesV3Api.Account.GetDepositWithdrawHistoryAsync endpoint
-
-* Version 3.0.1 - 02 Apr 2026
-    * Updated CryptoExchange.Net to version 11.0.3, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Fixed FuturesV3 UserStream endpoints
-
-* Version 3.0.0 - 24 Mar 2026
-    * Updated CryptoExchange.Net to version 11.0.1, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Updated class for supplying API credentials from ApiCredentials to AsterCredentials
-    * Added FuturesV3 and SpotV3 API's
-    * Added 1bps builder fee enabled by default on V3 API, can be disabled in the options
-    * Updated Shared order status parsing to default to Unknown value if not parsable
-    * Added LastUpdateId property to AsterBookTicker model
-    * Added Notional and IsolatedWallet properties to AsterPosition model
-    * Added OrderListId property to AsterSpotOrder model
-    * Added BaseAssetAddress and ListingTime properties to AsterSpotSymbol model
-    * Added BaseAsset and QuoteAsset properties to AsterSpotTicker model
-    * Added CounterpartyId property to AsterSpotUserTrade model
-    * Added TwapMinNotional and CreateTime properties to AsterSymbol model
-    * Added MarginAsset property to AsterUserTrade model
-    * Added Testnet environment for the V3 API
-
-    * Notes for updating:
-        * Update ApiCredentials to AsterCredentials for authentication, i.e. `ApiCredentials = new ApiCredentials(..)` => `ApiCredentials = new AsterCredentials(..)`
-
-* Version 2.8.0 - 06 Mar 2026
-    * Updated CryptoExchange.Net to version 10.8.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Improved method XML comments
-
-* Version 2.7.0 - 24 Feb 2026
-    * Updated CryptoExchange.Net to version 10.7.0
-    * Added additional Http settings to client options
-    * Updated Shared REST interfaces pagination logic
-    * Updated HttpClient registration, fixing issue of DNS changes not getting processed
-    * Fixed UserClientProvider using unconfigured HttpClient
-
-* Version 2.6.0 - 16 Feb 2026
-    * Updated CryptoExchange.Net to version 10.6.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Fixed SymbolOrderBook websocket subscription not getting closed if when waiting for initial data times out
-
-* Version 2.5.0 - 10 Feb 2026
-    * Updated CryptoExchange.Net to version 10.5.1, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Updated UserClientProvider internal client cache to non-static to prevent cleanup issues
-
-* Version 2.4.0 - 06 Feb 2026
-    * Updated CryptoExchange.Net to version 10.4.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Added AsterUserSpotDataTracker and AsterUserFuturesDataTracker
-    * Added additional methods for requesting supported symbols to Shared ISpotSymbolRestClient/IFuturesSymbolRestClient interfaces
-    * Added PositionMode mapping on SharedPosition models
-    * Fixed disposed clients getting returned from UserClientProvider
-
-* Version 2.3.0 - 22 Jan 2026
-    * Updated CryptoExchange.Net to version 10.3.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Removed legacy websocket message handling and the corresponding UseUpdatedDeserialization client option
-    * Added Metadata to AsterExchange
-
-* Version 2.2.2 - 19 Jan 2026
-    * Updated CryptoExchange.Net to version 10.2.5, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Added Delisted value to SymbolStatus enum
-    * Fixed some order book sync issues
-
-* Version 2.2.1 - 14 Jan 2026
-    * Updated CryptoExchange.Net to version 10.2.3, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-
-* Version 2.2.0 - 13 Jan 2026
-    * Updated CryptoExchange.Net to version 10.2.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Added SequenceNumber to order book websocket updates
-    * Updated SymbolOrderBook implementations to correctly check sequence numbers
-
-* Version 2.1.0 - 07 Jan 2026
-    * Updated CryptoExchange.Net version to 10.1.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Added DataTimeLocal and DataAge properties to DataEvent object
-    * Added UpdateServerTime, UpdateLocalTime and DataAge properties to (I)SymbolOrderBook
-    * Added missing Spot references on IAsterOrderBookFactory
-
-* Version 2.0.0 - 16 Dec 2025
-    * Added Net10.0 target framework
-    * Updated CryptoExchange.Net version to 10.0.0, see https://github.com/JKorf/CryptoExchange.Net/releases/ for full release notes
-    * Improved performance across the board, biggest gains in websocket message processing
-    * Updated REST message response handling
-    * Updated WebSocket message handling
-    * Added UseUpdatedDeserialization socket client options to toggle by new and old message handling
-    * Added various Performance websocket subscriptions for public streams
-    * Added SocketIndividualSubscriptionCombineTarget socket client option
-    * Updated Shared API's subscription update types from ExchangeEvent to DataEvent
-    * Fixed bug in Shared GetFuturesTickersAsync endpoint
-
-* Version 1.3.0 - 11 Nov 2025
-    * Updated CryptoExchange.Net version to 9.13.0, see https://github.com/JKorf/CryptoExchange.Net/releases/
-
-* Version 1.2.0 - 03 Nov 2025
-    * Updated CryptoExchange.Net to version 9.12.0
-    * Added support for using SharedSymbol.UsdOrStable in Shared APIs
-    * Fixed deserialization issue in restClient.FuturesApi.ExchangeData.GetFundingInfoAsync
-    * Fixed exception when initial trade snapshot has no items in TradeTracker
-    * Removed some unhelpful verbose logs
-
-* Version 1.1.0 - 16 Oct 2025
-    * Updated CryptoExchange.Net version to 9.10.0, see https://github.com/JKorf/CryptoExchange.Net/releases/
-    * Added ClientOrderId mapping on SharedUserTrade models
-    * Added ITransferRestClient.TransferAsync implementation
-    * Updated SpotApi IBalanceRestClient.GetBalancesAsync to support funding wallet balance retrieval
-    * Fixed FuturesApi IBalanceRestClient.GetBalancesAsync available balance mapping
-
-* Version 1.0.0 - 06 Oct 2025
-    * Initial release
-
