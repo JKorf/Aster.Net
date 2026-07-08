@@ -11,6 +11,11 @@ namespace Aster.Net.Enums
     public enum OrderStatus
     {
         /// <summary>
+        /// ["<c>PENDING</c>"] Pending
+        /// </summary>
+        [Map("PENDING")]
+        Pending,
+        /// <summary>
         /// ["<c>NEW</c>"] New/unfilled order
         /// </summary>
         [Map("NEW")]
