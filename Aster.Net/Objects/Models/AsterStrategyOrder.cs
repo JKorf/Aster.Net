@@ -150,7 +150,7 @@ public record AsterStrategyOrderSub
     /// ["<c>closePosition</c>"] Close position
     /// </summary>
     [JsonPropertyName("closePosition")]
-    public bool ClosePosition { get; set; }
+    public bool? ClosePosition { get; set; }
     /// <summary>
     /// ["<c>price</c>"] Price
     /// </summary>

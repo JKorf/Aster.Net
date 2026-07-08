@@ -44,6 +44,11 @@ namespace Aster.Net.Enums
         /// ["<c>HIDDEN</c>"] Hidden
         /// </summary>
         [Map("HIDDEN")]
-        Hidden
+        Hidden,
+        /// <summary>
+        /// ["<c>DAY</c>"] Expires in a day
+        /// </summary>
+        [Map("DAY")]
+        Day
     }
 }

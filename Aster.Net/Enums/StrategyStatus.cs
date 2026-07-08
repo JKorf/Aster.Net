@@ -20,4 +20,9 @@ public enum StrategyStatus
     /// </summary>
     [Map("EXPIRED")]
     Expired,
+    /// <summary>
+    /// ["<c>REJECTED</c>"] Rejected
+    /// </summary>
+    [Map("REJECTED")]
+    Rejected,
 }
