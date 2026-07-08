@@ -15,4 +15,9 @@ public enum StrategyStatus
     /// </summary>
     [Map("WORKING")]
     Working,
+    /// <summary>
+    /// ["<c>EXPIRED</c>"] Expired
+    /// </summary>
+    [Map("EXPIRED")]
+    Expired,
 }

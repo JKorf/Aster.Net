@@ -474,5 +474,101 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #endregion
 
+        #region Place Strategy Order
+
+        /// <inheritdoc />
+        public async Task<HttpResult<AsterStrategyOrderResult>> PlaceStrategyOrderAsync(
+            StrategyType strategyType,
+            IEnumerable<AsterStrategyOrderRequest> orders,
+            string? clientOrderId = null,
+            CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("clientStrategyId", clientOrderId);
+            parameters.Add("strategyType", strategyType);
+
+#pragma warning disable IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+#pragma warning disable IL3050 // Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.
+            parameters.Add("subOrderList", JsonSerializer.Serialize(orders.ToArray(), AsterExchange._serializerContext));
+#pragma warning restore IL3050 // Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.
+#pragma warning restore IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+
+            if (_baseClient.ClientOptions.BuilderFeePercentage > 0
+                && _baseClient.ClientOptions.BuilderAddress != null
+                && AsterUtils._builderFeeSuccess)
+            {
+                parameters.Add("builder", _baseClient.ClientOptions.BuilderAddress);
+                parameters.Add("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
+            }
+            
+            var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress, "fapi/v3/placeStrategyOrder", AsterExchange.RateLimiter.RestIp, 50, true);
+            return await _baseClient.SendAsync<AsterStrategyOrderResult>(request, parameters, ct).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Edit Strategy Order
+
+        /// <inheritdoc />
+        public async Task<HttpResult<AsterStrategyOrderResult>> EditStrategyOrderAsync(
+            long strategyId,
+            StrategyType strategyType,
+            IEnumerable<AsterStrategyEditOrderRequest> orders,
+            CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("strategyType", strategyType);
+
+#pragma warning disable IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+#pragma warning disable IL3050 // Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.
+            parameters.Add("subOrderList", JsonSerializer.Serialize(orders.ToArray(), AsterExchange._serializerContext));
+#pragma warning restore IL3050 // Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.
+#pragma warning restore IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+
+            var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress, "fapi/v3/updateStrategyOrder", AsterExchange.RateLimiter.RestIp, 50, true);
+            return await _baseClient.SendAsync<AsterStrategyOrderResult>(request, parameters, ct).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Get Open Strategy Order
+
+        /// <inheritdoc />
+        public async Task<HttpResult<AsterStrategyOrder>> GetOpenStrategyOrderAsync(
+            StrategyType strategyType,
+            long? strategyId = null,
+            string? clientStrategyId = null,
+            CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("strategyId", strategyId);
+            parameters.Add("clientStrategyId", clientStrategyId);
+            parameters.Add("strategyType", strategyType);
+
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "fapi/v3/strategyOpenOrder", AsterExchange.RateLimiter.RestIp, 5, true);
+            return await _baseClient.SendAsync<AsterStrategyOrder>(request, parameters, ct).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Get Closed Strategy Order
+
+        /// <inheritdoc />
+        public async Task<HttpResult<AsterStrategyOrder>> GetClosedStrategyOrderAsync(
+            StrategyType strategyType,
+            long? strategyId = null,
+            string? clientStrategyId = null,
+            CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("strategyId", strategyId);
+            parameters.Add("clientStrategyId", clientStrategyId);
+            parameters.Add("strategyType", strategyType);
+
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "fapi/v3/strategyHistoryOrder", AsterExchange.RateLimiter.RestIp, 5, true);
+            return await _baseClient.SendAsync<AsterStrategyOrder>(request, parameters, ct).ConfigureAwait(false);
+        }
+
+        #endregion
     }
 }

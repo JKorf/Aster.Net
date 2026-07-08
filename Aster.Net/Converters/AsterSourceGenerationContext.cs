@@ -9,6 +9,9 @@ using System.Text.Json.Serialization;
 
 namespace Aster.Net.Converters
 {
+    [JsonSerializable(typeof(AsterStrategyOrder))]
+    [JsonSerializable(typeof(AsterStrategyOrderRequest[]))]
+    [JsonSerializable(typeof(AsterStrategyEditOrderRequest[]))]
     [JsonSerializable(typeof(AsterStrategyOrderResult))]
     [JsonSerializable(typeof(AsterChaseOrder))]
     [JsonSerializable(typeof(AsterAgent[]))]

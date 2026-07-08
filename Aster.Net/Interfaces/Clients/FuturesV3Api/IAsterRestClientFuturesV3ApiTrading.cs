@@ -323,5 +323,82 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
             string? clientOrderId = null,
             CancellationToken ct = default);
 
+        /// <summary>
+        /// Place a new strategy order
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/account%26trades/#place-strategy-order-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/placeStrategyOrder<br />
+        /// </para>
+        /// </summary>
+        /// <param name="strategyType">["<c>strategyType</c>"] Type of strategy</param>
+        /// <param name="orders">["<c>subOrderList</c>"] Order list</param>
+        /// <param name="clientOrderId">["<c>clientStrategyId</c>"] Client strategy order id</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<HttpResult<AsterStrategyOrderResult>> PlaceStrategyOrderAsync(
+            StrategyType strategyType,
+            IEnumerable<AsterStrategyOrderRequest> orders,
+            string? clientOrderId = null,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Edit a strategy order
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/account%26trades/#update-strategy-order-trade" /><br />
+        /// Endpoint:<br />
+        /// POST /fapi/v3/updateStrategyOrder<br />
+        /// </para>
+        /// </summary>
+        /// <param name="strategyId">["<c>strategyId</c>"] Strategy id</param>
+        /// <param name="strategyType">["<c>strategyType</c>"] Type of strategy</param>
+        /// <param name="orders">["<c>subOrderList</c>"] Order list</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<HttpResult<AsterStrategyOrderResult>> EditStrategyOrderAsync(
+            long strategyId,
+            StrategyType strategyType,
+            IEnumerable<AsterStrategyEditOrderRequest> orders,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Get an open strategy order by strategyId or clientStrategyId
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/account%26trades/#query-strategy-open-order-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v3/strategyOpenOrder<br />
+        /// </para>
+        /// </summary>
+        /// <param name="strategyId">["<c>strategyId</c>"] Strategy id</param>
+        /// <param name="clientStrategyId">["<c>clientStrategyId</c>"] Client order strategy id</param>
+        /// <param name="strategyType">["<c>strategyType</c>"] Type of strategy</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<HttpResult<AsterStrategyOrder>> GetOpenStrategyOrderAsync(
+            StrategyType strategyType,
+            long? strategyId = null,
+            string? clientStrategyId = null,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Get a closed strategy order by strategyId or clientStrategyId
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/futures-v3/account%26trades/#query-strategy-history-order-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /fapi/v3/strategyHistoryOrder<br />
+        /// </para>
+        /// </summary>
+        /// <param name="strategyId">["<c>strategyId</c>"] Strategy id</param>
+        /// <param name="clientStrategyId">["<c>clientStrategyId</c>"] Client order strategy id</param>
+        /// <param name="strategyType">["<c>strategyType</c>"] Type of strategy</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<HttpResult<AsterStrategyOrder>> GetClosedStrategyOrderAsync(
+            StrategyType strategyType,
+            long? strategyId = null,
+            string? clientStrategyId = null,
+            CancellationToken ct = default);
     }
 }
