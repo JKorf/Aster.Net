@@ -28,20 +28,20 @@ namespace Aster.Net
 
             var timestamp = GetMillisecondTimestamp(apiClient);
             var parameters = request.GetPositionParameters() ?? new Parameters(AsterExchange._parameterSerializationSettings);
-            parameters.Add("timestamp", timestamp);
+            parameters["timestamp"] = timestamp;
 
             if (request.ParameterPosition == HttpMethodParameterPosition.InUri)
             {
                 var queryString = request.GetQueryString();
                 var signature = Sign(queryString);
-                parameters.Add("signature", signature);
+                parameters["signature"] = signature;
                 request.SetQueryString($"{queryString}&signature={signature}");
             }
             else
             {
                 var parameterData = request.BodyParameters?.ToFormData() ?? string.Empty;
                 var signature = Sign(parameterData);
-                parameters.Add("signature", signature);
+                parameters["signature"] = signature;
                 request.SetBodyContent($"{parameterData}&signature={signature}");
             }
         }
