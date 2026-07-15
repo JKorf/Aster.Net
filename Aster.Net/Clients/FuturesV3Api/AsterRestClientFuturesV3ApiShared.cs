@@ -133,7 +133,7 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #region Futures Symbol client
 
-        SharedSymbolCatalog? IFuturesSymbolRestClient.SymbolCatalog => ExchangeSymbolCache.GetSymbolCatalog(_topicId, EnvironmentName, null);
+        SharedSymbolCatalog? IFuturesSymbolRestClient.FuturesSymbolCatalog => ExchangeSymbolCache.GetSymbolCatalog(_topicId, EnvironmentName, null);
         GetFuturesSymbolsOptions IFuturesSymbolRestClient.GetFuturesSymbolsOptions { get; }
             = new GetFuturesSymbolsOptions(_exchangeName, false);
         async Task<HttpResult<SharedFuturesSymbol[]>> IFuturesSymbolRestClient.GetFuturesSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
@@ -177,12 +177,12 @@ namespace Aster.Net.Clients.FuturesV3Api
 
             if (s.UnderlyingSubType.Contains("STOCK"))
             {
-                symbol.BaseAssetType = SharedAssetType.Rwa;
+                symbol.BaseAssetType = SharedAssetType.TradFi;
                 symbol.BaseAssetSubType = SharedAssetSubType.Stock;
             }
             else if (s.UnderlyingSubType.Contains("Commodities"))
             {
-                symbol.BaseAssetType = SharedAssetType.Rwa;
+                symbol.BaseAssetType = SharedAssetType.TradFi;
                 symbol.BaseAssetSubType = SharedAssetSubType.Commodity;
             }
             else
