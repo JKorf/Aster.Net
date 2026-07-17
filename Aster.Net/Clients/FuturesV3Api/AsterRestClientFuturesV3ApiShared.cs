@@ -178,7 +178,7 @@ namespace Aster.Net.Clients.FuturesV3Api
             if (s.UnderlyingSubType.Contains("STOCK"))
             {
                 symbol.BaseAssetType = SharedAssetType.TradFi;
-                symbol.BaseAssetSubType = SharedAssetSubType.Stock;
+                symbol.BaseAssetSubType = SharedAssetSubType.Equity;
             }
             else if (s.UnderlyingSubType.Contains("Commodities"))
             {
