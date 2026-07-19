@@ -111,7 +111,11 @@ namespace Aster.Net.Clients.SpotV3Api
                 MaxTradeQuantity = s.LotSizeFilter?.MaxQuantity,
                 MinNotionalValue = s.MinNotionalFilter?.MinNotional,
                 QuantityStep = s.LotSizeFilter?.StepSize,
-                PriceStep = s.PriceFilter?.TickSize
+                PriceStep = s.PriceFilter?.TickSize,
+                DisplayName = s.Name,
+                QuoteAssetType = SharedAssetType.Crypto,
+                QuoteAssetSubType = SharedAssetSubType.StableCoin,
+                BaseAssetType = SharedAssetType.Crypto
             };
 
             return result;
