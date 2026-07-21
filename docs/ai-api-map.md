@@ -136,12 +136,18 @@ Use this file to route common user intents to the correct Aster.Net client membe
 | Shared spot socket client | `new AsterSocketClient().SpotV3Api.SharedClient` |
 | Shared futures socket client | `new AsterSocketClient().FuturesV3Api.SharedClient` |
 | Shared spot ticker REST | `ISpotTickerRestClient.GetSpotTickerAsync(new GetTickerRequest(symbol))` |
+| Get/filter shared spot symbols | `ISpotSymbolRestClient.GetSpotSymbolsAsync(new GetSymbolsRequest(...))` |
+| Read shared spot symbol catalog | `ISpotSymbolRestClient.SpotSymbolCatalog` after a successful symbol query |
+| Get/filter shared futures symbols | `IFuturesSymbolRestClient.GetFuturesSymbolsAsync(new GetSymbolsRequest(...))` |
+| Read shared futures symbol catalog | `IFuturesSymbolRestClient.FuturesSymbolCatalog` after a successful symbol query |
 | Shared spot order REST | `ISpotOrderRestClient.PlaceSpotOrderAsync(...)` |
 | Shared futures order REST | `IFuturesOrderRestClient.PlaceFuturesOrderAsync(...)` |
 | Shared ticker socket | `ITickerSocketClient.SubscribeToTickerUpdatesAsync(...)` |
 | Shared order book socket | `IOrderBookSocketClient.SubscribeToOrderBookUpdatesAsync(...)` |
 
 For shared socket subscriptions, keep the concrete socket client and unsubscribe with `await socketClient.UnsubscribeAsync(subscription.Data)`.
+
+V3 shared symbol queries apply the asset-type filters in `GetSymbolsRequest` and populate `DisplayName`, base/quote asset types, and subtypes. Spot symbols are classified as crypto with stablecoin quotes; futures stock and commodity underlyings are classified as TradFi equities and commodities. A symbol catalog is unavailable until its corresponding symbol query has completed successfully.
 
 ## Result Handling
 
@@ -166,4 +172,3 @@ For shared socket subscriptions, keep the concrete socket client and unsubscribe
 | Shared socket `UnsubscribeAsync(...)` | Keep the concrete socket client and call `socketClient.UnsubscribeAsync(subscription.Data)` |
 | Custom `clientOrderId` by default | Let Aster.Net auto-generate it |
 | `positionSide` in every futures order | Include only when hedge mode is intended |
-

@@ -4,8 +4,8 @@
 
 Aster.Net is a strongly typed .NET client library for the Aster DEX REST and WebSocket APIs. It is part of the CryptoExchange.Net ecosystem and uses the same result, shared API, logging, rate limiting, and socket patterns as the other JKorf exchange libraries.
 
-Current package version in this repository: 3.2.1.
-CryptoExchange.Net dependency: 11.1.0.
+Current package version in this repository: 4.2.0.
+CryptoExchange.Net dependency: 12.2.0.
 Target frameworks: netstandard2.0, netstandard2.1, net8.0, net9.0, net10.0.
 Native AOT: supported on compatible .NET targets.
 
@@ -373,6 +373,12 @@ if (!ticker.Success)
 
 Console.WriteLine(ticker.Data.LastPrice);
 ```
+
+Shared V3 symbol clients expose richer metadata and catalogs:
+
+- `ISpotSymbolRestClient.GetSpotSymbolsAsync(...)` and `IFuturesSymbolRestClient.GetFuturesSymbolsAsync(...)` apply the asset-type filters in `GetSymbolsRequest`.
+- V1 and V3 shared symbol clients expose `SpotSymbolCatalog` or `FuturesSymbolCatalog`; call the relevant symbol method successfully first because the catalog is unavailable before the initial symbol query.
+- Spot V3 symbols report crypto base assets and stablecoin quote assets. Futures V3 symbols additionally classify stock and commodity underlyings as TradFi equities and commodities. `DisplayName` is populated for both.
 
 Shared WebSocket subscriptions return an `UpdateSubscription` in `.Data`. For shared interface variables, unsubscribe through the concrete socket client:
 

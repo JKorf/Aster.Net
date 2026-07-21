@@ -56,6 +56,8 @@ Store the returned `UpdateSubscription` and unsubscribe on shutdown via `socketC
 
 For code that needs to work across multiple exchanges, use `CryptoExchange.Net.SharedApis` interfaces (`ISpotTickerRestClient`, `ISpotOrderRestClient`, etc.) accessed via `.SharedClient` properties. Prefer `SpotV3Api.SharedClient` and `FuturesV3Api.SharedClient`.
 
+Shared V3 symbol queries support `GetSymbolsRequest` asset-type filters and populate display/asset metadata. `SpotSymbolCatalog` and `FuturesSymbolCatalog` are available only after the corresponding `GetSpotSymbolsAsync(...)` or `GetFuturesSymbolsAsync(...)` call succeeds.
+
 ## Avoid
 
 - Raw `HttpClient` calls to Aster endpoints
@@ -69,4 +71,3 @@ For code that needs to work across multiple exchanges, use `CryptoExchange.Net.S
 ## Reference
 
 For detailed patterns and pitfalls see `AGENTS.md`, `llms.txt`, `docs/ai-api-map.md`, and `Examples/ai-friendly/`.
-
