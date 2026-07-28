@@ -73,7 +73,7 @@ namespace Aster.Net.Clients.FuturesV3Api
                             x.HighPrice,
                             x.LowPrice,
                             x.OpenPrice,
-                            x.Volume))
+                            new SharedOrderQuantity(x.Volume, x.QuoteVolume)))
                    .ToArray(), nextPageRequest);
         }
 
@@ -252,7 +252,13 @@ namespace Aster.Net.Clients.FuturesV3Api
                 return HttpResult.Fail<SharedFuturesTicker>(resultTicker.Result);
 
             return HttpResult.Ok(resultTicker.Result, new SharedFuturesTicker(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, resultTicker.Result.Data.Symbol), resultTicker.Result.Data.Symbol, resultTicker.Result.Data.LastPrice, resultTicker.Result.Data.HighPrice, resultTicker.Result.Data.LowPrice, resultTicker.Result.Data.Volume, resultTicker.Result.Data.PriceChangePercent)
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, resultTicker.Result.Data.Symbol), 
+                resultTicker.Result.Data.Symbol,
+                resultTicker.Result.Data.LastPrice, 
+                resultTicker.Result.Data.HighPrice, 
+                resultTicker.Result.Data.LowPrice, 
+                new SharedOrderQuantity(resultTicker.Result.Data.Volume, resultTicker.Result.Data.QuoteVolume),
+                resultTicker.Result.Data.PriceChangePercent)
             {
                 MarkPrice = resultMarkPrice.Result.Data.MarkPrice,
                 IndexPrice = resultMarkPrice.Result.Data.IndexPrice,
@@ -279,7 +285,14 @@ namespace Aster.Net.Clients.FuturesV3Api
             return HttpResult.Ok(resultTickers.Result, resultTickers.Result.Data.Select(x =>
             {
                 var markPrice = resultMarkPrices.Result.Data.SingleOrDefault(p => p.Symbol == x.Symbol);
-                return new SharedFuturesTicker(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol, x.LastPrice, x.HighPrice, x.LowPrice, x.Volume, x.PriceChangePercent)
+                return new SharedFuturesTicker(
+                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
+                    x.Symbol,
+                    x.LastPrice,
+                    x.HighPrice,
+                    x.LowPrice,
+                    new SharedOrderQuantity(x.Volume, x.QuoteVolume),
+                    x.PriceChangePercent)
                 {
                     IndexPrice = markPrice?.IndexPrice,
                     MarkPrice = markPrice?.MarkPrice,
@@ -334,7 +347,7 @@ namespace Aster.Net.Clients.FuturesV3Api
                 return HttpResult.Fail<SharedTrade[]>(result);
 
             return HttpResult.Ok(result, result.Data.Select(x => new SharedTrade(
-                request.Symbol, symbol, x.BaseQuantity, x.Price, x.TradeTime)
+                request.Symbol, symbol, new SharedOrderQuantity(x.BaseQuantity, x.QuoteQuantity), x.Price, x.TradeTime)
             {
                 Side = x.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
             }).ToArray());
@@ -872,7 +885,7 @@ namespace Aster.Net.Clients.FuturesV3Api
             return HttpResult.Ok(result,
                 ExchangeHelpers.ApplyFilter(result.Data, x => x.TradeTime, request.StartTime, request.EndTime, direction)
                     .Select(x =>
-                        new SharedTrade(request.Symbol, symbol, x.Quantity, x.Price, x.TradeTime)
+                        new SharedTrade(request.Symbol, symbol, new SharedOrderQuantity(x.Quantity), x.Price, x.TradeTime)
                         {
                             Side = x.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
                         })

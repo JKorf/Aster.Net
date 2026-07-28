@@ -74,7 +74,7 @@ namespace Aster.Net.Clients.SpotApi
                             x.HighPrice,
                             x.LowPrice,
                             x.OpenPrice,
-                            x.Volume))
+                            new SharedOrderQuantity(x.Volume, x.QuoteVolume)))
                    .ToArray(), nextPageRequest);
         }
 
@@ -160,9 +160,16 @@ namespace Aster.Net.Clients.SpotApi
             if (!result.Success)
                 return HttpResult.Fail<SharedSpotTicker>(result);
 
-            return HttpResult.Ok(result, new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, result.Data.Symbol), result.Data.Symbol, result.Data.LastPrice, result.Data.HighPrice, result.Data.LowPrice, result.Data.Volume, result.Data.PriceChangePercent)
+            return HttpResult.Ok(result,
+                new SharedSpotTicker(
+                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, result.Data.Symbol),
+                    result.Data.Symbol, 
+                    result.Data.LastPrice,
+                    result.Data.HighPrice, 
+                    result.Data.LowPrice,
+                    new SharedOrderQuantity(result.Data.Volume, result.Data.QuoteVolume), 
+                    result.Data.PriceChangePercent)
             {
-                QuoteVolume = result.Data.QuoteVolume
             });
         }
 
@@ -178,9 +185,15 @@ namespace Aster.Net.Clients.SpotApi
                 return HttpResult.Fail<SharedSpotTicker[]>(result);
 
             return HttpResult.Ok(result, result.Data.Select(x =>
-                new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol, x.LastPrice, x.HighPrice, x.LowPrice, x.Volume, x.PriceChangePercent)
+                new SharedSpotTicker(
+                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), 
+                    x.Symbol,
+                    x.LastPrice,
+                    x.HighPrice,
+                    x.LowPrice,
+                    new SharedOrderQuantity(x.Volume, x.QuoteVolume), 
+                    x.PriceChangePercent)
                 {
-                    QuoteVolume = x.QuoteVolume
                 }).ToArray());
         }
 
@@ -230,7 +243,7 @@ namespace Aster.Net.Clients.SpotApi
 
             // Return
             return HttpResult.Ok(result, result.Data.Select(x => 
-            new SharedTrade(request.Symbol, symbol, x.BaseQuantity, x.Price, x.TradeTime)
+            new SharedTrade(request.Symbol, symbol, new SharedOrderQuantity(x.BaseQuantity), x.Price, x.TradeTime)
             {
                 Side = x.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
             }).ToArray());
@@ -277,7 +290,7 @@ namespace Aster.Net.Clients.SpotApi
             // Return
             return HttpResult.Ok(result, ExchangeHelpers.ApplyFilter(result.Data, x => x.TradeTime, request.StartTime, request.EndTime, direction)
                     .Select(x => 
-                        new SharedTrade(request.Symbol, symbol, x.Quantity, x.Price, x.TradeTime)
+                        new SharedTrade(request.Symbol, symbol, new SharedOrderQuantity(x.Quantity), x.Price, x.TradeTime)
                         {
                             Side = x.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
                         })

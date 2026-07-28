@@ -104,6 +104,7 @@ namespace Aster.Net
                 symbol,
                 limit,
                 period,
+                TradeQuantityType.BaseAsset,
                 exchangeParameters
                 );
         }

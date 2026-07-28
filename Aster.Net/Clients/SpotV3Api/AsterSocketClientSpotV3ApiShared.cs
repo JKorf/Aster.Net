@@ -33,9 +33,16 @@ namespace Aster.Net.Clients.SpotV3Api
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
-            var result = await SubscribeToTickerUpdatesAsync(update => handler(update.ToType(update.Data.Select(x => new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol, x.LastPrice, x.HighPrice, x.LowPrice, x.Volume, x.PriceChangePercent)
+            var result = await SubscribeToTickerUpdatesAsync(update => handler(update.ToType(update.Data.Select(x => 
+            new SharedSpotTicker(
+                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
+                x.Symbol,
+                x.LastPrice,
+                x.HighPrice, 
+                x.LowPrice,
+                new SharedOrderQuantity(x.Volume, x.QuoteVolume), 
+                x.PriceChangePercent)
             {
-                QuoteVolume = x.QuoteVolume
             }).ToArray())), ct).ConfigureAwait(false);
 
             return result;
@@ -56,10 +63,17 @@ namespace Aster.Net.Clients.SpotV3Api
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
-            var result = await SubscribeToTickerUpdatesAsync(symbols, update => handler(update.ToType(new SharedSpotTicker(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol), update.Data.Symbol, update.Data.LastPrice, update.Data.HighPrice, update.Data.LowPrice, update.Data.Volume, update.Data.PriceChangePercent)
-            {
-                QuoteVolume = update.Data.QuoteVolume
-            })), ct).ConfigureAwait(false);
+            var result = await SubscribeToTickerUpdatesAsync(symbols, update => handler(update.ToType(
+                new SharedSpotTicker(
+                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol),
+                    update.Data.Symbol,
+                    update.Data.LastPrice, 
+                    update.Data.HighPrice,
+                    update.Data.LowPrice,
+                    new SharedOrderQuantity(update.Data.Volume, update.Data.QuoteVolume), 
+                    update.Data.PriceChangePercent)
+                {
+                })), ct).ConfigureAwait(false);
 
             return result;
         }
@@ -82,7 +96,12 @@ namespace Aster.Net.Clients.SpotV3Api
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
             var result = await SubscribeToAggregatedTradeUpdatesAsync(symbols, update => handler(update.ToType(new[] 
             { 
-                new SharedTrade(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol), update.Data.Symbol,update.Data.Quantity, update.Data.Price, update.Data.TradeTime)
+                new SharedTrade(
+                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol), 
+                    update.Data.Symbol,
+                    new SharedOrderQuantity(update.Data.Quantity), 
+                    update.Data.Price, 
+                    update.Data.TradeTime)
             {
                 Side = update.Data.BuyerIsMaker ? SharedOrderSide.Sell : SharedOrderSide.Buy,
             } })), ct).ConfigureAwait(false);
@@ -227,7 +246,15 @@ namespace Aster.Net.Clients.SpotV3Api
 
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
             var result = await SubscribeToKlineUpdatesAsync(symbols, (KlineInterval)request.Interval, update => handler(update.ToType(
-                new SharedKline(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol), update.Data.Symbol, update.Data.Data.OpenTime, update.Data.Data.ClosePrice, update.Data.Data.HighPrice, update.Data.Data.LowPrice, update.Data.Data.OpenPrice, update.Data.Data.Volume))), ct).ConfigureAwait(false);
+                new SharedKline(
+                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol),
+                    update.Data.Symbol, 
+                    update.Data.Data.OpenTime, 
+                    update.Data.Data.ClosePrice,
+                    update.Data.Data.HighPrice, 
+                    update.Data.Data.LowPrice, 
+                    update.Data.Data.OpenPrice,
+                    new SharedOrderQuantity(update.Data.Data.Volume, update.Data.Data.QuoteVolume)))), ct).ConfigureAwait(false);
 
             return result;
         }
