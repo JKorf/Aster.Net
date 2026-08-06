@@ -85,6 +85,56 @@ For information on the clients, dependency injection, response processing and mo
 **NOTE**  
 Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
 
+## Shared / unified API
+
+The CryptoExchange.Net [Shared APIs](https://cryptoexchange.jkorf.dev/client-libs/shared) provide exchange-agnostic, unified interfaces for common operations such as retrieving tickers, order books and balances, placing orders, and subscribing to market updates.
+
+This allows the same application code to work with different exchange libraries. Each Aster API surface exposes its supported shared functionality through a `SharedClient` property. Because support differs between exchanges and API surfaces, call `Discover()` to inspect the available trading modes, environments, endpoints, and subscriptions at runtime.
+
+### Supported shared interfaces
+
+The V1 and V3 API surfaces currently expose the same shared interfaces. The V3 surfaces are recommended for new integrations.
+
+| API | Type | Supported interfaces |
+|--|--|--|
+| `SpotApi` / `SpotV3Api` | REST | `IAssetsRestClient`, `IBalanceRestClient`, `IBookTickerRestClient`, `IFeeRestClient`, `IKlineRestClient`, `IOrderBookRestClient`, `IRecentTradeRestClient`, `ISpotOrderClientIdRestClient`, `ISpotOrderRestClient`, `ISpotSymbolRestClient`, `ISpotTickerRestClient`, `ISpotTriggerOrderRestClient`, `ITradeHistoryRestClient`, `ITransferRestClient` |
+| `SpotApi` / `SpotV3Api` | WebSocket | `IBalanceSocketClient`, `IBookTickerSocketClient`, `IKlineSocketClient`, `IOrderBookSocketClient`, `ISpotOrderSocketClient`, `ITickerSocketClient`, `ITickersSocketClient`, `ITradeSocketClient` |
+| `FuturesApi` / `FuturesV3Api` | REST | `IBalanceRestClient`, `IBookTickerRestClient`, `IFeeRestClient`, `IFundingRateRestClient`, `IFuturesOrderClientIdRestClient`, `IFuturesOrderRestClient`, `IFuturesSymbolRestClient`, `IFuturesTickerRestClient`, `IFuturesTpSlRestClient`, `IFuturesTriggerOrderRestClient`, `IIndexPriceKlineRestClient`, `IKlineRestClient`, `ILeverageRestClient`, `IMarkPriceKlineRestClient`, `IOrderBookRestClient`, `IPositionModeRestClient`, `IRecentTradeRestClient`, `ITradeHistoryRestClient` |
+| `FuturesApi` / `FuturesV3Api` | WebSocket | `IBalanceSocketClient`, `IBookTickerSocketClient`, `IFuturesOrderSocketClient`, `IKlineSocketClient`, `IOrderBookSocketClient`, `IPositionSocketClient`, `ITickerSocketClient`, `ITickersSocketClient`, `ITradeSocketClient` |
+
+### Discover supported functionality
+
+```csharp
+var sharedClient = new AsterRestClient().SpotV3Api.SharedClient;
+var clientInfo = sharedClient.Discover();
+
+Console.WriteLine(clientInfo);
+```
+
+### Example
+
+```csharp
+using Aster.Net.Clients;
+using CryptoExchange.Net.SharedApis;
+
+var sharedClient = new AsterRestClient().SpotV3Api.SharedClient;
+ISpotTickerRestClient tickerClient = sharedClient;
+
+var symbol = new SharedSymbol(TradingMode.Spot, "ETH", "USDT");
+var result = await tickerClient.GetSpotTickerAsync(
+    new GetTickerRequest(symbol));
+
+if (!result.Success)
+{
+    Console.WriteLine(result.Error);
+    return;
+}
+
+Console.WriteLine(result.Data.LastPrice);
+```
+
+The request and response models belong to `CryptoExchange.Net.SharedApis`, so the same pattern can be used with another exchange's `SharedClient`.
+
 ## AI documentation
 For AI coding assistants and quick onboarding:
 * [AGENTS.md](AGENTS.md) skill-style instructions for Aster.Net usage
@@ -223,11 +273,9 @@ A Discord server is available [here](https://discord.gg/MSpeEtSY8t). For discuss
 Any support is greatly appreciated.
 
 ### Donate
-Make a one time donation in a crypto currency of your choice. If you prefer to donate a currency not listed here please contact me.
-
-**Btc**:  bc1q277a5n54s2l2mzlu778ef7lpkwhjhyvghuv8qf  
-**Eth**:  0xcb1b63aCF9fef2755eBf4a0506250074496Ad5b7   
-**USDT (TRX)**  TKigKeJPXZYyMVDgMyXxMf17MWYia92Rjd 
+Make a one time donation in a crypto currency of your choice. If you prefer to donate in a different currency or network send me a message.
+   
+**USDT (TRX)**  TKigKeJPXZYyMVDgMyXxMf17MWYia92Rjd
 
 ### Sponsor
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
