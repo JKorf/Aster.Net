@@ -2,6 +2,8 @@
 
 [![.NET](https://img.shields.io/github/actions/workflow/status/JKorf/Aster.Net/dotnet.yml?style=for-the-badge)](https://github.com/JKorf/Aster.Net/actions/workflows/dotnet.yml) ![License](https://img.shields.io/github/license/JKorf/Aster.Net?style=for-the-badge) ![Since](https://img.shields.io/badge/since-2025-brightgreen?style=for-the-badge)
 
+[![Docs](https://img.shields.io/badge/Docs-Aster.Net-1b7f50?style=for-the-badge)](https://cryptoexchange.jkorf.dev/docs/exchange-clients?library=Aster.Net)
+
 Aster.Net is a client library for accessing the [Aster DEX REST and Websocket API](https://asterdex.github.io/aster-api-website/futures-v3/general-info/). 
 
 ## Features
@@ -16,6 +18,17 @@ Aster.Net is a client library for accessing the [Aster DEX REST and Websocket AP
 * Support for different environments
 * Easy integration with other exchange clients based on the CryptoExchange.Net base library
 * Native AOT support
+
+## Documentation
+
+The [Aster.Net documentation](https://cryptoexchange.jkorf.dev/docs/exchange-clients?library=Aster.Net) is the main resource for installing, configuring, and using the library.
+
+| Resource | Description |
+|--|--|
+| [Client guide](https://cryptoexchange.jkorf.dev/docs/exchange-clients?library=Aster.Net) | Installation, REST and WebSocket clients, authentication, dependency injection, error handling, and advanced features |
+| [Examples](https://cryptoexchange.jkorf.dev/docs/exchange-clients/examples?library=Aster.Net) | Common REST and WebSocket operations |
+| [API reference](https://cryptoexchange.jkorf.dev/docs/exchange-clients/reference?library=Aster.Net) | Client interfaces, methods, and properties |
+| [Shared API guide](https://cryptoexchange.jkorf.dev/docs/shared-api) | Common interfaces and models for working with multiple exchanges |
 
 ## Supported Frameworks
 The library is targeting both `.NET Standard 2.0` and `.NET Standard 2.1` for optimal compatibility, as well as the latest dotnet versions to use the latest framework features.
@@ -80,14 +93,14 @@ var tickerSubscriptionResult = socketClient.SpotV3Api.SubscribeToTickerUpdatesAs
 });
 ```
 
-For information on the clients, dependency injection, response processing and more see the [documentation](https://cryptoexchange.jkorf.dev/client-libs/getting-started), or have a look at the examples [here](https://github.com/JKorf/Aster.Net/tree/main/Examples) or [here](https://github.com/JKorf/CryptoExchange.Net/tree/master/Examples).
+For more examples and explanations, continue with the [Aster.Net documentation](https://cryptoexchange.jkorf.dev/docs/exchange-clients?library=Aster.Net) or browse the [compilable repository examples](https://github.com/JKorf/Aster.Net/tree/main/Examples).
 
 **NOTE**  
 Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which means that an additional 1bps / 0.01% fee is charged on top of orders placed with the library to fund development. This is entirely optional and can be disabled in the client options by setting `BuilderFeePercentage` to `0` or `null` in the client options.
 
 ## Shared / unified API
 
-The CryptoExchange.Net [Shared APIs](https://cryptoexchange.jkorf.dev/client-libs/shared) provide exchange-agnostic, unified interfaces for common operations such as retrieving tickers, order books and balances, placing orders, and subscribing to market updates.
+The CryptoExchange.Net [Shared APIs](https://cryptoexchange.jkorf.dev/docs/shared-api) provide exchange-agnostic, unified interfaces for common operations such as retrieving tickers, order books and balances, placing orders, and subscribing to market updates.
 
 This allows the same application code to work with different exchange libraries. Each Aster API surface exposes its supported shared functionality through a `SharedClient` property. Because support differs between exchanges and API surfaces, call `Discover()` to inspect the available trading modes, environments, endpoints, and subscriptions at runtime.
 
@@ -177,7 +190,7 @@ var result = await client.FuturesApi.Account.GetBalancesAsync();
 ## CryptoExchange.Net
 Aster.Net is based on the [CryptoExchange.Net](https://github.com/JKorf/CryptoExchange.Net) base library. Other exchange API implementations based on the CryptoExchange.Net base library are available and follow the same logic.
 
-CryptoExchange.Net also allows for [easy access to different exchange API's](https://jkorf.github.io/CryptoExchange.Net#idocs_shared).
+CryptoExchange.Net also provides [shared access to different exchange APIs](https://cryptoexchange.jkorf.dev/docs/shared-api).
 
 |Exchange|Repository|Nuget|
 |--|--|--|
