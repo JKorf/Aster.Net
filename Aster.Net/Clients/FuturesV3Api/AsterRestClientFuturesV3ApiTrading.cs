@@ -82,7 +82,7 @@ namespace Aster.Net.Clients.FuturesV3Api
 
             if (_baseClient.ClientOptions.BuilderFeePercentage > 0
                 && _baseClient.ClientOptions.BuilderAddress != null
-                && AsterUtils._builderFeeSuccess)
+                && AsterUtils._builderFeeStatus.TryGetValue(_baseClient.ApiCredentials?.V3?.Key ?? "", out var status) && status.Success)
             {
                 parameters.Add("builder", _baseClient.ClientOptions.BuilderAddress);
                 parameters.Add("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
@@ -128,7 +128,7 @@ namespace Aster.Net.Clients.FuturesV3Api
                 orderParameters.AddOptionalParameter("priceProtect", order.PriceProtect?.ToString().ToUpper());
                 if (_baseClient.ClientOptions.BuilderFeePercentage > 0
                     && _baseClient.ClientOptions.BuilderAddress != null
-                    && AsterUtils._builderFeeSuccess)
+                    && AsterUtils._builderFeeStatus.TryGetValue(_baseClient.ApiCredentials?.V3?.Key ?? "", out var status) && status.Success)
                 {
                     orderParameters.Add("builder", _baseClient.ClientOptions.BuilderAddress);
                     orderParameters.Add("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);
@@ -495,7 +495,7 @@ namespace Aster.Net.Clients.FuturesV3Api
 
             if (_baseClient.ClientOptions.BuilderFeePercentage > 0
                 && _baseClient.ClientOptions.BuilderAddress != null
-                && AsterUtils._builderFeeSuccess)
+                && AsterUtils._builderFeeStatus.TryGetValue(_baseClient.ApiCredentials?.V3?.Key ?? "", out var status) && status.Success)
             {
                 parameters.Add("builder", _baseClient.ClientOptions.BuilderAddress);
                 parameters.Add("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);

@@ -57,7 +57,7 @@ namespace Aster.Net.Clients.SpotV3Api
             parameters.Add("stopPrice", stopPrice);
             if (_baseClient.ClientOptions.BuilderFeePercentage > 0
                     && _baseClient.ClientOptions.BuilderAddress != null
-                    && AsterUtils._builderFeeSuccess)
+                    && AsterUtils._builderFeeStatus.TryGetValue(_baseClient.ApiCredentials?.V3?.Key ?? "", out var status) && status.Success)
             {
                 parameters.Add("builder", _baseClient.ClientOptions.BuilderAddress);
                 parameters.Add("feeRate", _baseClient.ClientOptions.BuilderFeePercentage / 100);

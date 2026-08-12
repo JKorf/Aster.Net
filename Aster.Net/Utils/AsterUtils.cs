@@ -1,13 +1,11 @@
 ﻿using Aster.Net.Clients;
 using Aster.Net.Clients.FuturesV3Api;
 using CryptoExchange.Net.Objects;
-using CryptoExchange.Net.Objects.Errors;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Aster.Net.Utils
 {
@@ -16,10 +14,7 @@ namespace Aster.Net.Utils
     /// </summary>
     public static class AsterUtils
     {
-        private static readonly SemaphoreSlim _semaphoreBuilderFee = new SemaphoreSlim(1, 1);
-        private static bool _checkedBuilderFee = false;
-        // We should only send builder credentials if the check has succeeded
-        internal static bool _builderFeeSuccess = false;
+        internal static readonly ConcurrentDictionary<string, BuilderFeeStatus> _builderFeeStatus = new ConcurrentDictionary<string, BuilderFeeStatus>();
 
         internal static async Task<CallResult> CheckBuilderFeeAsync(AsterRestClient client)
         {
@@ -28,12 +23,15 @@ namespace Aster.Net.Utils
                 // No (V3) credentials provided, no need to check builder fee
                 return CallResult.Ok();
 
+            var key = futuresV3Api.AuthenticationProvider!.ApiCredentials.V3.Key;
+
             var envName = client.ClientOptions.Environment.Name;
             if (!envName.Equals(TradeEnvironmentNames.Live, StringComparison.Ordinal))
                 return CallResult.Ok();
 
             var options = client.ClientOptions;
-            if(_checkedBuilderFee)
+            var builderStatus = _builderFeeStatus.GetOrAdd(key, (key) => new BuilderFeeStatus());
+            if (builderStatus.Checked)
                 return CallResult.Ok();
 
             if (options.BuilderFeePercentage == null
@@ -43,11 +41,11 @@ namespace Aster.Net.Utils
                 return CallResult.Ok();
             }
 
-            await _semaphoreBuilderFee.WaitAsync().ConfigureAwait(false);
+            await builderStatus.Semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 // Set to true even if the check fails to avoid continuously trying to check and approve the builder fee if there's an issue
-                _checkedBuilderFee = true;
+                builderStatus.Checked = true;
 
                 var approvedBuildersResult = await client.FuturesV3Api.Account.GetApprovedBuildersAsync().ConfigureAwait(false);
                 if (!approvedBuildersResult.Success)
@@ -57,21 +55,37 @@ namespace Aster.Net.Utils
                 var targetBps = options.BuilderFeePercentage.Value / 100;
                 if (builder != null && builder.MaxFeeRate >= targetBps)
                 {
-                    // Builder fee is approved, we're good
-                    _builderFeeSuccess = true;
+                    // Builder fee already approved, we're good
+                    builderStatus.Success = true;
                     return CallResult.Ok();
                 }
 
                 var approveResult = await client.FuturesV3Api.Account.ApproveBuilderAsync().ConfigureAwait(false);
                 if (approveResult.Success)
-                    _builderFeeSuccess = true;
+                    builderStatus.Success = true;
 
                 return CallResult.Ok();
             }
             finally
             {
-                _semaphoreBuilderFee.Release();
+                builderStatus.Semaphore.Release();
             }
         }
+    }
+
+    internal class BuilderFeeStatus
+    {
+        /// <summary>
+        /// Whether builder fee was checked
+        /// </summary>
+        public bool Checked { get; set; }
+        /// <summary>
+        /// Whether builder fee is approved and can be applied
+        /// </summary>
+        public bool Success { get; set; }
+        /// <summary>
+        /// Key-specific semaphore
+        /// </summary>
+        public SemaphoreSlim Semaphore { get; set; } = new SemaphoreSlim(1, 1);
     }
 }
