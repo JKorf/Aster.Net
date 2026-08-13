@@ -729,7 +729,7 @@ namespace Aster.Net.Clients.SpotV3Api
             }).ToArray());
         }
 
-        GetAssetOptions IAssetsRestClient.GetAssetOptions { get; } = new GetAssetOptions(_exchangeName, true);
+        GetAssetOptions IAssetsRestClient.GetAssetOptions { get; } = new GetAssetOptions(_exchangeName, false);
         async Task<HttpResult<SharedAsset>> IAssetsRestClient.GetAssetAsync(GetAssetRequest request, CancellationToken ct)
         {
             var validationError = SharedClient.GetAssetOptions.ValidateRequest(request, this);
