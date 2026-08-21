@@ -294,6 +294,11 @@ Make a one time donation in a crypto currency of your choice. If you prefer to d
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Release notes
+* Version 4.4.0 - 21 Aug 2026
+    * Updated to CryptoExchange.Net v12.5.0
+    * Added LowerPriceLimitPercentage, UpperPriceLimitPercentage to SharedFuturesSymbol
+    * Added LowerPriceLimitPercentage, UpperPriceLimitPercentage to SharedSpotSymbol
+
 * Version 4.3.1 - 12 Aug 2026
     * Fixed builder code logic for multi-user
 
