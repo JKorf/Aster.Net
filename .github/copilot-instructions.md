@@ -58,6 +58,8 @@ For code that needs to work across multiple exchanges, use `CryptoExchange.Net.S
 
 Shared V3 symbol queries support `GetSymbolsRequest` asset-type filters and populate display/asset metadata. `SpotSymbolCatalog` and `FuturesSymbolCatalog` are available only after the corresponding `GetSpotSymbolsAsync(...)` or `GetFuturesSymbolsAsync(...)` call succeeds.
 
+Shared book ticker, position, and user trade quantities are `SharedOrderQuantity` values. Read the appropriate `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` property; Aster shared order books declare base-asset quantities.
+
 ## Avoid
 
 - Raw `HttpClient` calls to Aster endpoints

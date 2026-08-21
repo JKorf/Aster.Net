@@ -149,6 +149,8 @@ For shared socket subscriptions, keep the concrete socket client and unsubscribe
 
 V3 shared symbol queries apply the asset-type filters in `GetSymbolsRequest` and populate `DisplayName`, base/quote asset types, and subtypes. Spot symbols are classified as crypto with stablecoin quotes; futures stock and commodity underlyings are classified as TradFi equities and commodities. A symbol catalog is unavailable until its corresponding symbol query has completed successfully.
 
+Shared book ticker, position, and user trade quantities use `SharedOrderQuantity`; read `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` as appropriate. Shared REST and socket order books report `QuantityType` as `SharedQuantityType.BaseAsset`.
+
 ## Result Handling
 
 | Situation | Pattern |

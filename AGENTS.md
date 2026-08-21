@@ -138,6 +138,8 @@ var ticker = await asterShared.GetSpotTickerAsync(new GetTickerRequest(symbol));
 
 Shared symbol clients on both the V1 compatibility and V3 branches expose a symbol catalog. Call `GetSpotSymbolsAsync(...)` or `GetFuturesSymbolsAsync(...)` before reading `SpotSymbolCatalog` or `FuturesSymbolCatalog`; the catalog is unavailable until that initial query. V3 symbol queries also support `GetSymbolsRequest` asset-type filters and populate asset metadata. Spot assets are classified as crypto with stablecoin quotes, while futures can classify stock and commodity underlyings as TradFi equities or commodities.
 
+Shared book ticker, position, and user trade quantities use `SharedOrderQuantity`; read `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` as appropriate instead of treating the value as a `decimal`. Aster shared order books report `QuantityType` as `SharedQuantityType.BaseAsset`.
+
 ## Dependency Injection
 
 ```csharp

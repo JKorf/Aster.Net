@@ -86,6 +86,8 @@ Same pattern works against `BinanceRestClient().SpotApi.SharedClient`, `OKXRestC
 
 For shared V3 symbol discovery, use `ISpotSymbolRestClient.GetSpotSymbolsAsync(...)` or `IFuturesSymbolRestClient.GetFuturesSymbolsAsync(...)`. These methods honor `GetSymbolsRequest` asset-type filters and populate display/asset metadata. Only read `SpotSymbolCatalog` or `FuturesSymbolCatalog` after the corresponding symbol query has succeeded.
 
+Shared book ticker, position, and user trade quantities use `SharedOrderQuantity`; select `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` instead of treating them as `decimal`. Aster shared order books use `SharedQuantityType.BaseAsset`.
+
 ## Hard rules
 
 - Never write raw `HttpClient` to Aster endpoints.
