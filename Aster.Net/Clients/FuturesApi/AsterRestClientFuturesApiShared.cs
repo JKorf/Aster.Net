@@ -294,9 +294,9 @@ namespace Aster.Net.Clients.FuturesApi
                 ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, result.Data.Symbol),
                 result.Data.Symbol,
                 result.Data.BestAskPrice,
-                result.Data.BestAskQuantity,
+                new SharedOrderQuantity(result.Data.BestAskQuantity),
                 result.Data.BestBidPrice,
-                result.Data.BestBidQuantity));
+                new SharedOrderQuantity(result.Data.BestBidQuantity)));
         }
 
         #endregion
@@ -520,7 +520,7 @@ namespace Aster.Net.Clients.FuturesApi
                 x.OrderId.ToString(),
                 x.Id.ToString(),
                 x.Buyer ? SharedOrderSide.Buy : SharedOrderSide.Sell,
-                x.Quantity,
+                new SharedOrderQuantity(x.Quantity),
                 x.Price,
                 x.Timestamp)
             {
@@ -574,12 +574,11 @@ namespace Aster.Net.Clients.FuturesApi
                             x.OrderId.ToString(),
                             x.Id.ToString(),
                             x.Buyer ? SharedOrderSide.Buy : SharedOrderSide.Sell,
-                            x.Quantity,
+                            new SharedOrderQuantity(x.Quantity),
                             x.Price,
                             x.Timestamp)
                         {
                             Price = x.Price,
-                            Quantity = x.Quantity,
                             Fee = x.Fee,
                             FeeAsset = x.FeeAsset,
                             Role = x.Maker ? SharedRole.Maker : SharedRole.Taker
@@ -618,15 +617,20 @@ namespace Aster.Net.Clients.FuturesApi
                 return HttpResult.Fail<SharedPosition[]>(result);
 
             var resultTypes = request.Symbol == null && request.TradingMode == null ? SupportedTradingModes : request.Symbol != null ? new[] { request.Symbol!.TradingMode } : new[] { request.TradingMode!.Value };
-            return HttpResult.Ok(result, result.Data.Select(x => new SharedPosition(ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol, Math.Abs(x.PositionAmount), x.UpdateTime)
-            {
-                UnrealizedPnl = x.UnrealizedProfit,
-                LiquidationPrice = x.LiquidationPrice == 0 ? null : x.LiquidationPrice,
-                Leverage = x.Leverage,
-                AverageOpenPrice = x.AverageEntryPrice,
-                PositionMode = x.PositionSide == PositionSide.Both ? SharedPositionMode.OneWay : SharedPositionMode.HedgeMode,
-                PositionSide = x.PositionSide == PositionSide.Both ? (x.PositionAmount >= 0 ? SharedPositionSide.Long : SharedPositionSide.Short) : x.PositionSide == PositionSide.Short ? SharedPositionSide.Short : SharedPositionSide.Long
-            }).ToArray());
+            return HttpResult.Ok(result, result.Data.Select(x => 
+                new SharedPosition(
+                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
+                    x.Symbol, 
+                    new SharedOrderQuantity(Math.Abs(x.PositionAmount)),
+                    x.UpdateTime)
+                {
+                    UnrealizedPnl = x.UnrealizedProfit,
+                    LiquidationPrice = x.LiquidationPrice == 0 ? null : x.LiquidationPrice,
+                    Leverage = x.Leverage,
+                    AverageOpenPrice = x.AverageEntryPrice,
+                    PositionMode = x.PositionSide == PositionSide.Both ? SharedPositionMode.OneWay : SharedPositionMode.HedgeMode,
+                    PositionSide = x.PositionSide == PositionSide.Both ? (x.PositionAmount >= 0 ? SharedPositionSide.Long : SharedPositionSide.Short) : x.PositionSide == PositionSide.Short ? SharedPositionSide.Short : SharedPositionSide.Long
+                }).ToArray());
         }
 
         ClosePositionOptions IFuturesOrderRestClient.ClosePositionOptions { get; }
@@ -811,7 +815,7 @@ namespace Aster.Net.Clients.FuturesApi
             if (!result.Success)
                 return HttpResult.Fail<SharedOrderBook>(result);
 
-            return HttpResult.Ok(result, new SharedOrderBook(result.Data.Asks, result.Data.Bids));
+            return HttpResult.Ok(result, new SharedOrderBook(SharedQuantityType.BaseAsset, result.Data.Asks, result.Data.Bids));
         }
 
         #endregion

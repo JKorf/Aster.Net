@@ -216,9 +216,9 @@ namespace Aster.Net.Clients.SpotApi
                 ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, resultTicker.Data.Symbol),
                 resultTicker.Data.Symbol,
                 resultTicker.Data.BestAskPrice,
-                resultTicker.Data.BestAskQuantity,
+                new SharedOrderQuantity(resultTicker.Data.BestAskQuantity),
                 resultTicker.Data.BestBidPrice,
-                resultTicker.Data.BestBidQuantity));
+                new SharedOrderQuantity(resultTicker.Data.BestBidQuantity)));
         }
 
         #endregion
@@ -313,7 +313,7 @@ namespace Aster.Net.Clients.SpotApi
             if (!result.Success)
                 return HttpResult.Fail<SharedOrderBook>(result);
 
-            return HttpResult.Ok(result, new SharedOrderBook(result.Data.Asks, result.Data.Bids));
+            return HttpResult.Ok(result, new SharedOrderBook(SharedQuantityType.BaseAsset, result.Data.Asks, result.Data.Bids));
         }
 
         #endregion
@@ -525,7 +525,7 @@ namespace Aster.Net.Clients.SpotApi
                 x.OrderId.ToString(),
                 x.Id.ToString(),
                 x.Side == OrderSide.Buy ? SharedOrderSide.Buy : SharedOrderSide.Sell,
-                x.Quantity,
+                new SharedOrderQuantity(x.Quantity),
                 x.Price,
                 x.Timestamp)
             {
@@ -578,7 +578,7 @@ namespace Aster.Net.Clients.SpotApi
                             x.OrderId.ToString(),
                             x.Id.ToString(),
                             x.Buyer ? SharedOrderSide.Buy : SharedOrderSide.Sell,
-                            x.Quantity,
+                            new SharedOrderQuantity(x.Quantity),
                             x.Price,
                             x.Timestamp)
                         {
