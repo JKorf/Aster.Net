@@ -27,6 +27,8 @@ namespace Aster.Net.Clients.FuturesV3Api
     internal partial class AsterRestClientFuturesV3Api : RestApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterRestClientFuturesV3Api
     {
         #region fields 
+        private readonly AsterRestClientFuturesV3SharedApi _sharedApi;
+
         protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.FuturesErrors);
         protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
 
@@ -58,6 +60,8 @@ namespace Aster.Net.Clients.FuturesV3Api
             Account = new AsterRestClientFuturesV3ApiAccount(this);
             ExchangeData = new AsterRestClientFuturesV3ApiExchangeData(_logger, this);
             Trading = new AsterRestClientFuturesV3ApiTrading(_logger, this);
+
+            _sharedApi = new AsterRestClientFuturesV3SharedApi(this);
 
             StandardRequestHeaders = new Dictionary<string, string>
             {
@@ -110,7 +114,8 @@ namespace Aster.Net.Clients.FuturesV3Api
             => AsterExchange.FormatSymbol(baseAsset, quoteAsset, tradingMode, deliverDate);
 
         /// <inheritdoc />
-        public IAsterRestClientFuturesV3ApiShared SharedClient => this;
+        public IAsterRestClientFuturesV3ApiShared SharedClient => _sharedApi;
+        public IAsterRestClientFuturesV3SharedApi SharedApi => _sharedApi;
 
     }
 }

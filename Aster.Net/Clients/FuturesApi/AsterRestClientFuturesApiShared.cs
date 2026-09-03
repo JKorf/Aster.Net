@@ -1,36 +1,50 @@
+using Aster.Net.Clients.FuturesV3Api;
+using Aster.Net.Enums;
+using Aster.Net.Interfaces.Clients.FuturesApi;
+using Aster.Net.Interfaces.Clients.FuturesV3Api;
+using Aster.Net.Objects.Models;
+using CryptoExchange.Net;
+using CryptoExchange.Net.Objects;
+using CryptoExchange.Net.Objects.Errors;
 using CryptoExchange.Net.SharedApis;
 using System;
 using System.Collections.Generic;
-using Aster.Net.Interfaces.Clients.FuturesApi;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CryptoExchange.Net.Objects;
-using System.Linq;
-using Aster.Net.Enums;
-using CryptoExchange.Net;
-using CryptoExchange.Net.Objects.Errors;
-using Aster.Net.Objects.Models;
 
 namespace Aster.Net.Clients.FuturesApi
 {
-    internal partial class AsterRestClientFuturesApi : IAsterRestClientFuturesApiShared
+    internal class AsterRestClientFuturesSharedApi : 
+        SharedApiBase,
+        IAsterRestClientFuturesApiShared,
+        IAsterRestClientFuturesSharedApi
     {
+        private readonly AsterRestClientFuturesApi _api;
+
         private const string _topicId = "AsterFutures";
         private const string _exchangeName = "Aster";
 
-        public TradingMode[] SupportedTradingModes => new[] { TradingMode.PerpetualLinear };
+        public override SharedClientInfo Discover() => SharedUtils.GetClientInfo(AsterExchange.Metadata, this);
 
-        public void SetDefaultExchangeParameter(string key, object value) => ExchangeParameters.SetStaticParameter(Exchange, key, value);
-        public void ResetDefaultExchangeParameters() => ExchangeParameters.ResetStaticParameters();
-        public SharedClientInfo Discover() => SharedUtils.GetClientInfo(AsterExchange.Metadata, this);
+        public AsterRestClientFuturesSharedApi(AsterRestClientFuturesApi api)
+            : base(
+                  SharedTransport.Rest,
+                  api.Exchange,
+                  [TradingMode.PerpetualLinear],
+                  () => api.Authenticated,
+                  api.FormatSymbol)
+        {
+            _api = api;
+        }
 
         #region Klines client
 
-        GetKlinesOptions IKlineRestClient.GetKlinesOptions { get; } = new GetKlinesOptions(_exchangeName, true, true, true, 1000, false);
+        public GetKlinesOptions GetKlinesOptions { get; } = new GetKlinesOptions(_exchangeName, true, true, true, 1000, false);
 
-        async Task<HttpResult<SharedKline[]>> IKlineRestClient.GetKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
+        public async Task<HttpResult<SharedKline[]>> GetKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = SharedClient.GetKlinesOptions.ValidateRequest(request, this);
+            var validationError = GetKlinesOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedKline[]>(Exchange, validationError);
 
@@ -39,7 +53,7 @@ namespace Aster.Net.Clients.FuturesApi
             var limit = request.Limit ?? 1000;
             var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
 
-            var result = await ExchangeData.GetKlinesAsync(
+            var result = await _api.ExchangeData.GetKlinesAsync(
                 symbol,
                 (KlineInterval)request.Interval,
                 startTime: pageParams.StartTime,
@@ -79,11 +93,11 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region Mark Klines client
 
-        GetMarkPriceKlinesOptions IMarkPriceKlineRestClient.GetMarkPriceKlinesOptions { get; } = new GetMarkPriceKlinesOptions(_exchangeName, true, true, true, 1000, false);
+        public GetMarkPriceKlinesOptions GetMarkPriceKlinesOptions { get; } = new GetMarkPriceKlinesOptions(_exchangeName, true, true, true, 1000, false);
 
-        async Task<HttpResult<SharedFuturesKline[]>> IMarkPriceKlineRestClient.GetMarkPriceKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
+        public async Task<HttpResult<SharedFuturesKline[]>> GetMarkPriceKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = SharedClient.GetMarkPriceKlinesOptions.ValidateRequest(request, this);
+            var validationError = GetMarkPriceKlinesOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesKline[]>(Exchange, validationError);
 
@@ -92,7 +106,7 @@ namespace Aster.Net.Clients.FuturesApi
             var limit = request.Limit ?? 1000;
             var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
 
-            var result = await ExchangeData.GetMarkPriceKlinesAsync(
+            var result = await _api.ExchangeData.GetMarkPriceKlinesAsync(
                 symbol,
                 (KlineInterval)request.Interval,
                 startTime: pageParams.StartTime,
@@ -130,17 +144,17 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Futures Symbol client
-        SharedSymbolCatalog? IFuturesSymbolRestClient.FuturesSymbolCatalog => ExchangeSymbolCache.GetSymbolCatalog(_exchangeName, _topicId, EnvironmentName, null);
+        public SharedSymbolCatalog? FuturesSymbolCatalog => ExchangeSymbolCache.GetSymbolCatalog(_exchangeName, _topicId, _api.EnvironmentName, null);
 
-        GetFuturesSymbolsOptions IFuturesSymbolRestClient.GetFuturesSymbolsOptions { get; } 
+        public GetFuturesSymbolsOptions GetFuturesSymbolsOptions { get; } 
             = new GetFuturesSymbolsOptions(_exchangeName, false);
-        async Task<HttpResult<SharedFuturesSymbol[]>> IFuturesSymbolRestClient.GetFuturesSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedFuturesSymbol[]>> GetFuturesSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesSymbolsOptions.ValidateRequest(request, this);
+            var validationError = GetFuturesSymbolsOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesSymbol[]>(Exchange, validationError);
 
-            var result = await ExchangeData.GetExchangeInfoAsync(ct).ConfigureAwait(false);
+            var result = await _api.ExchangeData.GetExchangeInfoAsync(ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedFuturesSymbol[]>(result);
 
@@ -161,61 +175,61 @@ namespace Aster.Net.Clients.FuturesApi
                     DeliveryTime = s.DeliveryDate.Year == 2100 ? null : s.DeliveryDate
                 }).ToArray());
 
-            ExchangeSymbolCache.UpdateSymbolInfo(_topicId, EnvironmentName, null, resultData.Data!);
+            ExchangeSymbolCache.UpdateSymbolInfo(_topicId, _api.EnvironmentName, null, resultData.Data!);
             return resultData;
         }
 
-        async Task<ExchangeCallResult<SharedSymbol[]>> IFuturesSymbolRestClient.GetFuturesSymbolsForBaseAssetAsync(string baseAsset)
+        public async Task<ExchangeCallResult<SharedSymbol[]>> GetFuturesSymbolsForBaseAssetAsync(string baseAsset)
         {
-            if (!ExchangeSymbolCache.HasCached(_topicId, EnvironmentName, null))
+            if (!ExchangeSymbolCache.HasCached(_topicId, _api.EnvironmentName, null))
             {
-                var symbols = await ((IFuturesSymbolRestClient)this).GetFuturesSymbolsAsync(new GetSymbolsRequest()).ConfigureAwait(false);
+                var symbols = await GetFuturesSymbolsAsync(new GetSymbolsRequest(), default).ConfigureAwait(false);
                 if (!symbols.Success)
                     return ExchangeCallResult<SharedSymbol[]>.Fail(Exchange, symbols.Error!);
             }
 
-            return ExchangeCallResult<SharedSymbol[]>.Ok(Exchange, ExchangeSymbolCache.GetSymbolsForBaseAsset(_topicId, EnvironmentName, null, baseAsset));
+            return ExchangeCallResult<SharedSymbol[]>.Ok(Exchange, ExchangeSymbolCache.GetSymbolsForBaseAsset(_topicId, _api.EnvironmentName, null, baseAsset));
         }
 
-        async Task<ExchangeCallResult<bool>> IFuturesSymbolRestClient.SupportsFuturesSymbolAsync(SharedSymbol symbol)
+        public async Task<ExchangeCallResult<bool>> SupportsFuturesSymbolAsync(SharedSymbol symbol)
         {
             if (symbol.TradingMode == TradingMode.Spot)
                 throw new ArgumentException(nameof(symbol), "Spot symbols not allowed");
 
-            if (!ExchangeSymbolCache.HasCached(_topicId, EnvironmentName, null))
+            if (!ExchangeSymbolCache.HasCached(_topicId, _api.EnvironmentName, null))
             {
-                var symbols = await ((IFuturesSymbolRestClient)this).GetFuturesSymbolsAsync(new GetSymbolsRequest()).ConfigureAwait(false);
+                var symbols = await GetFuturesSymbolsAsync(new GetSymbolsRequest(), default).ConfigureAwait(false);
                 if (!symbols.Success)
                     return ExchangeCallResult<bool>.Fail(Exchange, symbols.Error!);
             }
 
-            return ExchangeCallResult<bool>.Ok(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, EnvironmentName, null, symbol));
+            return ExchangeCallResult<bool>.Ok(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, _api.EnvironmentName, null, symbol));
         }
 
-        async Task<ExchangeCallResult<bool>> IFuturesSymbolRestClient.SupportsFuturesSymbolAsync(string symbolName)
+        public async Task<ExchangeCallResult<bool>> SupportsFuturesSymbolAsync(string symbolName)
         {
-            if (!ExchangeSymbolCache.HasCached(_topicId, EnvironmentName, null))
+            if (!ExchangeSymbolCache.HasCached(_topicId, _api.EnvironmentName, null))
             {
-                var symbols = await ((IFuturesSymbolRestClient)this).GetFuturesSymbolsAsync(new GetSymbolsRequest()).ConfigureAwait(false);
+                var symbols = await GetFuturesSymbolsAsync(new GetSymbolsRequest(), default).ConfigureAwait(false);
                 if (!symbols.Success)
                     return ExchangeCallResult<bool>.Fail(Exchange, symbols.Error!);
             }
 
-            return ExchangeCallResult<bool>.Ok(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, EnvironmentName, null, symbolName));
+            return ExchangeCallResult<bool>.Ok(Exchange, ExchangeSymbolCache.SupportsSymbol(_topicId, _api.EnvironmentName, null, symbolName));
         }
         #endregion
 
         #region Ticker client
 
-        GetFuturesTickerOptions IFuturesTickerRestClient.GetFuturesTickerOptions { get; } = new GetFuturesTickerOptions(_exchangeName);
-        async Task<HttpResult<SharedFuturesTicker>> IFuturesTickerRestClient.GetFuturesTickerAsync(GetTickerRequest request, CancellationToken ct)
+        public GetFuturesTickerOptions GetFuturesTickerOptions { get; } = new GetFuturesTickerOptions(_exchangeName);
+        public async Task<HttpResult<SharedFuturesTicker>> GetFuturesTickerAsync(GetTickerRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesTickerOptions.ValidateRequest(request, this);
+            var validationError = GetFuturesTickerOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesTicker>(Exchange, validationError);
 
-            var resultTicker = ExchangeData.GetTickerAsync(request.Symbol!.GetSymbol(FormatSymbol), ct);
-            var resultMarkPrice = ExchangeData.GetMarkPriceAsync(request.Symbol!.GetSymbol(FormatSymbol), ct);
+            var resultTicker = _api.ExchangeData.GetTickerAsync(request.Symbol!.GetSymbol(FormatSymbol), ct);
+            var resultMarkPrice = _api.ExchangeData.GetMarkPriceAsync(request.Symbol!.GetSymbol(FormatSymbol), ct);
             await Task.WhenAll(resultTicker, resultMarkPrice).ConfigureAwait(false);
 
             if (!resultTicker.Result.Success)
@@ -224,7 +238,7 @@ namespace Aster.Net.Clients.FuturesApi
                 return HttpResult.Fail<SharedFuturesTicker>(resultTicker.Result);
 
             return HttpResult.Ok(resultTicker.Result, new SharedFuturesTicker(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, resultTicker.Result.Data.Symbol), 
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, resultTicker.Result.Data.Symbol), 
                 resultTicker.Result.Data.Symbol,
                 resultTicker.Result.Data.LastPrice, 
                 resultTicker.Result.Data.HighPrice, 
@@ -239,15 +253,19 @@ namespace Aster.Net.Clients.FuturesApi
             });
         }
 
-        GetFuturesTickersOptions IFuturesTickerRestClient.GetFuturesTickersOptions { get; } = new GetFuturesTickersOptions(_exchangeName);
-        async Task<HttpResult<SharedFuturesTicker[]>> IFuturesTickerRestClient.GetFuturesTickersAsync(GetTickersRequest request, CancellationToken ct)
+        Task<HttpResult<SharedFuturesTicker[]>> IFuturesTickerRestClient.GetFuturesTickersAsync(GetTickersRequest request, CancellationToken ct)
+            => GetAllFuturesTickersAsync(request, ct);
+        GetAllFuturesTickersOptions IFuturesTickerRestClient.GetFuturesTickersOptions => GetAllFuturesTickersOptions;
+
+        public GetAllFuturesTickersOptions GetAllFuturesTickersOptions { get; } = new GetAllFuturesTickersOptions(_exchangeName);
+        public async Task<HttpResult<SharedFuturesTicker[]>> GetAllFuturesTickersAsync(GetTickersRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesTickersOptions.ValidateRequest(request, this);
+            var validationError = GetAllFuturesTickersOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesTicker[]>(Exchange, validationError);
 
-            var resultTickers = ExchangeData.GetTickersAsync(ct: ct);
-            var resultMarkPrices = ExchangeData.GetMarkPricesAsync(ct: ct);
+            var resultTickers = _api.ExchangeData.GetTickersAsync(ct: ct);
+            var resultMarkPrices = _api.ExchangeData.GetMarkPricesAsync(ct: ct);
             await Task.WhenAll(resultTickers, resultMarkPrices).ConfigureAwait(false);
             if (!resultTickers.Result.Success)
                 return HttpResult.Fail<SharedFuturesTicker[]>(resultTickers.Result);
@@ -258,7 +276,7 @@ namespace Aster.Net.Clients.FuturesApi
             {
                 var markPrice = resultMarkPrices.Result.Data.SingleOrDefault(p => p.Symbol == x.Symbol);
                 return new SharedFuturesTicker(
-                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), 
+                    ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol), 
                     x.Symbol, 
                     x.LastPrice, 
                     x.HighPrice, 
@@ -278,20 +296,20 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region Book Ticker client
 
-        GetBookTickerOptions IBookTickerRestClient.GetBookTickerOptions { get; }
+        public GetBookTickerOptions GetBookTickerOptions { get; }
             = new GetBookTickerOptions(_exchangeName, false);
-        async Task<HttpResult<SharedBookTicker>> IBookTickerRestClient.GetBookTickerAsync(GetBookTickerRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedBookTicker>> GetBookTickerAsync(GetBookTickerRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetBookTickerOptions.ValidateRequest(request, this);
+            var validationError = GetBookTickerOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedBookTicker>(Exchange, validationError);
 
-            var result = await ExchangeData.GetBookTickerAsync(request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
+            var result = await _api.ExchangeData.GetBookTickerAsync(request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedBookTicker>(result);
 
             return HttpResult.Ok(result, new SharedBookTicker(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, result.Data.Symbol),
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, result.Data.Symbol),
                 result.Data.Symbol,
                 result.Data.BestAskPrice,
                 new SharedOrderQuantity(result.Data.BestAskQuantity),
@@ -303,15 +321,15 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region Recent Trade client
 
-        GetRecentTradesOptions IRecentTradeRestClient.GetRecentTradesOptions { get; } = new GetRecentTradesOptions(_exchangeName, 1000, false);
-        async Task<HttpResult<SharedTrade[]>> IRecentTradeRestClient.GetRecentTradesAsync(GetRecentTradesRequest request, CancellationToken ct)
+        public GetRecentTradesOptions GetRecentTradesOptions { get; } = new GetRecentTradesOptions(_exchangeName, 1000, false);
+        public async Task<HttpResult<SharedTrade[]>> GetRecentTradesAsync(GetRecentTradesRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetRecentTradesOptions.ValidateRequest(request, this);
+            var validationError = GetRecentTradesOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedTrade[]>(Exchange, validationError);
 
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
-            var result = await ExchangeData.GetRecentTradesAsync(
+            var result = await _api.ExchangeData.GetRecentTradesAsync(
                 symbol,
                 limit: request.Limit,
                 ct: ct).ConfigureAwait(false);
@@ -329,27 +347,27 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region Futures Order Client
 
-        SharedFeeDeductionType IFuturesOrderRestClient.FuturesFeeDeductionType => SharedFeeDeductionType.AddToCost;
-        SharedFeeAssetType IFuturesOrderRestClient.FuturesFeeAssetType => SharedFeeAssetType.QuoteAsset;
+        public SharedFeeDeductionType FuturesFeeDeductionType => SharedFeeDeductionType.AddToCost;
+        public SharedFeeAssetType FuturesFeeAssetType => SharedFeeAssetType.QuoteAsset;
 
-        SharedOrderType[] IFuturesOrderRestClient.FuturesSupportedOrderTypes { get; } = new[] { SharedOrderType.Limit, SharedOrderType.Market };
-        SharedTimeInForce[] IFuturesOrderRestClient.FuturesSupportedTimeInForce { get; } = new[] { SharedTimeInForce.GoodTillCanceled, SharedTimeInForce.ImmediateOrCancel, SharedTimeInForce.FillOrKill };
-        SharedQuantitySupport IFuturesOrderRestClient.FuturesSupportedOrderQuantity { get; } = new SharedQuantitySupport(
+        public SharedOrderType[] FuturesSupportedOrderTypes { get; } = new[] { SharedOrderType.Limit, SharedOrderType.Market };
+        public SharedTimeInForce[] FuturesSupportedTimeInForce { get; } = new[] { SharedTimeInForce.GoodTillCanceled, SharedTimeInForce.ImmediateOrCancel, SharedTimeInForce.FillOrKill };
+        public SharedQuantitySupport FuturesSupportedOrderQuantity { get; } = new SharedQuantitySupport(
                 SharedQuantityType.BaseAsset,
                 SharedQuantityType.BaseAsset,
                 SharedQuantityType.BaseAsset,
                 SharedQuantityType.BaseAsset);
 
-        string IFuturesOrderRestClient.GenerateClientOrderId() => ExchangeHelpers.RandomString(20);
+        public string GenerateClientOrderId() => ExchangeHelpers.RandomString(20);
 
-        PlaceFuturesOrderOptions IFuturesOrderRestClient.PlaceFuturesOrderOptions { get; } = new PlaceFuturesOrderOptions(_exchangeName, false);
-        async Task<HttpResult<SharedId>> IFuturesOrderRestClient.PlaceFuturesOrderAsync(PlaceFuturesOrderRequest request, CancellationToken ct)
+        public PlaceFuturesOrderOptions PlaceFuturesOrderOptions { get; } = new PlaceFuturesOrderOptions(_exchangeName, false);
+        public async Task<HttpResult<SharedId>> PlaceFuturesOrderAsync(PlaceFuturesOrderRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.PlaceFuturesOrderOptions.ValidateRequest(request, this);
+            var validationError = PlaceFuturesOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedId>(Exchange, validationError);
 
-            var result = await Trading.PlaceOrderAsync(
+            var result = await _api.Trading.PlaceOrderAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 request.Side == SharedOrderSide.Buy ? Enums.OrderSide.Buy : Enums.OrderSide.Sell,
                 request.OrderType == SharedOrderType.Limit ? OrderType.Limit : OrderType.Market,
@@ -366,23 +384,23 @@ namespace Aster.Net.Clients.FuturesApi
             return HttpResult.Ok(result, new SharedId(result.Data.Id.ToString()));
         }
 
-        GetFuturesOrderOptions IFuturesOrderRestClient.GetFuturesOrderOptions { get; } 
+        public GetFuturesOrderOptions GetFuturesOrderOptions { get; } 
             = new GetFuturesOrderOptions(_exchangeName, true);
-        async Task<HttpResult<SharedFuturesOrder>> IFuturesOrderRestClient.GetFuturesOrderAsync(GetOrderRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedFuturesOrder>> GetFuturesOrderAsync(GetOrderRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesOrderOptions.ValidateRequest(request, this);
+            var validationError = GetFuturesOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesOrder>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
                 return HttpResult.Fail<SharedFuturesOrder>(Exchange, ArgumentError.Invalid(nameof(GetOrderRequest.OrderId), "Invalid order id"));
 
-            var order = await Trading.GetOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
+            var order = await _api.Trading.GetOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
             if (!order.Success)
                 return HttpResult.Fail<SharedFuturesOrder>(order);
 
             return HttpResult.Ok(order, new SharedFuturesOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, order.Data.Symbol), order.Data.Symbol,
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, order.Data.Symbol), order.Data.Symbol,
                 order.Data.Id.ToString(),
                 ParseOrderType(order.Data.Type),
                 order.Data.Side == OrderSide.Buy ? SharedOrderSide.Buy : SharedOrderSide.Sell,
@@ -403,21 +421,21 @@ namespace Aster.Net.Clients.FuturesApi
             });
         }
 
-        GetOpenFuturesOrdersOptions IFuturesOrderRestClient.GetOpenFuturesOrdersOptions { get; } 
+        public GetOpenFuturesOrdersOptions GetOpenFuturesOrdersOptions { get; } 
             = new GetOpenFuturesOrdersOptions(_exchangeName, true);
-        async Task<HttpResult<SharedFuturesOrder[]>> IFuturesOrderRestClient.GetOpenFuturesOrdersAsync(GetOpenOrdersRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedFuturesOrder[]>> GetOpenFuturesOrdersAsync(GetOpenOrdersRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetOpenFuturesOrdersOptions.ValidateRequest(request, this);
+            var validationError = GetOpenFuturesOrdersOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesOrder[]>(Exchange, validationError);
 
             var symbol = request.Symbol?.GetSymbol(FormatSymbol);
-            var orders = await Trading.GetOpenOrdersAsync(symbol, ct: ct).ConfigureAwait(false);
+            var orders = await _api.Trading.GetOpenOrdersAsync(symbol, ct: ct).ConfigureAwait(false);
             if (!orders.Success)
                 return HttpResult.Fail<SharedFuturesOrder[]>(orders);
 
             return HttpResult.Ok(orders, orders.Data.Select(x => new SharedFuturesOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol,
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol), x.Symbol,
                 x.Id.ToString(),
                 ParseOrderType(x.Type),
                 x.Side == OrderSide.Buy ? SharedOrderSide.Buy : SharedOrderSide.Sell,
@@ -438,10 +456,10 @@ namespace Aster.Net.Clients.FuturesApi
             }).ToArray());
         }
 
-        GetFuturesClosedOrdersOptions IFuturesOrderRestClient.GetClosedFuturesOrdersOptions { get; } = new GetFuturesClosedOrdersOptions(_exchangeName, true, true, true, 1000);
-        async Task<HttpResult<SharedFuturesOrder[]>> IFuturesOrderRestClient.GetClosedFuturesOrdersAsync(GetClosedOrdersRequest request, PageRequest? pageRequest, CancellationToken ct)
+        public GetFuturesClosedOrdersOptions GetClosedFuturesOrdersOptions { get; } = new GetFuturesClosedOrdersOptions(_exchangeName, true, true, true, 1000);
+        public async Task<HttpResult<SharedFuturesOrder[]>> GetClosedFuturesOrdersAsync(GetClosedOrdersRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = SharedClient.GetClosedFuturesOrdersOptions.ValidateRequest(request, this);
+            var validationError = GetClosedFuturesOrdersOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesOrder[]>(Exchange, validationError);
 
@@ -453,7 +471,7 @@ namespace Aster.Net.Clients.FuturesApi
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
             // Get data
-            var result = await Trading.GetOrdersAsync(
+            var result = await _api.Trading.GetOrdersAsync(
                 symbol,
                 startTime: pageParams.StartTime,
                 endTime: pageParams.EndTime,
@@ -477,7 +495,7 @@ namespace Aster.Net.Clients.FuturesApi
                     ExchangeHelpers.ApplyFilter(result.Data, x => x.CreateTime ?? x.UpdateTime, request.StartTime, request.EndTime, direction)
                     .Where(x => x.Status == OrderStatus.Filled || x.Status == OrderStatus.Canceled || x.Status == OrderStatus.Expired).Select(x =>
                         new SharedFuturesOrder(
-                            ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol,
+                            ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol), x.Symbol,
                             x.Id.ToString(),
                             ParseOrderType(x.Type),
                             x.Side == OrderSide.Buy ? SharedOrderSide.Buy : SharedOrderSide.Sell,
@@ -499,24 +517,24 @@ namespace Aster.Net.Clients.FuturesApi
                     .ToArray(), nextPageRequest);
         }
 
-        GetFuturesOrderTradesOptions IFuturesOrderRestClient.GetFuturesOrderTradesOptions { get; } 
+        public GetFuturesOrderTradesOptions GetFuturesOrderTradesOptions { get; } 
             = new GetFuturesOrderTradesOptions(_exchangeName, true);
-        async Task<HttpResult<SharedUserTrade[]>> IFuturesOrderRestClient.GetFuturesOrderTradesAsync(GetOrderTradesRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedUserTrade[]>> GetFuturesOrderTradesAsync(GetOrderTradesRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesOrderTradesOptions.ValidateRequest(request, this);
+            var validationError = GetFuturesOrderTradesOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedUserTrade[]>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
                 return HttpResult.Fail<SharedUserTrade[]>(Exchange, ArgumentError.Invalid(nameof(GetOrderTradesRequest.OrderId), "Invalid order id"));
 
-            var trades = await Trading.GetUserTradesAsync(request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
+            var trades = await _api.Trading.GetUserTradesAsync(request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
             if (!trades.Success)
                 return HttpResult.Fail<SharedUserTrade[]>(trades);
 
             var orderTrades = trades.Data.Where(x => x.OrderId == orderId);
             return HttpResult.Ok(trades, orderTrades.Select(x => new SharedUserTrade(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol,
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol), x.Symbol,
                 x.OrderId.ToString(),
                 x.Id.ToString(),
                 x.Buyer ? SharedOrderSide.Buy : SharedOrderSide.Sell,
@@ -530,10 +548,14 @@ namespace Aster.Net.Clients.FuturesApi
             }).ToArray());
         }
 
-        GetFuturesUserTradesOptions IFuturesOrderRestClient.GetFuturesUserTradesOptions { get; } = new GetFuturesUserTradesOptions(_exchangeName, true, true, true, 1000);
-        async Task<HttpResult<SharedUserTrade[]>> IFuturesOrderRestClient.GetFuturesUserTradesAsync(GetUserTradesRequest request, PageRequest? pageRequest, CancellationToken ct)
+        Task<HttpResult<SharedUserTrade[]>> IFuturesOrderRestClient.GetFuturesUserTradesAsync(GetUserTradesRequest request, PageRequest? nextPageToken, CancellationToken ct)
+            => GetFuturesUserTradeHistoryAsync(request, nextPageToken, ct);
+        GetFuturesUserTradeHistoryOptions IFuturesOrderRestClient.GetFuturesUserTradesOptions => GetFuturesUserTradeHistoryOptions;
+
+        public GetFuturesUserTradeHistoryOptions GetFuturesUserTradeHistoryOptions { get; } = new GetFuturesUserTradeHistoryOptions(_exchangeName, true, true, true, 1000);
+        public async Task<HttpResult<SharedUserTrade[]>> GetFuturesUserTradeHistoryAsync(GetUserTradesRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesUserTradesOptions.ValidateRequest(request, this);
+            var validationError = GetFuturesUserTradeHistoryOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedUserTrade[]>(Exchange, validationError);
 
@@ -545,7 +567,7 @@ namespace Aster.Net.Clients.FuturesApi
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
             // Get data
-            var result = await Trading.GetUserTradesAsync(
+            var result = await _api.Trading.GetUserTradesAsync(
                 symbol,
                 startTime: pageParams.StartTime,
                 endTime: pageParams.EndTime,
@@ -570,7 +592,7 @@ namespace Aster.Net.Clients.FuturesApi
                     ExchangeHelpers.ApplyFilter(result.Data, x => x.Timestamp, request.StartTime, request.EndTime, direction)
                     .Select(x => 
                         new SharedUserTrade(
-                            ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), x.Symbol,
+                            ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol), x.Symbol,
                             x.OrderId.ToString(),
                             x.Id.ToString(),
                             x.Buyer ? SharedOrderSide.Buy : SharedOrderSide.Sell,
@@ -586,40 +608,40 @@ namespace Aster.Net.Clients.FuturesApi
                     .ToArray(), nextPageRequest);
         }
 
-        CancelFuturesOrderOptions IFuturesOrderRestClient.CancelFuturesOrderOptions { get; }
+        public CancelFuturesOrderOptions CancelFuturesOrderOptions { get; }
             = new CancelFuturesOrderOptions(_exchangeName, true);
-        async Task<HttpResult<SharedId>> IFuturesOrderRestClient.CancelFuturesOrderAsync(CancelOrderRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedId>> CancelFuturesOrderAsync(CancelOrderRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.CancelFuturesOrderOptions.ValidateRequest(request, this);
+            var validationError = CancelFuturesOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
                 return HttpResult.Fail<SharedId>(Exchange, ArgumentError.Invalid(nameof(CancelOrderRequest.OrderId), "Invalid order id"));
 
-            var order = await Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
+            var order = await _api.Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
             if (!order.Success)
                 return HttpResult.Fail<SharedId>(order);
 
             return HttpResult.Ok(order, new SharedId(order.Data.Id.ToString()));
         }
 
-        GetPositionsOptions IFuturesOrderRestClient.GetPositionsOptions { get; }
+        public GetPositionsOptions GetPositionsOptions { get; }
             = new GetPositionsOptions(_exchangeName, true);
-        async Task<HttpResult<SharedPosition[]>> IFuturesOrderRestClient.GetPositionsAsync(GetPositionsRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedPosition[]>> GetPositionsAsync(GetPositionsRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetPositionsOptions.ValidateRequest(request, this);
+            var validationError = GetPositionsOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedPosition[]>(Exchange, validationError);
 
-            var result = await Trading.GetPositionsAsync(symbol: request.Symbol?.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
+            var result = await _api.Trading.GetPositionsAsync(symbol: request.Symbol?.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedPosition[]>(result);
 
             var resultTypes = request.Symbol == null && request.TradingMode == null ? SupportedTradingModes : request.Symbol != null ? new[] { request.Symbol!.TradingMode } : new[] { request.TradingMode!.Value };
             return HttpResult.Ok(result, result.Data.Select(x => 
                 new SharedPosition(
-                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
+                    ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol),
                     x.Symbol, 
                     new SharedOrderQuantity(Math.Abs(x.PositionAmount)),
                     x.UpdateTime)
@@ -633,27 +655,27 @@ namespace Aster.Net.Clients.FuturesApi
                 }).ToArray());
         }
 
-        ClosePositionOptions IFuturesOrderRestClient.ClosePositionOptions { get; }
+        public ClosePositionOptions ClosePositionOptions { get; }
             = new ClosePositionOptions(_exchangeName, true)
         {
-            RequiredOptionalParameters = new List<ParameterDescription>
+            RequiredRequestParameters = new List<ParameterDescription>
             {
                 new ParameterDescription(nameof(ClosePositionRequest.PositionSide), typeof(SharedPositionSide), "The position side to close", SharedPositionSide.Long),
                 new ParameterDescription(nameof(ClosePositionRequest.Quantity), typeof(decimal), "Quantity of the position is required", 0.1m)
             }
         };
-        async Task<HttpResult<SharedId>> IFuturesOrderRestClient.ClosePositionAsync(ClosePositionRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedId>> ClosePositionAsync(ClosePositionRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.ClosePositionOptions.ValidateRequest(request, this);
+            var validationError = ClosePositionOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             var symbol = request.Symbol!.GetSymbol(FormatSymbol);
-            var positionMode = await Account.GetPositionModeAsync().ConfigureAwait(false);
+            var positionMode = await _api.Account.GetPositionModeAsync().ConfigureAwait(false);
             if (!positionMode.Success)
                 return HttpResult.Fail<SharedId>(positionMode);
 
-            var result = await Trading.PlaceOrderAsync(
+            var result = await _api.Trading.PlaceOrderAsync(
                 symbol,
                 request.PositionSide == SharedPositionSide.Long ? OrderSide.Sell : OrderSide.Buy,
                 OrderType.Market,
@@ -711,20 +733,20 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region Futures Client Id Order Client
 
-        GetFuturesOrderByClientOrderIdOptions IFuturesOrderClientIdRestClient.GetFuturesOrderByClientOrderIdOptions { get; } 
+        public GetFuturesOrderByClientOrderIdOptions GetFuturesOrderByClientOrderIdOptions { get; } 
             = new GetFuturesOrderByClientOrderIdOptions(_exchangeName, true);
-        async Task<HttpResult<SharedFuturesOrder>> IFuturesOrderClientIdRestClient.GetFuturesOrderByClientOrderIdAsync(GetOrderRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedFuturesOrder>> GetFuturesOrderByClientOrderIdAsync(GetOrderRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesOrderByClientOrderIdOptions.ValidateRequest(request, this);
+            var validationError = GetFuturesOrderByClientOrderIdOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesOrder>(Exchange, validationError);
 
-            var order = await Trading.GetOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), clientOrderId: request.OrderId, ct: ct).ConfigureAwait(false);
+            var order = await _api.Trading.GetOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), clientOrderId: request.OrderId, ct: ct).ConfigureAwait(false);
             if (!order.Success)
                 return HttpResult.Fail<SharedFuturesOrder>(order);
 
             return HttpResult.Ok(order, new SharedFuturesOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, order.Data.Symbol), order.Data.Symbol,
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, order.Data.Symbol), order.Data.Symbol,
                 order.Data.Id.ToString(),
                 ParseOrderType(order.Data.Type),
                 order.Data.Side == OrderSide.Buy ? SharedOrderSide.Buy : SharedOrderSide.Sell,
@@ -745,15 +767,15 @@ namespace Aster.Net.Clients.FuturesApi
             });
         }
 
-        CancelFuturesOrderByClientOrderIdOptions IFuturesOrderClientIdRestClient.CancelFuturesOrderByClientOrderIdOptions { get; } 
+        public CancelFuturesOrderByClientOrderIdOptions CancelFuturesOrderByClientOrderIdOptions { get; } 
             = new CancelFuturesOrderByClientOrderIdOptions(_exchangeName, true);
-        async Task<HttpResult<SharedId>> IFuturesOrderClientIdRestClient.CancelFuturesOrderByClientOrderIdAsync(CancelOrderRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedId>> CancelFuturesOrderByClientOrderIdAsync(CancelOrderRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.CancelFuturesOrderByClientOrderIdOptions.ValidateRequest(request, this);
+            var validationError = CancelFuturesOrderByClientOrderIdOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedId>(Exchange, validationError);
 
-            var order = await Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), clientOrderId: request.OrderId, ct: ct).ConfigureAwait(false);
+            var order = await _api.Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), clientOrderId: request.OrderId, ct: ct).ConfigureAwait(false);
             if (!order.Success)
                 return HttpResult.Fail<SharedId>(order);
 
@@ -762,17 +784,17 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Leverage client
-        SharedLeverageSettingMode ILeverageRestClient.LeverageSettingType => SharedLeverageSettingMode.PerSymbol;
+        public SharedLeverageSettingMode LeverageSettingType => SharedLeverageSettingMode.PerSymbol;
 
-        GetLeverageOptions ILeverageRestClient.GetLeverageOptions { get; }
+        public GetLeverageOptions GetLeverageOptions { get; }
             = new GetLeverageOptions(_exchangeName, true);
-        async Task<HttpResult<SharedLeverage>> ILeverageRestClient.GetLeverageAsync(GetLeverageRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedLeverage>> GetLeverageAsync(GetLeverageRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetLeverageOptions.ValidateRequest(request, this);
+            var validationError = GetLeverageOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedLeverage>(Exchange, validationError);
 
-            var result = await Trading.GetPositionsAsync(symbol: request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
+            var result = await _api.Trading.GetPositionsAsync(symbol: request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedLeverage>(result);
 
@@ -785,14 +807,14 @@ namespace Aster.Net.Clients.FuturesApi
             });
         }
 
-        SetLeverageOptions ILeverageRestClient.SetLeverageOptions { get; } = new SetLeverageOptions(_exchangeName);
-        async Task<HttpResult<SharedLeverage>> ILeverageRestClient.SetLeverageAsync(SetLeverageRequest request, CancellationToken ct)
+        public SetLeverageOptions SetLeverageOptions { get; } = new SetLeverageOptions(_exchangeName);
+        public async Task<HttpResult<SharedLeverage>> SetLeverageAsync(SetLeverageRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.SetLeverageOptions.ValidateRequest(request, this);
+            var validationError = SetLeverageOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedLeverage>(Exchange, validationError);
 
-            var result = await Account.SetLeverageAsync(symbol: request.Symbol!.GetSymbol(FormatSymbol), (int)request.Leverage, ct: ct).ConfigureAwait(false);
+            var result = await _api.Account.SetLeverageAsync(symbol: request.Symbol!.GetSymbol(FormatSymbol), (int)request.Leverage, ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedLeverage>(result);
 
@@ -801,31 +823,31 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Order Book client
-        GetOrderBookOptions IOrderBookRestClient.GetOrderBookOptions { get; } = new GetOrderBookOptions(_exchangeName, new[] { 5, 10, 20, 50, 100, 500, 1000 }, false);
-        async Task<HttpResult<SharedOrderBook>> IOrderBookRestClient.GetOrderBookAsync(GetOrderBookRequest request, CancellationToken ct)
+        public GetOrderBookOptions GetOrderBookOptions { get; } = new GetOrderBookOptions(_exchangeName, new[] { 5, 10, 20, 50, 100, 500, 1000 }, false);
+        public async Task<HttpResult<SharedOrderBook>> GetOrderBookAsync(GetOrderBookRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetOrderBookOptions.ValidateRequest(request, this);
+            var validationError = GetOrderBookOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedOrderBook>(Exchange, validationError);
 
-            var result = await ExchangeData.GetOrderBookAsync(
+            var result = await _api.ExchangeData.GetOrderBookAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 limit: request.Limit,
                 ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedOrderBook>(result);
 
-            return HttpResult.Ok(result, new SharedOrderBook(SharedQuantityType.BaseAsset, result.Data.Asks, result.Data.Bids));
+            return HttpResult.Ok(result, new SharedOrderBook(SharedQuantityType.BaseAsset, result.Data.LastUpdateId, result.Data.Asks, result.Data.Bids));
         }
 
         #endregion
 
         #region Trade History client
-        GetTradeHistoryOptions ITradeHistoryRestClient.GetTradeHistoryOptions { get; } = new GetTradeHistoryOptions(_exchangeName, true, true, true, 500, false);
+        public GetTradeHistoryOptions GetTradeHistoryOptions { get; } = new GetTradeHistoryOptions(_exchangeName, true, true, true, 500, false);
 
-        async Task<HttpResult<SharedTrade[]>> ITradeHistoryRestClient.GetTradeHistoryAsync(GetTradeHistoryRequest request, PageRequest? pageRequest, CancellationToken ct)
+        public async Task<HttpResult<SharedTrade[]>> GetTradeHistoryAsync(GetTradeHistoryRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = SharedClient.GetTradeHistoryOptions.ValidateRequest(request, this);
+            var validationError = GetTradeHistoryOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedTrade[]>(Exchange, validationError);
 
@@ -837,7 +859,7 @@ namespace Aster.Net.Clients.FuturesApi
                 pageParams.StartTime = null; // If filtering using FromId no timestamps should be set
 
             // Get data
-            var result = await ExchangeData.GetAggregatedTradeHistoryAsync(
+            var result = await _api.ExchangeData.GetAggregatedTradeHistoryAsync(
                 symbol,
                 startTime: pageParams.StartTime,
                 endTime: pageParams.EndTime,
@@ -871,11 +893,11 @@ namespace Aster.Net.Clients.FuturesApi
 
         #region Index Klines client
 
-        GetIndexPriceKlinesOptions IIndexPriceKlineRestClient.GetIndexPriceKlinesOptions { get; } = new GetIndexPriceKlinesOptions(_exchangeName, true, true, true, 1000, false);
+        public GetIndexPriceKlinesOptions GetIndexPriceKlinesOptions { get; } = new GetIndexPriceKlinesOptions(_exchangeName, true, true, true, 1000, false);
 
-        async Task<HttpResult<SharedFuturesKline[]>> IIndexPriceKlineRestClient.GetIndexPriceKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
+        public async Task<HttpResult<SharedFuturesKline[]>> GetIndexPriceKlinesAsync(GetKlinesRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = SharedClient.GetIndexPriceKlinesOptions.ValidateRequest(request, this);
+            var validationError = GetIndexPriceKlinesOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesKline[]>(Exchange, validationError);
 
@@ -884,7 +906,7 @@ namespace Aster.Net.Clients.FuturesApi
             var limit = request.Limit ?? 1000;
             var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, false);
 
-            var result = await ExchangeData.GetIndexPriceKlinesAsync(
+            var result = await _api.ExchangeData.GetIndexPriceKlinesAsync(
                 symbol,
                 (KlineInterval)request.Interval,
                 startTime: pageParams.StartTime,
@@ -922,11 +944,11 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Funding Rate client
-        GetFundingRateHistoryOptions IFundingRateRestClient.GetFundingRateHistoryOptions { get; } = new GetFundingRateHistoryOptions(_exchangeName, true, false, true, 1000, false);
+        public GetFundingRateHistoryOptions GetFundingRateHistoryOptions { get; } = new GetFundingRateHistoryOptions(_exchangeName, true, false, true, 1000, false);
 
-        async Task<HttpResult<SharedFundingRate[]>> IFundingRateRestClient.GetFundingRateHistoryAsync(GetFundingRateHistoryRequest request, PageRequest? pageRequest, CancellationToken ct)
+        public async Task<HttpResult<SharedFundingRate[]>> GetFundingRateHistoryAsync(GetFundingRateHistoryRequest request, PageRequest? pageRequest, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFundingRateHistoryOptions.ValidateRequest(request, this);
+            var validationError = GetFundingRateHistoryOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFundingRate[]>(Exchange, validationError);
 
@@ -936,7 +958,7 @@ namespace Aster.Net.Clients.FuturesApi
             var pageParams = Pagination.GetPaginationParameters(direction, limit, request.StartTime, request.EndTime ?? DateTime.UtcNow, pageRequest, true);
 
             // Get data
-            var result = await ExchangeData.GetFundingRatesAsync(
+            var result = await _api.ExchangeData.GetFundingRatesAsync(
                 symbol,
                 startTime: pageParams.StartTime,
                 endTime: pageParams.EndTime,
@@ -962,15 +984,15 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Balance Client
-        GetBalancesOptions IBalanceRestClient.GetBalancesOptions { get; } = new GetBalancesOptions(_exchangeName, AccountTypeFilter.Futures);
+        public GetBalancesOptions GetBalancesOptions { get; } = new GetBalancesOptions(_exchangeName, AccountTypeFilter.Futures);
 
-        async Task<HttpResult<SharedBalance[]>> IBalanceRestClient.GetBalancesAsync(GetBalancesRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedBalance[]>> GetBalancesAsync(GetBalancesRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetBalancesOptions.ValidateRequest(request, this);
+            var validationError = GetBalancesOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedBalance[]>(Exchange, validationError);
 
-            var result = await Account.GetBalancesAsync(ct: ct).ConfigureAwait(false);
+            var result = await _api.Account.GetBalancesAsync(ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedBalance[]>(result);
 
@@ -985,30 +1007,30 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Position Mode client
-        SharedPositionModeSelection IPositionModeRestClient.PositionModeSettingType => SharedPositionModeSelection.PerAccount;
+        public SharedPositionModeSelection PositionModeSettingType => SharedPositionModeSelection.PerAccount;
 
-        GetPositionModeOptions IPositionModeRestClient.GetPositionModeOptions { get; } = new GetPositionModeOptions(_exchangeName);
-        async Task<HttpResult<SharedPositionModeResult>> IPositionModeRestClient.GetPositionModeAsync(GetPositionModeRequest request, CancellationToken ct)
+        public GetPositionModeOptions GetPositionModeOptions { get; } = new GetPositionModeOptions(_exchangeName);
+        public async Task<HttpResult<SharedPositionModeResult>> GetPositionModeAsync(GetPositionModeRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetPositionModeOptions.ValidateRequest(request, this);
+            var validationError = GetPositionModeOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedPositionModeResult>(Exchange, validationError);
 
-            var result = await Account.GetPositionModeAsync(ct: ct).ConfigureAwait(false);
+            var result = await _api.Account.GetPositionModeAsync(ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedPositionModeResult>(result);
 
             return HttpResult.Ok(result, new SharedPositionModeResult(result.Data.DualPositionMode ? SharedPositionMode.HedgeMode : SharedPositionMode.OneWay));
         }
 
-        SetPositionModeOptions IPositionModeRestClient.SetPositionModeOptions { get; } = new SetPositionModeOptions(_exchangeName);
-        async Task<HttpResult<SharedPositionModeResult>> IPositionModeRestClient.SetPositionModeAsync(SetPositionModeRequest request, CancellationToken ct)
+        public SetPositionModeOptions SetPositionModeOptions { get; } = new SetPositionModeOptions(_exchangeName);
+        public async Task<HttpResult<SharedPositionModeResult>> SetPositionModeAsync(SetPositionModeRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.SetPositionModeOptions.ValidateRequest(request, this);
+            var validationError = SetPositionModeOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedPositionModeResult>(Exchange, validationError);
 
-            var result = await Account.SetPositionModeAsync(request.PositionMode == SharedPositionMode.HedgeMode, ct: ct).ConfigureAwait(false);
+            var result = await _api.Account.SetPositionModeAsync(request.PositionMode == SharedPositionMode.HedgeMode, ct: ct).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<SharedPositionModeResult>(result);
 
@@ -1017,16 +1039,16 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Fee Client
-        GetFeeOptions IFeeRestClient.GetFeeOptions { get; } = new GetFeeOptions(_exchangeName, true);
+        public GetFeeOptions GetFeeOptions { get; } = new GetFeeOptions(_exchangeName, true);
 
-        async Task<HttpResult<SharedFee>> IFeeRestClient.GetFeesAsync(GetFeeRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedFee>> GetFeesAsync(GetFeeRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFeeOptions.ValidateRequest(request, this);
+            var validationError = GetFeeOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFee>(Exchange, validationError);
 
             // Get data
-            var result = await Account.GetUserCommissionRateAsync(
+            var result = await _api.Account.GetUserCommissionRateAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 ct: ct).ConfigureAwait(false);
             if (!result.Success)
@@ -1038,21 +1060,21 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Trigger Order Client
-        PlaceFuturesTriggerOrderOptions IFuturesTriggerOrderRestClient.PlaceFuturesTriggerOrderOptions { get; } = new PlaceFuturesTriggerOrderOptions(_exchangeName, false)
+        public PlaceFuturesTriggerOrderOptions PlaceFuturesTriggerOrderOptions { get; } = new PlaceFuturesTriggerOrderOptions(_exchangeName, false)
         {
-            RequiredOptionalParameters = new List<ParameterDescription>
+            RequiredRequestParameters = new List<ParameterDescription>
             {
                 new ParameterDescription(nameof(PlaceFuturesTriggerOrderRequest.PositionMode), typeof(SharedPositionMode), "PositionMode the account is in", SharedPositionMode.OneWay)
             }
         };
-        async Task<HttpResult<SharedId>> IFuturesTriggerOrderRestClient.PlaceFuturesTriggerOrderAsync(PlaceFuturesTriggerOrderRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedId>> PlaceFuturesTriggerOrderAsync(PlaceFuturesTriggerOrderRequest request, CancellationToken ct)
         {
             var (type, side) = GetTriggerOrderParameters(request.PriceDirection, request.OrderPrice, request.OrderDirection);
-            var validationError = SharedClient.PlaceFuturesTriggerOrderOptions.ValidateRequest(request, this);
+            var validationError = PlaceFuturesTriggerOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedId>(Exchange, validationError);
 
-            var result = await Trading.PlaceOrderAsync(
+            var result = await _api.Trading.PlaceOrderAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 side,
                 type,
@@ -1085,18 +1107,18 @@ namespace Aster.Net.Clients.FuturesApi
             return WorkingType.ContractPrice;
         }
 
-        GetFuturesTriggerOrderOptions IFuturesTriggerOrderRestClient.GetFuturesTriggerOrderOptions { get; }
+        public GetFuturesTriggerOrderOptions GetFuturesTriggerOrderOptions { get; }
             = new GetFuturesTriggerOrderOptions(_exchangeName, true);
-        async Task<HttpResult<SharedFuturesTriggerOrder>> IFuturesTriggerOrderRestClient.GetFuturesTriggerOrderAsync(GetOrderRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedFuturesTriggerOrder>> GetFuturesTriggerOrderAsync(GetOrderRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.GetFuturesTriggerOrderOptions.ValidateRequest(request, this);
+            var validationError = GetFuturesTriggerOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesTriggerOrder>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var id))
                 throw new ArgumentException($"Invalid order id");
 
-            var order = await Trading.GetOrderAsync(
+            var order = await _api.Trading.GetOrderAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 id,
                 ct: ct).ConfigureAwait(false);
@@ -1106,7 +1128,7 @@ namespace Aster.Net.Clients.FuturesApi
             var (orderType, orderDirection) = ParseTriggerDirections(order.Data.Type, order.Data.Side);
             // Return
             return HttpResult.Ok(order, new SharedFuturesTriggerOrder(
-                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, order.Data.Symbol),
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, order.Data.Symbol),
                 order.Data.Symbol,
                 order.Data.Id.ToString(),
                 orderType,
@@ -1143,18 +1165,18 @@ namespace Aster.Net.Clients.FuturesApi
             return SharedTriggerOrderStatus.Unknown;
         }
 
-        CancelFuturesTriggerOrderOptions IFuturesTriggerOrderRestClient.CancelFuturesTriggerOrderOptions { get; } 
+        public CancelFuturesTriggerOrderOptions CancelFuturesTriggerOrderOptions { get; } 
             = new CancelFuturesTriggerOrderOptions(_exchangeName, true);
-        async Task<HttpResult<SharedId>> IFuturesTriggerOrderRestClient.CancelFuturesTriggerOrderAsync(CancelOrderRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedId>> CancelFuturesTriggerOrderAsync(CancelOrderRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.CancelFuturesTriggerOrderOptions.ValidateRequest(request, this);
+            var validationError = CancelFuturesTriggerOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedId>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
                 return HttpResult.Fail<SharedId>(Exchange, ArgumentError.Invalid(nameof(CancelOrderRequest.OrderId), "Invalid order id"));
 
-            var order = await Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
+            var order = await _api.Trading.CancelOrderAsync(request.Symbol!.GetSymbol(FormatSymbol), orderId, ct: ct).ConfigureAwait(false);
             if (!order.Success)
                 return HttpResult.Fail<SharedId>(order);
 
@@ -1220,21 +1242,21 @@ namespace Aster.Net.Clients.FuturesApi
         #endregion
 
         #region Tp/SL Client
-        SetFuturesTpSlOptions IFuturesTpSlRestClient.SetFuturesTpSlOptions { get; } = new SetFuturesTpSlOptions(_exchangeName, true)
+        public SetFuturesTpSlOptions SetFuturesTpSlOptions { get; } = new SetFuturesTpSlOptions(_exchangeName, true)
         {
-            RequiredOptionalParameters = new List<ParameterDescription>
+            RequiredRequestParameters = new List<ParameterDescription>
             {
                 new ParameterDescription(nameof(SetTpSlRequest.PositionMode), typeof(SharedPositionMode), "Position mode the account is in", SharedPositionMode.OneWay)
             },
         };
 
-        async Task<HttpResult<SharedId>> IFuturesTpSlRestClient.SetFuturesTpSlAsync(SetTpSlRequest request, CancellationToken ct)
+        public async Task<HttpResult<SharedId>> SetFuturesTpSlAsync(SetTpSlRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.SetFuturesTpSlOptions.ValidateRequest(request, this);
+            var validationError = SetFuturesTpSlOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedId>(Exchange, validationError);
 
-            var result = await Trading.PlaceOrderAsync(
+            var result = await _api.Trading.PlaceOrderAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 request.PositionSide == SharedPositionSide.Long ? OrderSide.Sell : OrderSide.Buy,
                 request.TpSlSide == SharedTpSlSide.TakeProfit ? OrderType.TakeProfitMarket : OrderType.StopMarket,
@@ -1251,25 +1273,25 @@ namespace Aster.Net.Clients.FuturesApi
             return HttpResult.Ok(result, new SharedId(result.Data.Id.ToString()));
         }
 
-        CancelFuturesTpSlOptions IFuturesTpSlRestClient.CancelFuturesTpSlOptions { get; }
+        public CancelFuturesTpSlOptions CancelFuturesTpSlOptions { get; }
             = new CancelFuturesTpSlOptions(_exchangeName, true)
         {
-            RequiredOptionalParameters = new List<ParameterDescription>
+            RequiredRequestParameters = new List<ParameterDescription>
             {
                 new ParameterDescription(nameof(CancelTpSlRequest.OrderId), typeof(string), "Id of the tp/sl order", "123123")
             }
         };
 
-        async Task<HttpResult<bool>> IFuturesTpSlRestClient.CancelFuturesTpSlAsync(CancelTpSlRequest request, CancellationToken ct)
+        public async Task<HttpResult<bool>> CancelFuturesTpSlAsync(CancelTpSlRequest request, CancellationToken ct)
         {
-            var validationError = SharedClient.CancelFuturesTpSlOptions.ValidateRequest(request, this);
+            var validationError = CancelFuturesTpSlOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<bool>(Exchange, validationError);
 
             if (!long.TryParse(request.OrderId, out var orderId))
                 return HttpResult.Fail<bool>(Exchange, ArgumentError.Invalid(nameof(CancelTpSlRequest.OrderId), "Invalid order id"));
 
-            var result = await Trading.CancelOrderAsync(
+            var result = await _api.Trading.CancelOrderAsync(
                 request.Symbol!.GetSymbol(FormatSymbol),
                 orderId,
                 ct: ct).ConfigureAwait(false);

@@ -40,6 +40,8 @@ namespace Aster.Net.Clients.FuturesV3Api
     internal partial class AsterSocketClientFuturesV3Api : SocketApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterSocketClientFuturesV3Api
     {
         #region fields
+        private readonly AsterSocketClientFuturesV3SharedApi _sharedApi;
+
         protected override ErrorMapping ErrorMapping => AsterErrors.FuturesErrors;
 
         private readonly ILoggerFactory? _loggerFactory;
@@ -74,6 +76,8 @@ namespace Aster.Net.Clients.FuturesV3Api
             base(loggerFactory, AsterExchange.Metadata.Id, options.Environment.FuturesSocketClientAddress!, options, options.FuturesOptions)
         {
             _loggerFactory = loggerFactory;
+
+            _sharedApi = new AsterSocketClientFuturesV3SharedApi(this);
 
             RateLimiter = AsterExchange.RateLimiter.Socket;
 
@@ -570,7 +574,9 @@ namespace Aster.Net.Clients.FuturesV3Api
         }
 
         /// <inheritdoc />
-        public IAsterSocketClientFuturesV3ApiShared SharedClient => this;
+        public IAsterSocketClientFuturesV3ApiShared SharedClient => _sharedApi;
+        /// <inheritdoc />
+        public IAsterSocketClientFuturesV3SharedApi SharedApi => _sharedApi;
 
         /// <inheritdoc />
         public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null)

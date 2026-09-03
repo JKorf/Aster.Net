@@ -13,34 +13,49 @@ using System.Threading.Tasks;
 
 namespace Aster.Net.Clients.FuturesV3Api
 {
-    internal partial class AsterSocketClientFuturesV3Api : IAsterSocketClientFuturesV3ApiShared
+    internal class AsterSocketClientFuturesV3SharedApi :
+        SharedApiBase,
+        IAsterSocketClientFuturesV3ApiShared,
+        IAsterSocketClientFuturesV3SharedApi
     {
+        private readonly AsterSocketClientFuturesV3Api _api;
+
         private const string _topicId = "AsterFutures";
         private const string _exchangeName = "Aster";
 
-        public TradingMode[] SupportedTradingModes => new[] { TradingMode.PerpetualLinear };
+        public override SharedClientInfo Discover() => SharedUtils.GetClientInfo(AsterExchange.Metadata, this);
 
-        public void SetDefaultExchangeParameter(string key, object value) => ExchangeParameters.SetStaticParameter(Exchange, key, value);
-        public void ResetDefaultExchangeParameters() => ExchangeParameters.ResetStaticParameters();
-        public SharedClientInfo Discover() => SharedUtils.GetClientInfo(AsterExchange.Metadata, this);
+        public AsterSocketClientFuturesV3SharedApi(AsterSocketClientFuturesV3Api api)
+            : base(
+                  SharedTransport.Socket,
+                  api.Exchange,
+                  [TradingMode.PerpetualLinear],
+                  () => api.Authenticated,
+                  api.FormatSymbol)
+        {
+            _api = api;
+        }
 
         #region Ticker client
 
-        SubscribeTickerOptions ITickerSocketClient.SubscribeTickerOptions { get; } = new SubscribeTickerOptions(_exchangeName)
+        async Task<WebSocketResult<UpdateSubscription>> ISubscribeTickerSocket.SubscribeToTickerUpdatesAsync(SubscribeTickerRequest request, Action<DataEvent<SharedTicker>> handler, CancellationToken ct)
+            => await SubscribeToTickerUpdatesAsync(request, x => handler(x.ToType<SharedTicker>(x.Data)), ct).ConfigureAwait(false);
+
+        public SubscribeTickerOptions SubscribeTickerOptions { get; } = new SubscribeTickerOptions(_exchangeName)
         {
             SupportsMultipleSymbols = true,
             MaxSymbolCount = 200
         };
-        async Task<WebSocketResult<UpdateSubscription>> ITickerSocketClient.SubscribeToTickerUpdatesAsync(SubscribeTickerRequest request, Action<DataEvent<SharedSpotTicker>> handler, CancellationToken ct)
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(SubscribeTickerRequest request, Action<DataEvent<SharedSpotTicker>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeTickerOptions.ValidateRequest(request, this);
+            var validationError = SubscribeTickerOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
-            var result = await SubscribeToTickerUpdatesAsync(symbols, update => handler(update.ToType(
+            var result = await _api.SubscribeToTickerUpdatesAsync(symbols, update => handler(update.ToType(
                 new SharedSpotTicker(
-                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol),
+                    ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, update.Data.Symbol),
                     update.Data.Symbol,
                     update.Data.LastPrice,
                     update.Data.HighPrice,
@@ -57,18 +72,21 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #region Tickers client
 
-        SubscribeTickersOptions ITickersSocketClient.SubscribeAllTickersOptions { get; } = new SubscribeTickersOptions(_exchangeName);
-        async Task<WebSocketResult<UpdateSubscription>> ITickersSocketClient.SubscribeToAllTickersUpdatesAsync(SubscribeAllTickersRequest request, Action<DataEvent<SharedSpotTicker[]>> handler, CancellationToken ct)
+        async Task<WebSocketResult<UpdateSubscription>> ISubscribeAllTickersSocket.SubscribeToAllTickersUpdatesAsync(SubscribeAllTickersRequest request, Action<DataEvent<SharedTicker[]>> handler, CancellationToken ct)
+            => await SubscribeToAllTickersUpdatesAsync(request, x => handler(x.ToType<SharedTicker[]>(x.Data)), ct).ConfigureAwait(false);
+
+        public SubscribeTickersOptions SubscribeAllTickersOptions { get; } = new SubscribeTickersOptions(_exchangeName);
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToAllTickersUpdatesAsync(SubscribeAllTickersRequest request, Action<DataEvent<SharedSpotTicker[]>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeAllTickersOptions.ValidateRequest(request, this);
+            var validationError = SubscribeAllTickersOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
-            var result = await SubscribeToTickerUpdatesAsync(update =>
+            var result = await _api.SubscribeToTickerUpdatesAsync(update =>
             {
                 handler(update.ToType(update.Data.Select(x => 
                     new SharedSpotTicker(
-                        ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol),
+                        ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol),
                         x.Symbol,
                         x.LastPrice,
                         x.HighPrice,
@@ -86,22 +104,22 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #region Trade client
 
-        SubscribeTradeOptions ITradeSocketClient.SubscribeTradeOptions { get; } 
+        public SubscribeTradeOptions SubscribeTradeOptions { get; } 
             = new SubscribeTradeOptions(_exchangeName, false)
         {
             SupportsMultipleSymbols = true,
             MaxSymbolCount = 200
         };
-        async Task<WebSocketResult<UpdateSubscription>> ITradeSocketClient.SubscribeToTradeUpdatesAsync(SubscribeTradeRequest request, Action<DataEvent<SharedTrade[]>> handler, CancellationToken ct)
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(SubscribeTradeRequest request, Action<DataEvent<SharedTrade[]>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeTradeOptions.ValidateRequest(request, this);
+            var validationError = SubscribeTradeOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
-            var result = await SubscribeToAggregatedTradeUpdatesAsync(symbols, update => handler(update.ToType(new[] { 
+            var result = await _api.SubscribeToAggregatedTradeUpdatesAsync(symbols, update => handler(update.ToType(new[] { 
                 new SharedTrade(
-                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol), 
+                    ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, update.Data.Symbol), 
                     update.Data.Symbol,
                     new SharedOrderQuantity(update.Data.Quantity),
                     update.Data.Price, 
@@ -117,23 +135,23 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #region Book Ticker client
 
-        SubscribeBookTickerOptions IBookTickerSocketClient.SubscribeBookTickerOptions { get; }
+        public SubscribeBookTickerOptions SubscribeBookTickerOptions { get; }
             = new SubscribeBookTickerOptions(_exchangeName, false)
         {
             SupportsMultipleSymbols = true,
             MaxSymbolCount = 200
         };
-        async Task<WebSocketResult<UpdateSubscription>> IBookTickerSocketClient.SubscribeToBookTickerUpdatesAsync(SubscribeBookTickerRequest request, Action<DataEvent<SharedBookTicker>> handler, CancellationToken ct)
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToBookTickerUpdatesAsync(SubscribeBookTickerRequest request, Action<DataEvent<SharedBookTicker>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeBookTickerOptions.ValidateRequest(request, this);
+            var validationError = SubscribeBookTickerOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
-            var result = await SubscribeToBookTickerUpdatesAsync(symbols, update => handler(
+            var result = await _api.SubscribeToBookTickerUpdatesAsync(symbols, update => handler(
                 update.ToType(
                     new SharedBookTicker(
-                        ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol),
+                        ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, update.Data.Symbol),
                         update.Data.Symbol,
                         update.Data.BestAskPrice,
                         new SharedOrderQuantity(update.Data.BestAskQuantity), 
@@ -146,15 +164,15 @@ namespace Aster.Net.Clients.FuturesV3Api
         #endregion
 
         #region Balance client
-        SubscribeBalanceOptions IBalanceSocketClient.SubscribeBalanceOptions { get; } 
+        public SubscribeBalanceOptions SubscribeBalanceOptions { get; } 
             = new SubscribeBalanceOptions(_exchangeName, true);
-        async Task<WebSocketResult<UpdateSubscription>> IBalanceSocketClient.SubscribeToBalanceUpdatesAsync(SubscribeBalancesRequest request, Action<DataEvent<SharedBalance[]>> handler, CancellationToken ct)
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToBalanceUpdatesAsync(SubscribeBalancesRequest request, Action<DataEvent<SharedBalance[]>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeBalanceOptions.ValidateRequest(request, this);
+            var validationError = SubscribeBalanceOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
-            var result = await SubscribeToUserDataUpdatesAsync(
+            var result = await _api.SubscribeToUserDataUpdatesAsync(
                 onAccountUpdate: update => handler(update.ToType(update.Data.UpdateData.Balances.Select(x => 
                     new SharedBalance(
                         SupportedTradingModes,
@@ -170,18 +188,21 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         #region Futures Order client
 
-        SubscribeFuturesOrderOptions IFuturesOrderSocketClient.SubscribeFuturesOrderOptions { get; }
-            = new SubscribeFuturesOrderOptions(_exchangeName, true);
         async Task<WebSocketResult<UpdateSubscription>> IFuturesOrderSocketClient.SubscribeToFuturesOrderUpdatesAsync(SubscribeFuturesOrderRequest request, Action<DataEvent<SharedFuturesOrder[]>> handler, CancellationToken ct)
+            => await SubscribeToFuturesOrderUpdatesAsync(request, x => handler(x.ToType<SharedFuturesOrder[]>(x.Data)), ct).ConfigureAwait(false);
+
+        public SubscribeFuturesOrderOptions SubscribeFuturesOrderOptions { get; }
+            = new SubscribeFuturesOrderOptions(_exchangeName, true);
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToFuturesOrderUpdatesAsync(SubscribeFuturesOrderRequest request, Action<DataEvent<SharedFuturesOrderUpdate[]>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeFuturesOrderOptions.ValidateRequest(request, this);
+            var validationError = SubscribeFuturesOrderOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
-            var result = await SubscribeToUserDataUpdatesAsync(
+            var result = await _api.SubscribeToUserDataUpdatesAsync(
                 onOrderUpdate: update => handler(update.ToType(new[] {
-                    new SharedFuturesOrder(
-                        ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.UpdateData.Symbol), update.Data.UpdateData.Symbol,
+                    new SharedFuturesOrderUpdate(
+                        ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, update.Data.UpdateData.Symbol), update.Data.UpdateData.Symbol,
                         update.Data.UpdateData.OrderId.ToString(),
                         ParseOrderType(update.Data.UpdateData.Type),
                         update.Data.UpdateData.Side == Enums.OrderSide.Buy ? SharedOrderSide.Buy : SharedOrderSide.Sell,
@@ -193,8 +214,10 @@ namespace Aster.Net.Clients.FuturesV3Api
                         OrderQuantity = new SharedOrderQuantity(update.Data.UpdateData.Quantity, contractQuantity: update.Data.UpdateData.Quantity),
                         QuantityFilled = new SharedOrderQuantity(update.Data.UpdateData.AccumulatedQuantityOfFilledTrades, contractQuantity : update.Data.UpdateData.AccumulatedQuantityOfFilledTrades),
                         UpdateTime = update.Data.UpdateData.UpdateTime,
+#pragma warning disable CS0618 // Type or member is obsolete
                         Fee = update.Data.UpdateData.Fee,
                         FeeAsset = update.Data.UpdateData.FeeAsset,
+#pragma warning restore CS0618 // Type or member is obsolete
                         AveragePrice = update.Data.UpdateData.AveragePrice == 0 ? null : update.Data.UpdateData.AveragePrice,
                         PositionSide = update.Data.UpdateData.PositionSide == Enums.PositionSide.Long ? SharedPositionSide.Long : update.Data.UpdateData.PositionSide == Enums.PositionSide.Short ? SharedPositionSide.Short : null,
                         ReduceOnly = update.Data.UpdateData.IsReduce,
@@ -204,7 +227,7 @@ namespace Aster.Net.Clients.FuturesV3Api
                         IsCloseOrder = update.Data.UpdateData.IsClosePositionOrder,
                         LastTrade = update.Data.UpdateData.QuantityOfLastFilledTrade == 0 ? null : 
                             new SharedUserTrade(
-                                ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.UpdateData.Symbol),
+                                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, update.Data.UpdateData.Symbol),
                                 update.Data.UpdateData.Symbol,
                                 update.Data.UpdateData.OrderId.ToString(), 
                                 update.Data.UpdateData.TradeId.ToString(), 
@@ -248,21 +271,21 @@ namespace Aster.Net.Clients.FuturesV3Api
         #endregion
 
         #region Kline client
-        SubscribeKlineOptions IKlineSocketClient.SubscribeKlineOptions { get; } = new SubscribeKlineOptions(_exchangeName, false)
+        public SubscribeKlineOptions SubscribeKlineOptions { get; } = new SubscribeKlineOptions(_exchangeName, false)
         {
             SupportsMultipleSymbols = true,
             MaxSymbolCount = 200
         };
-        async Task<WebSocketResult<UpdateSubscription>> IKlineSocketClient.SubscribeToKlineUpdatesAsync(SubscribeKlineRequest request, Action<DataEvent<SharedKline>> handler, CancellationToken ct)
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToKlineUpdatesAsync(SubscribeKlineRequest request, Action<DataEvent<SharedKline>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeKlineOptions.ValidateRequest(request, this);
+            var validationError = SubscribeKlineOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
-            var result = await SubscribeToKlineUpdatesAsync(symbols, (KlineInterval)request.Interval, update => handler(update.ToType(
+            var result = await _api.SubscribeToKlineUpdatesAsync(symbols, (KlineInterval)request.Interval, update => handler(update.ToType(
                 new SharedKline(
-                    ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, update.Data.Symbol),
+                    ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, update.Data.Symbol),
                     update.Data.Symbol,
                     update.Data.Data.OpenTime,
                     update.Data.Data.ClosePrice, 
@@ -276,40 +299,40 @@ namespace Aster.Net.Clients.FuturesV3Api
         #endregion
 
         #region Order Book client
-        SubscribeOrderBookOptions IOrderBookSocketClient.SubscribeOrderBookOptions { get; } = new SubscribeOrderBookOptions(_exchangeName, false, new[] { 5, 10, 20 })
+        public SubscribeOrderBookOptions SubscribeOrderBookOptions { get; } = new SubscribeOrderBookOptions(_exchangeName, false, new[] { 5, 10, 20 })
         {
             SupportsMultipleSymbols = true,
             MaxSymbolCount = 200
         };
-        async Task<WebSocketResult<UpdateSubscription>> IOrderBookSocketClient.SubscribeToOrderBookUpdatesAsync(SubscribeOrderBookRequest request, Action<DataEvent<SharedOrderBook>> handler, CancellationToken ct)
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(SubscribeOrderBookRequest request, Action<DataEvent<SharedOrderBook>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribeOrderBookOptions.ValidateRequest(request, this);
+            var validationError = SubscribeOrderBookOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
             var symbols = request.Symbols?.Length > 0 ? request.Symbols.Select(x => x.GetSymbol(FormatSymbol)).ToArray() : [request.Symbol!.GetSymbol(FormatSymbol)];
-            var result = await SubscribeToPartialOrderBookUpdatesAsync(symbols, request.Limit ?? 20, 100, update => handler(
+            var result = await _api.SubscribeToPartialOrderBookUpdatesAsync(symbols, request.Limit ?? 20, 100, update => handler(
                 update.ToType(
-                    new SharedOrderBook(SharedQuantityType.BaseAsset, update.Data.Asks, update.Data.Bids))), ct).ConfigureAwait(false);
+                    new SharedOrderBook(SharedQuantityType.BaseAsset, update.Data.LastUpdateId, update.Data.Asks, update.Data.Bids))), ct).ConfigureAwait(false);
 
             return result;
         }
         #endregion
 
         #region Position client
-        SubscribePositionOptions IPositionSocketClient.SubscribePositionOptions { get; } 
+        public SubscribePositionOptions SubscribePositionOptions { get; } 
             = new SubscribePositionOptions(_exchangeName, true);
-        async Task<WebSocketResult<UpdateSubscription>> IPositionSocketClient.SubscribeToPositionUpdatesAsync(SubscribePositionRequest request, Action<DataEvent<SharedPosition[]>> handler, CancellationToken ct)
+        public async Task<WebSocketResult<UpdateSubscription>> SubscribeToPositionUpdatesAsync(SubscribePositionRequest request, Action<DataEvent<SharedPosition[]>> handler, CancellationToken ct)
         {
-            var validationError = SharedClient.SubscribePositionOptions.ValidateRequest(request, this);
+            var validationError = SubscribePositionOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return WebSocketResult.Fail<UpdateSubscription>(_exchangeName, validationError);
 
-            var result = await SubscribeToUserDataUpdatesAsync(
+            var result = await _api.SubscribeToUserDataUpdatesAsync(
                 onAccountUpdate: update => handler(
                     update.ToType(update.Data.UpdateData.Positions.Select(x =>
                         new SharedPosition(
-                            ExchangeSymbolCache.ParseSymbol(_topicId, EnvironmentName, null, x.Symbol), 
+                            ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol), 
                             x.Symbol,
                             new SharedOrderQuantity(Math.Abs(x.Quantity)),
                             update.Data.EventTime)
