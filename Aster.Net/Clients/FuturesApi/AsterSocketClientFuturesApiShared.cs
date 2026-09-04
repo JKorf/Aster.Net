@@ -34,6 +34,18 @@ namespace Aster.Net.Clients.FuturesApi
                   api.FormatSymbol)
         {
             _api = api;
+
+            SetCapabilities(
+                SubscribeAllTickersOptions,
+                SubscribeTickerOptions,
+                SubscribeTradeOptions,
+                SubscribeBookTickerOptions,
+                SubscribeBalanceOptions,
+                SubscribeFuturesOrderOptions,
+                SubscribeKlineOptions,
+                SubscribeOrderBookOptions,
+                SubscribePositionOptions
+                );
         }
 
         #region Ticker client

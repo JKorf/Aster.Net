@@ -102,6 +102,7 @@ namespace Aster.Net.Clients.FuturesApi
 
         /// <inheritdoc />
         public IAsterRestClientFuturesApiShared SharedClient => _sharedApi;
+        /// <inheritdoc />
         public IAsterRestClientFuturesSharedApi SharedApi => _sharedApi;
 
     }

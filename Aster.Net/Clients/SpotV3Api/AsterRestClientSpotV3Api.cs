@@ -27,6 +27,8 @@ namespace Aster.Net.Clients.SpotV3Api
     internal partial class AsterRestClientSpotV3Api : RestApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterRestClientSpotV3Api
     {
         #region fields 
+        private readonly AsterRestClientSpotV3SharedApi _sharedApi;
+
         protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.SpotErrors);
         protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
         internal AsterRestClient BaseClient { get; set; }
@@ -59,6 +61,8 @@ namespace Aster.Net.Clients.SpotV3Api
             Account = new AsterRestClientSpotV3ApiAccount(this);
             ExchangeData = new AsterRestClientSpotV3ApiExchangeData(_logger, this);
             Trading = new AsterRestClientSpotV3ApiTrading(_logger, this);
+
+            _sharedApi = new AsterRestClientSpotV3SharedApi(this);
 
             RequestBodyEmptyContent = "";
             RequestBodyFormat = RequestBodyFormat.FormData;
@@ -111,6 +115,8 @@ namespace Aster.Net.Clients.SpotV3Api
             => AsterExchange.FormatSymbol(baseAsset, quoteAsset, tradingMode, deliverDate);
 
         /// <inheritdoc />
-        public IAsterRestClientSpotV3ApiShared SharedClient => this;
+        public IAsterRestClientSpotV3ApiShared SharedClient => _sharedApi;
+        /// <inheritdoc />
+        public IAsterRestClientSpotV3SharedApi SharedApi => _sharedApi;
     }
 }

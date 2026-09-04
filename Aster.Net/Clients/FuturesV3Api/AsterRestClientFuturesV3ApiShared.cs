@@ -36,6 +36,42 @@ namespace Aster.Net.Clients.FuturesV3Api
                   api.FormatSymbol)
         {
             _api = api;
+
+            SetCapabilities(
+                GetKlinesOptions,
+                GetMarkPriceKlinesOptions,
+                GetFuturesSymbolsOptions,
+                GetFuturesTickerOptions,
+                GetAllFuturesTickersOptions,
+                GetBookTickerOptions,
+                GetRecentTradesOptions,
+                PlaceFuturesOrderOptions,
+                GetFuturesOrderOptions,
+                GetOpenFuturesOrdersOptions,
+                GetClosedFuturesOrdersOptions,
+                CancelFuturesOrderOptions,
+                GetFuturesOrderTradesOptions,
+                GetFuturesUserTradeHistoryOptions,
+                GetPositionsOptions,
+                ClosePositionOptions,
+                GetFuturesOrderByClientOrderIdOptions,
+                CancelFuturesOrderByClientOrderIdOptions,
+                GetLeverageOptions,
+                SetLeverageOptions,
+                GetOrderBookOptions,
+                GetTradeHistoryOptions,
+                GetIndexPriceKlinesOptions,
+                GetFundingRateHistoryOptions,
+                GetBalancesOptions,
+                GetPositionModeOptions,
+                SetPositionModeOptions,
+                GetFeeOptions,
+                PlaceFuturesTriggerOrderOptions,
+                GetFuturesTriggerOrderOptions,
+                CancelFuturesTriggerOrderOptions,
+                SetFuturesTpSlOptions,
+                CancelFuturesTpSlOptions
+                );
         }
 
         #region Klines client
