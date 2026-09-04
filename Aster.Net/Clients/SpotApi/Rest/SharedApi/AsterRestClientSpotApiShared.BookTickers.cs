@@ -1,0 +1,46 @@
+using Aster.Net.Clients.FuturesApi;
+using Aster.Net.Enums;
+using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Objects.Models;
+using CryptoExchange.Net;
+using CryptoExchange.Net.Objects;
+using CryptoExchange.Net.Objects.Errors;
+using CryptoExchange.Net.SharedApis;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Aster.Net.Clients.SpotApi
+{
+    internal partial class AsterRestClientSpotSharedApi
+    {
+        #region Get Book Ticker
+
+        public GetBookTickerOptions GetBookTickerOptions { get; } = new GetBookTickerOptions(_exchangeName, false);
+        async Task<ICallResult<SharedBookTicker>> IGetBookTicker.GetBookTickerAsync(GetBookTickerRequest request, CancellationToken ct)
+            => await GetBookTickerAsync(request, ct).ConfigureAwait(false);
+
+        public async Task<HttpResult<SharedBookTicker>> GetBookTickerAsync(GetBookTickerRequest request, CancellationToken ct)
+        {
+            var validationError = GetBookTickerOptions.ValidateRequest(request, this);
+            if (validationError != null)
+                return HttpResult.Fail<SharedBookTicker>(Exchange, validationError);
+
+            var resultTicker = await _api.ExchangeData.GetBookTickerAsync(request.Symbol!.GetSymbol(FormatSymbol), ct: ct).ConfigureAwait(false);
+            if (!resultTicker.Success)
+                return HttpResult.Fail<SharedBookTicker>(resultTicker);
+
+            return HttpResult.Ok(resultTicker, new SharedBookTicker(
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, resultTicker.Data.Symbol),
+                resultTicker.Data.Symbol,
+                resultTicker.Data.BestAskPrice,
+                new SharedOrderQuantity(resultTicker.Data.BestAskQuantity),
+                resultTicker.Data.BestBidPrice,
+                new SharedOrderQuantity(resultTicker.Data.BestBidQuantity)));
+        }
+
+        #endregion
+
+    }
+}

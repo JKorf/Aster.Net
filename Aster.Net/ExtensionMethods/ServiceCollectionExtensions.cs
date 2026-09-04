@@ -123,16 +123,27 @@ namespace Microsoft.Extensions.DependencyInjection
                     x.GetRequiredService<IOptions<AsterRestOptions>>(),
                     x.GetRequiredService<IOptions<AsterSocketOptions>>()));
 
+            services.AddTransient<IAsterSharedApiClient, AsterSharedApiClient>();
+
             if (version == "V1")
             {
+                services.RegisterSharedApi(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedApi);
+                services.RegisterSharedApi(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedApi);
+
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedClient);
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedClient);
             }
             else
             {
+                services.RegisterSharedApi(x => x.GetRequiredService<IAsterRestClient>().SpotV3Api.SharedApi);
+                services.RegisterSharedApi(x => x.GetRequiredService<IAsterRestClient>().FuturesV3Api.SharedApi);
+
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotV3Api.SharedClient);
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesV3Api.SharedClient);
             }
+
+            services.RegisterSharedApi(x => x.GetRequiredService<IAsterSocketClient>().SpotV3Api.SharedApi);
+            services.RegisterSharedApi(x => x.GetRequiredService<IAsterSocketClient>().FuturesV3Api.SharedApi);
 
             services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().SpotV3Api.SharedClient);
             services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().FuturesV3Api.SharedClient);
