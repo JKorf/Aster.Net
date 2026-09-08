@@ -21,10 +21,9 @@ namespace Aster.Net.Clients.FuturesApi
 
         public PlaceFuturesTriggerOrderOptions PlaceFuturesTriggerOrderOptions { get; } = new PlaceFuturesTriggerOrderOptions(_exchangeName, false)
         {
-            RequiredRequestParameters = new List<ParameterDescription>
-            {
-                new ParameterDescription(nameof(PlaceFuturesTriggerOrderRequest.PositionMode), typeof(SharedPositionMode), "PositionMode the account is in", SharedPositionMode.OneWay)
-            }
+            ParameterRuleOverwrites = [
+                RequestParameterRuleOverride<PlaceFuturesTriggerOrderRequest>.Required(x => x.PositionMode)
+            ]
         };
         async Task<ICallResult<SharedId>> IPlaceFuturesTriggerOrder.PlaceFuturesTriggerOrderAsync(PlaceFuturesTriggerOrderRequest request, CancellationToken ct)
             => await PlaceFuturesTriggerOrderAsync(request, ct).ConfigureAwait(false);
@@ -45,6 +44,7 @@ namespace Aster.Net.Clients.FuturesApi
                 price: request.OrderPrice,
                 stopPrice: request.TriggerPrice,
                 clientOrderId: request.ClientOrderId,
+                reduceOnly: request.ReduceOnly,
                 positionSide: request.PositionMode == SharedPositionMode.OneWay ? null : request.PositionSide == SharedPositionSide.Long ? PositionSide.Long : PositionSide.Short,
                 workingType: GetWorkingType(request),
                 ct: ct).ConfigureAwait(false);

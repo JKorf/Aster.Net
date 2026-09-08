@@ -40,8 +40,8 @@ namespace Aster.Net.Clients.SpotV3Api
             SetCapabilities(
                 GetKlinesOptions,
                 GetSpotSymbolsOptions,
-                GetSpotTickerOptions,
-                GetAllSpotTickersOptions,
+                GetTickerOptions,
+                GetAllTickersOptions,
                 GetBookTickerOptions,
                 GetRecentTradesOptions,
                 GetTradeHistoryOptions,

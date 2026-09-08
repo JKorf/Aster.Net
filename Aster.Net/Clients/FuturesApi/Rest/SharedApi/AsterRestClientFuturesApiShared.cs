@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Aster.Net.Clients.FuturesApi
 {
-    internal partial class AsterRestClientFuturesSharedApi : 
+    internal partial class AsterRestClientFuturesSharedApi :
         SharedApiBase,
         IAsterRestClientFuturesApiShared,
         IAsterRestClientFuturesSharedApi
@@ -41,8 +41,8 @@ namespace Aster.Net.Clients.FuturesApi
                 GetKlinesOptions,
                 GetMarkPriceKlinesOptions,
                 GetFuturesSymbolsOptions,
-                GetFuturesTickerOptions,
-                GetAllFuturesTickersOptions,
+                GetTickerOptions,
+                GetAllTickersOptions,
                 GetBookTickerOptions,
                 GetRecentTradesOptions,
                 PlaceFuturesOrderOptions,
@@ -53,7 +53,6 @@ namespace Aster.Net.Clients.FuturesApi
                 GetFuturesOrderTradesOptions,
                 GetFuturesUserTradeHistoryOptions,
                 GetPositionsOptions,
-                ClosePositionOptions,
                 GetFuturesOrderByClientOrderIdOptions,
                 CancelFuturesOrderByClientOrderIdOptions,
                 GetLeverageOptions,

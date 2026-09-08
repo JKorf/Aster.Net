@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Aster.Net.Clients.SpotApi
 {
-    internal partial class AsterRestClientSpotSharedApi : 
+    internal partial class AsterRestClientSpotSharedApi :
         SharedApiBase,
         IAsterRestClientSpotApiShared,
         IAsterRestClientSpotSharedApi
@@ -38,8 +38,8 @@ namespace Aster.Net.Clients.SpotApi
             SetCapabilities(
                 GetKlinesOptions,
                 GetSpotSymbolsOptions,
-                GetSpotTickerOptions,
-                GetAllSpotTickersOptions,
+                GetTickerOptions,
+                GetAllTickersOptions,
                 GetBookTickerOptions,
                 GetRecentTradesOptions,
                 GetTradeHistoryOptions,

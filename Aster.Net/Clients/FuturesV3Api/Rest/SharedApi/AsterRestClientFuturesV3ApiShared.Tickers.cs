@@ -1,6 +1,4 @@
-using Aster.Net.Clients.FuturesV3Api;
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
@@ -8,24 +6,38 @@ using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Errors;
 using CryptoExchange.Net.SharedApis;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Aster.Net.Clients.FuturesApi
+namespace Aster.Net.Clients.FuturesV3Api
 {
-    internal partial class AsterRestClientFuturesSharedApi
+    internal partial class AsterRestClientFuturesV3SharedApi
     {
-        #region Get Futures Ticker
+        #region Get Ticker
 
-        public GetFuturesTickerOptions GetFuturesTickerOptions { get; } = new GetFuturesTickerOptions(_exchangeName);
-        async Task<ICallResult<SharedFuturesTicker>> IGetFuturesTicker.GetFuturesTickerAsync(GetTickerRequest request, CancellationToken ct)
-            => await GetFuturesTickerAsync(request, ct).ConfigureAwait(false);
+        async Task<ICallResult<SharedTicker>> IGetTicker.GetTickerAsync(GetTickerRequest request, CancellationToken ct)
+            => await ((IGetTickerRest)this).GetTickerAsync(request, ct).ConfigureAwait(false);
+
+        async Task<HttpResult<SharedTicker>> IGetTickerRest.GetTickerAsync(GetTickerRequest request, CancellationToken ct)
+        {
+            var result = await GetFuturesTickerAsync(request, ct).ConfigureAwait(false);
+            if (!result.Success)
+                return HttpResult.Fail<SharedTicker>(result);
+
+            return HttpResult.Ok<SharedTicker>(result, result.Data);
+        }
+
+        GetTickerOptions IFuturesTickerRestClient.GetFuturesTickerOptions => GetTickerOptions;
+
+        public GetTickerOptions GetTickerOptions { get; } = new GetTickerOptions(_exchangeName);
 
         public async Task<HttpResult<SharedFuturesTicker>> GetFuturesTickerAsync(GetTickerRequest request, CancellationToken ct)
         {
-            var validationError = GetFuturesTickerOptions.ValidateRequest(request, this);
+            var validationError = GetTickerOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesTicker>(Exchange, validationError);
 
@@ -39,10 +51,10 @@ namespace Aster.Net.Clients.FuturesApi
                 return HttpResult.Fail<SharedFuturesTicker>(resultTicker.Result);
 
             return HttpResult.Ok(resultTicker.Result, new SharedFuturesTicker(
-                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, resultTicker.Result.Data.Symbol), 
+                ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, resultTicker.Result.Data.Symbol),
                 resultTicker.Result.Data.Symbol,
-                resultTicker.Result.Data.LastPrice, 
-                resultTicker.Result.Data.HighPrice, 
+                resultTicker.Result.Data.LastPrice,
+                resultTicker.Result.Data.HighPrice,
                 resultTicker.Result.Data.LowPrice,
                 new SharedOrderQuantity(resultTicker.Result.Data.Volume, resultTicker.Result.Data.QuoteVolume),
                 resultTicker.Result.Data.PriceChangePercent)
@@ -56,19 +68,29 @@ namespace Aster.Net.Clients.FuturesApi
 
         #endregion
 
-        #region Get All Futures Tickers
+        #region Get All Tickers
+
+        async Task<ICallResult<SharedTicker[]>> IGetAllTickers.GetAllTickersAsync(GetTickersRequest request, CancellationToken ct)
+            => await ((IGetAllTickersRest)this).GetAllTickersAsync(request, ct).ConfigureAwait(false);
+
+        async Task<HttpResult<SharedTicker[]>> IGetAllTickersRest.GetAllTickersAsync(GetTickersRequest request, CancellationToken ct)
+        {
+            var result = await GetAllFuturesTickersAsync(request, ct).ConfigureAwait(false);
+            if (!result.Success)
+                return HttpResult.Fail<SharedTicker[]>(result);
+
+            return HttpResult.Ok<SharedTicker[]>(result, result.Data);
+        }
 
         Task<HttpResult<SharedFuturesTicker[]>> IFuturesTickerRestClient.GetFuturesTickersAsync(GetTickersRequest request, CancellationToken ct)
             => GetAllFuturesTickersAsync(request, ct);
-        GetAllFuturesTickersOptions IFuturesTickerRestClient.GetFuturesTickersOptions => GetAllFuturesTickersOptions;
+        GetAllTickersOptions IFuturesTickerRestClient.GetFuturesTickersOptions => GetAllTickersOptions;
 
-        public GetAllFuturesTickersOptions GetAllFuturesTickersOptions { get; } = new GetAllFuturesTickersOptions(_exchangeName);
-        async Task<ICallResult<SharedFuturesTicker[]>> IGetAllFuturesTickers.GetAllFuturesTickersAsync(GetTickersRequest request, CancellationToken ct)
-            => await GetAllFuturesTickersAsync(request, ct).ConfigureAwait(false);
+        public GetAllTickersOptions GetAllTickersOptions { get; } = new GetAllTickersOptions(_exchangeName);
 
         public async Task<HttpResult<SharedFuturesTicker[]>> GetAllFuturesTickersAsync(GetTickersRequest request, CancellationToken ct)
         {
-            var validationError = GetAllFuturesTickersOptions.ValidateRequest(request, this);
+            var validationError = GetAllTickersOptions.ValidateRequest(request, this);
             if (validationError != null)
                 return HttpResult.Fail<SharedFuturesTicker[]>(Exchange, validationError);
 
@@ -84,12 +106,12 @@ namespace Aster.Net.Clients.FuturesApi
             {
                 var markPrice = resultMarkPrices.Result.Data.SingleOrDefault(p => p.Symbol == x.Symbol);
                 return new SharedFuturesTicker(
-                    ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol), 
-                    x.Symbol, 
-                    x.LastPrice, 
-                    x.HighPrice, 
+                    ExchangeSymbolCache.ParseSymbol(_topicId, _api.EnvironmentName, null, x.Symbol),
+                    x.Symbol,
+                    x.LastPrice,
+                    x.HighPrice,
                     x.LowPrice,
-                    new SharedOrderQuantity(x.Volume, x.QuoteVolume), 
+                    new SharedOrderQuantity(x.Volume, x.QuoteVolume),
                     x.PriceChangePercent)
                 {
                     IndexPrice = markPrice?.IndexPrice,

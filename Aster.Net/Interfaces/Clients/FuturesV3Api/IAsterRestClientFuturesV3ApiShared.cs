@@ -34,8 +34,8 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
     /// </summary>
     public interface IAsterRestClientFuturesV3SharedApi :
         IGetBalancesRest,
-        IGetFuturesTickerRest,
-        IGetAllFuturesTickersRest,
+        IGetTickerRest,
+        IGetAllTickersRest,
         IGetFuturesSymbolsRest,
         IPlaceFuturesOrderRest,
         IGetFuturesOrderRest,
@@ -45,7 +45,6 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
         IGetFuturesUserTradeHistoryRest,
         ICancelFuturesOrderRest,
         IGetPositionsRest,
-        IClosePositionRest,
         IGetKlinesRest,
         IGetRecentTradesRest,
         IGetTradeHistoryRest,
