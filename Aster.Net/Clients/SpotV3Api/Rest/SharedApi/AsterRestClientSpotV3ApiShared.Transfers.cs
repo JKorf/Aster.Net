@@ -21,7 +21,13 @@ namespace Aster.Net.Clients.SpotV3Api
         public TransferOptions TransferOptions { get; } = new TransferOptions(_exchangeName, [
             SharedAccountType.Spot,
             SharedAccountType.PerpetualLinearFutures
-            ]);
+            ])
+        {
+            ParameterRuleOverwrites = [
+                RequestParameterRuleOverride<TransferRequest>.NotSupported(x => x.FromSymbol),
+                RequestParameterRuleOverride<TransferRequest>.NotSupported(x => x.ToSymbol),
+                ]
+        };
         async Task<ICallResult<SharedId>> ITransfer.TransferAsync(TransferRequest request, CancellationToken ct)
             => await TransferAsync(request, ct).ConfigureAwait(false);
 
