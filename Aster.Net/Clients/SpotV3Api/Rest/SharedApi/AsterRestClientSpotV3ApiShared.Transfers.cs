@@ -23,7 +23,7 @@ namespace Aster.Net.Clients.SpotV3Api
             SharedAccountType.PerpetualLinearFutures
             ])
         {
-            ParameterRuleOverwrites = [
+            ParameterRuleOverrides = [
                 RequestParameterRuleOverride<TransferRequest>.NotSupported(x => x.FromSymbol),
                 RequestParameterRuleOverride<TransferRequest>.NotSupported(x => x.ToSymbol),
                 ]

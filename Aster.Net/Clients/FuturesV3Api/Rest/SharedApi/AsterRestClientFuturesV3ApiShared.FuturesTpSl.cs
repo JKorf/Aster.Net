@@ -21,7 +21,7 @@ namespace Aster.Net.Clients.FuturesV3Api
 
         public SetFuturesTpSlOptions SetFuturesTpSlOptions { get; } = new SetFuturesTpSlOptions(_exchangeName, true)
         {
-            ParameterRuleOverwrites = [
+            ParameterRuleOverrides = [
                 RequestParameterRuleOverride<SetTpSlRequest>.Required(x => x.PositionMode)
             ]
         };
@@ -59,7 +59,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         public CancelFuturesTpSlOptions CancelFuturesTpSlOptions { get; }
             = new CancelFuturesTpSlOptions(_exchangeName, true)
         {
-            ParameterRuleOverwrites = [
+            ParameterRuleOverrides = [
                 RequestParameterRuleOverride<CancelTpSlRequest>.Required(x => x.OrderId)
             ]
         };
