@@ -2,13 +2,14 @@ using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
+using CryptoExchange.Net.SharedApis;
 
 namespace Aster.Net.Interfaces.Clients
 {
     /// <summary>
     /// Client for the shared REST and WebSocket API implementations of Aster
     /// </summary>
-    public interface IAsterSharedApiClient
+    public interface IAsterSharedApiClient : ISharedApiClientBase
     {
         /// <summary>
         /// Spot V1 REST shared API implementations

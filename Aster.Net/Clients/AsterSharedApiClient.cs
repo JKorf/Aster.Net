@@ -3,11 +3,14 @@ using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
+using Aster.Net.Objects.Options;
+using CryptoExchange.Net.SharedApis;
+using Microsoft.Extensions.Options;
 
 namespace Aster.Net.Clients
 {
     /// <inheritdoc />
-    public class AsterSharedApiClient : IAsterSharedApiClient
+    public class AsterSharedApiClient : SharedApiClientBase, IAsterSharedApiClient
     {
         /// <inheritdoc />
         public IAsterRestClientSpotSharedApi SpotRest { get; }
@@ -31,7 +34,19 @@ namespace Aster.Net.Clients
         /// </summary>
         public AsterSharedApiClient(
             IAsterRestClient restClient,
-            IAsterSocketClient socketClient)
+            IAsterSocketClient socketClient,
+            IOptions<AsterOptions> options)
+            : base(options.Value.SharedApi.PreferredTransport,
+                  options.Value.SharedApi.ApiVersion == AsterApiVersion.V1 ?
+                    [restClient.SpotApi.SharedApi,
+                     restClient.FuturesApi.SharedApi,
+                     socketClient.SpotApi.SharedApi,
+                     socketClient.FuturesApi.SharedApi] :
+                    [restClient.SpotV3Api.SharedApi,
+                     restClient.FuturesV3Api.SharedApi,
+                     socketClient.SpotV3Api.SharedApi,
+                     socketClient.FuturesV3Api.SharedApi]
+                  )
         {
             SpotRest = restClient.SpotApi.SharedApi;
             FuturesRest = restClient.FuturesApi.SharedApi;

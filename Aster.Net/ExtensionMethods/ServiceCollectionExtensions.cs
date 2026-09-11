@@ -60,10 +60,11 @@ namespace Microsoft.Extensions.DependencyInjection
             options.Socket.ApiCredentials = options.Socket.ApiCredentials ?? options.ApiCredentials;
 
 
-            services.AddSingleton(x => Options.Options.Create(options.Rest));
-            services.AddSingleton(x => Options.Options.Create(options.Socket));
+            services.AddSingleton(Options.Options.Create(options.Rest));
+            services.AddSingleton(Options.Options.Create(options.Socket));
+            services.AddSingleton(Options.Options.Create(options));
 
-            return AddAsterCore(services, "V3", options.SocketClientLifeTime);
+            return AddAsterCore(services, AsterApiVersion.V3, options.SocketClientLifeTime);
         }
 
         /// <summary>
@@ -89,16 +90,16 @@ namespace Microsoft.Extensions.DependencyInjection
             options.Socket.Environment = options.Socket.Environment ?? options.Environment ?? AsterEnvironment.Live;
             options.Socket.ApiCredentials = options.Socket.ApiCredentials ?? options.ApiCredentials;
 
-            services.AddSingleton(x => Options.Options.Create(options.Rest));
-            services.AddSingleton(x => Options.Options.Create(options.Socket));
+            services.AddSingleton(Options.Options.Create(options.Rest));
+            services.AddSingleton(Options.Options.Create(options.Socket));
+            services.AddSingleton(Options.Options.Create(options));
 
-            var version = options.Rest.ApiCredentials?.V1 != null && options.Rest.ApiCredentials?.V3 == null ? "V1" : "V3";
-            return AddAsterCore(services, version, options.SocketClientLifeTime);
+            return AddAsterCore(services, options.SharedApi.ApiVersion, options.SocketClientLifeTime);
         }
 
         private static IServiceCollection AddAsterCore(
             this IServiceCollection services,
-            string version,
+            AsterApiVersion version,
             ServiceLifetime? socketClientLifeTime = null)
         {
             services.AddHttpClient<IAsterRestClient, AsterRestClient>((client, serviceProvider) =>
@@ -125,7 +126,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddTransient<IAsterSharedApiClient, AsterSharedApiClient>();
 
-            if (version == "V1")
+            if (version == AsterApiVersion.V3)
             {
                 services.RegisterSharedApi(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedApi);
                 services.RegisterSharedApi(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedApi);
