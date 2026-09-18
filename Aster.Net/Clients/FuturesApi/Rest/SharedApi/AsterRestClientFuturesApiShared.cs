@@ -30,7 +30,7 @@ namespace Aster.Net.Clients.FuturesApi
         public AsterRestClientFuturesSharedApi(AsterRestClientFuturesApi api)
             : base(
                   SharedTransport.Rest,
-                  api.Exchange,
+                  api,
                   [TradingMode.PerpetualLinear],
                   () => api.Authenticated,
                   api.FormatSymbol)

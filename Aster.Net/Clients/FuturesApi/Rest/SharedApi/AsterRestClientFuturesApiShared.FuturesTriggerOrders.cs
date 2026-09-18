@@ -27,7 +27,7 @@ namespace Aster.Net.Clients.FuturesApi
                 RequestParameterRuleOverride<PlaceFuturesTriggerOrderRequest>.NotSupported(x => x.MarginMode),
             ]
         };
-        async Task<ICallResult<SharedId>> IPlaceFuturesTriggerOrder.PlaceFuturesTriggerOrderAsync(PlaceFuturesTriggerOrderRequest request, CancellationToken ct)
+        async Task<IExchangeCallResult<SharedId>> IPlaceFuturesTriggerOrder.PlaceFuturesTriggerOrderAsync(PlaceFuturesTriggerOrderRequest request, CancellationToken ct)
             => await PlaceFuturesTriggerOrderAsync(request, ct).ConfigureAwait(false);
 
         public async Task<HttpResult<SharedId>> PlaceFuturesTriggerOrderAsync(PlaceFuturesTriggerOrderRequest request, CancellationToken ct)
@@ -77,7 +77,7 @@ namespace Aster.Net.Clients.FuturesApi
 
         public GetFuturesTriggerOrderOptions GetFuturesTriggerOrderOptions { get; }
             = new GetFuturesTriggerOrderOptions(_exchangeName, true);
-        async Task<ICallResult<SharedFuturesTriggerOrder>> IGetFuturesTriggerOrder.GetFuturesTriggerOrderAsync(GetOrderRequest request, CancellationToken ct)
+        async Task<IExchangeCallResult<SharedFuturesTriggerOrder>> IGetFuturesTriggerOrder.GetFuturesTriggerOrderAsync(GetOrderRequest request, CancellationToken ct)
             => await GetFuturesTriggerOrderAsync(request, ct).ConfigureAwait(false);
 
         public async Task<HttpResult<SharedFuturesTriggerOrder>> GetFuturesTriggerOrderAsync(GetOrderRequest request, CancellationToken ct)
@@ -142,7 +142,7 @@ namespace Aster.Net.Clients.FuturesApi
 
         public CancelFuturesTriggerOrderOptions CancelFuturesTriggerOrderOptions { get; } 
             = new CancelFuturesTriggerOrderOptions(_exchangeName, true);
-        async Task<ICallResult<SharedId>> ICancelFuturesTriggerOrder.CancelFuturesTriggerOrderAsync(CancelOrderRequest request, CancellationToken ct)
+        async Task<IExchangeCallResult<SharedId>> ICancelFuturesTriggerOrder.CancelFuturesTriggerOrderAsync(CancelOrderRequest request, CancellationToken ct)
             => await CancelFuturesTriggerOrderAsync(request, ct).ConfigureAwait(false);
 
         public async Task<HttpResult<SharedId>> CancelFuturesTriggerOrderAsync(CancelOrderRequest request, CancellationToken ct)

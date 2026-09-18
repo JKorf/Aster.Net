@@ -28,7 +28,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         public AsterSocketClientFuturesV3SharedApi(AsterSocketClientFuturesV3Api api)
             : base(
                   SharedTransport.Socket,
-                  api.Exchange,
+                  api,
                   [TradingMode.PerpetualLinear],
                   () => api.Authenticated,
                   api.FormatSymbol)

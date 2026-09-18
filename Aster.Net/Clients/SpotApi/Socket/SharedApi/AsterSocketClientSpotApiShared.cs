@@ -28,7 +28,7 @@ namespace Aster.Net.Clients.SpotApi
         public AsterSocketClientSpotSharedApi(AsterSocketClientSpotApi api)
             : base(
                   SharedTransport.Socket,
-                  api.Exchange,
+                  api,
                   [TradingMode.Spot],
                   () => api.Authenticated,
                   api.FormatSymbol)

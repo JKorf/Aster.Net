@@ -29,7 +29,7 @@ namespace Aster.Net.Clients.SpotV3Api
         public AsterSocketClientSpotV3SharedApi(AsterSocketClientSpotV3Api api)
             : base(
                   SharedTransport.Socket,
-                  api.Exchange,
+                  api,
                   [TradingMode.Spot],
                   () => api.Authenticated,
                   api.FormatSymbol)

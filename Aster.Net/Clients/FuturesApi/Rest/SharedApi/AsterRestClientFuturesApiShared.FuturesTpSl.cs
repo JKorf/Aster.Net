@@ -26,7 +26,7 @@ namespace Aster.Net.Clients.FuturesApi
             ],
         };
 
-        async Task<ICallResult<SharedId>> ISetFuturesTpSl.SetFuturesTpSlAsync(SetTpSlRequest request, CancellationToken ct)
+        async Task<IExchangeCallResult<SharedId>> ISetFuturesTpSl.SetFuturesTpSlAsync(SetTpSlRequest request, CancellationToken ct)
             => await SetFuturesTpSlAsync(request, ct).ConfigureAwait(false);
 
         public async Task<HttpResult<SharedId>> SetFuturesTpSlAsync(SetTpSlRequest request, CancellationToken ct)
@@ -64,7 +64,7 @@ namespace Aster.Net.Clients.FuturesApi
             ]
         };
 
-        async Task<ICallResult<bool>> ICancelFuturesTpSl.CancelFuturesTpSlAsync(CancelTpSlRequest request, CancellationToken ct)
+        async Task<IExchangeCallResult<bool>> ICancelFuturesTpSl.CancelFuturesTpSlAsync(CancelTpSlRequest request, CancellationToken ct)
             => await CancelFuturesTpSlAsync(request, ct).ConfigureAwait(false);
 
         public async Task<HttpResult<bool>> CancelFuturesTpSlAsync(CancelTpSlRequest request, CancellationToken ct)
