@@ -22,7 +22,7 @@ namespace Aster.Net.Clients.FuturesV3Api
         public SharedSymbolCatalog? FuturesSymbolCatalog => ExchangeSymbolCache.GetSymbolCatalog(_exchangeName, _topicId, _api.EnvironmentName, null);
         public GetFuturesSymbolsOptions GetFuturesSymbolsOptions { get; }
             = new GetFuturesSymbolsOptions(_exchangeName, false);
-        async Task<ICallResult<SharedFuturesSymbol[]>> IGetFuturesSymbols.GetFuturesSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
+        async Task<IExchangeCallResult<SharedFuturesSymbol[]>> IGetFuturesSymbols.GetFuturesSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
             => await GetFuturesSymbolsAsync(request, ct).ConfigureAwait(false);
 
         public async Task<HttpResult<SharedFuturesSymbol[]>> GetFuturesSymbolsAsync(GetSymbolsRequest request, CancellationToken ct)
