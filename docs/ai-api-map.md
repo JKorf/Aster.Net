@@ -131,19 +131,19 @@ Use this file to route common user intents to the correct Aster.Net client membe
 
 | User intent | Aster.Net member or interface |
 |---|---|
-| Shared spot REST client | `new AsterRestClient().SpotV3Api.SharedClient` |
-| Shared futures REST client | `new AsterRestClient().FuturesV3Api.SharedClient` |
-| Shared spot socket client | `new AsterSocketClient().SpotV3Api.SharedClient` |
-| Shared futures socket client | `new AsterSocketClient().FuturesV3Api.SharedClient` |
-| Shared spot ticker REST | `ISpotTickerRestClient.GetSpotTickerAsync(new GetTickerRequest(symbol))` |
-| Get/filter shared spot symbols | `ISpotSymbolRestClient.GetSpotSymbolsAsync(new GetSymbolsRequest(...))` |
-| Read shared spot symbol catalog | `ISpotSymbolRestClient.SpotSymbolCatalog` after a successful symbol query |
-| Get/filter shared futures symbols | `IFuturesSymbolRestClient.GetFuturesSymbolsAsync(new GetSymbolsRequest(...))` |
-| Read shared futures symbol catalog | `IFuturesSymbolRestClient.FuturesSymbolCatalog` after a successful symbol query |
-| Shared spot order REST | `ISpotOrderRestClient.PlaceSpotOrderAsync(...)` |
-| Shared futures order REST | `IFuturesOrderRestClient.PlaceFuturesOrderAsync(...)` |
-| Shared ticker socket | `ITickerSocketClient.SubscribeToTickerUpdatesAsync(...)` |
-| Shared order book socket | `IOrderBookSocketClient.SubscribeToOrderBookUpdatesAsync(...)` |
+| Shared spot REST client | `new AsterRestClient().SpotV3Api.SharedApi` |
+| Shared futures REST client | `new AsterRestClient().FuturesV3Api.SharedApi` |
+| Shared spot socket client | `new AsterSocketClient().SpotV3Api.SharedApi` |
+| Shared futures socket client | `new AsterSocketClient().FuturesV3Api.SharedApi` |
+| Shared spot ticker REST | `IGetTickerRest.GetTickerAsync(new GetTickerRequest(symbol))` |
+| Get/filter shared spot symbols | `IGetSpotSymbolsRest.GetSpotSymbolsAsync(new GetSymbolsRequest(...))` |
+| Read shared spot symbol catalog | `IGetSpotSymbolsRest.SpotSymbolCatalog` after a successful symbol query |
+| Get/filter shared futures symbols | `IGetFuturesSymbolsRest.GetFuturesSymbolsAsync(new GetSymbolsRequest(...))` |
+| Read shared futures symbol catalog | `IGetFuturesSymbolsRest.FuturesSymbolCatalog` after a successful symbol query |
+| Shared spot order REST | `IPlaceSpotOrderRest.PlaceSpotOrderAsync(...)` |
+| Shared futures order REST | `IPlaceFuturesOrderRest.PlaceFuturesOrderAsync(...)` |
+| Shared ticker socket | `ISubscribeTickerSocket.SubscribeToTickerUpdatesAsync(...)` |
+| Shared order book socket | `ISubscribeOrderBookSocket.SubscribeToOrderBookUpdatesAsync(...)` |
 
 For shared socket subscriptions, keep the concrete socket client and unsubscribe with `await socketClient.UnsubscribeAsync(subscription.Data)`.
 
