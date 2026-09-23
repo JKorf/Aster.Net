@@ -530,8 +530,14 @@ namespace Aster.Net.Interfaces.Clients.FuturesV3Api
             CancellationToken ct = default);
 
         /// <summary>
-        /// Get the shared socket requests client. This interface is shared with other exchanges to allow for a common implementation for different exchanges.
+        /// [V1] Get the shared socket requests client. For new implementations prefer using <see cref="SharedApi"/>
         /// </summary>
         public IAsterSocketClientFuturesV3ApiShared SharedClient { get; }
+        /// <summary>
+        /// [V2] Gets the aggregate Shared API interface. Shared APIs provide a common,
+        /// exchange-independent contract for accessing functionality across different
+        /// exchange client libraries.
+        /// </summary>
+        public IAsterSocketClientFuturesV3SharedApi SharedApi { get; }
     }
 }

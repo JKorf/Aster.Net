@@ -54,7 +54,7 @@ Store the returned `UpdateSubscription` and unsubscribe on shutdown via `socketC
 
 ## Cross-exchange
 
-For code that needs to work across multiple exchanges, use `CryptoExchange.Net.SharedApis` interfaces (`ISpotTickerRestClient`, `ISpotOrderRestClient`, etc.) accessed via `.SharedClient` properties. Prefer `SpotV3Api.SharedClient` and `FuturesV3Api.SharedClient`.
+For code that needs to work across multiple exchanges, use `CryptoExchange.Net.SharedApis` interfaces (`IGetTickerRest`, `IPlaceSpotOrderRest`, etc.) accessed via `.SharedApi` properties. Prefer `SpotV3Api.SharedApi` and `FuturesV3Api.SharedApi`.
 
 Shared V3 symbol queries support `GetSymbolsRequest` asset-type filters and populate display/asset metadata. `SpotSymbolCatalog` and `FuturesSymbolCatalog` are available only after the corresponding `GetSpotSymbolsAsync(...)` or `GetFuturesSymbolsAsync(...)` call succeeds.
 

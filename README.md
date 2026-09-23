@@ -100,41 +100,21 @@ Aster.Net uses the Builder Code mechanism for Aster when using the V3 API, which
 
 ## Shared / unified API
 
-The CryptoExchange.Net [Shared APIs](https://cryptoexchange.jkorf.dev/docs/shared-api) provide exchange-agnostic, unified interfaces for common operations such as retrieving tickers, order books and balances, placing orders, and subscribing to market updates.
+The CryptoExchange.Net [Shared API V2](https://cryptoexchange.jkorf.dev/docs/shared-api) provides exchange-agnostic interfaces and models for common operations such as retrieving tickers, order books and balances, placing orders, and subscribing to market updates.
 
-This allows the same application code to work with different exchange libraries. Each Aster API surface exposes its supported shared functionality through a `SharedClient` property. Because support differs between exchanges and API surfaces, call `Discover()` to inspect the available trading modes, environments, endpoints, and subscriptions at runtime.
+V2 uses a strict interface per capability. The `SharedApi` property on each API surface therefore exposes only the operations or subscriptions that surface actually supports. `IAsterSharedApiClient` groups the exchange's Shared API surfaces for dependency injection and runtime capability lookup.
 
-### Supported shared interfaces
-
-The V1 and V3 API surfaces currently expose the same shared interfaces. The V3 surfaces are recommended for new integrations.
-
-| API | Type | Supported interfaces |
-|--|--|--|
-| `SpotApi` / `SpotV3Api` | REST | `IAssetsRestClient`, `IBalanceRestClient`, `IBookTickerRestClient`, `IFeeRestClient`, `IKlineRestClient`, `IOrderBookRestClient`, `IRecentTradeRestClient`, `ISpotOrderClientIdRestClient`, `ISpotOrderRestClient`, `ISpotSymbolRestClient`, `ISpotTickerRestClient`, `ISpotTriggerOrderRestClient`, `ITradeHistoryRestClient`, `ITransferRestClient` |
-| `SpotApi` / `SpotV3Api` | WebSocket | `IBalanceSocketClient`, `IBookTickerSocketClient`, `IKlineSocketClient`, `IOrderBookSocketClient`, `ISpotOrderSocketClient`, `ITickerSocketClient`, `ITickersSocketClient`, `ITradeSocketClient` |
-| `FuturesApi` / `FuturesV3Api` | REST | `IBalanceRestClient`, `IBookTickerRestClient`, `IFeeRestClient`, `IFundingRateRestClient`, `IFuturesOrderClientIdRestClient`, `IFuturesOrderRestClient`, `IFuturesSymbolRestClient`, `IFuturesTickerRestClient`, `IFuturesTpSlRestClient`, `IFuturesTriggerOrderRestClient`, `IIndexPriceKlineRestClient`, `IKlineRestClient`, `ILeverageRestClient`, `IMarkPriceKlineRestClient`, `IOrderBookRestClient`, `IPositionModeRestClient`, `IRecentTradeRestClient`, `ITradeHistoryRestClient` |
-| `FuturesApi` / `FuturesV3Api` | WebSocket | `IBalanceSocketClient`, `IBookTickerSocketClient`, `IFuturesOrderSocketClient`, `IKlineSocketClient`, `IOrderBookSocketClient`, `IPositionSocketClient`, `ITickerSocketClient`, `ITickersSocketClient`, `ITradeSocketClient` |
-
-### Discover supported functionality
-
-```csharp
-var sharedClient = new AsterRestClient().SpotV3Api.SharedClient;
-var clientInfo = sharedClient.Discover();
-
-Console.WriteLine(clientInfo);
-```
-
-### Example
+### Access a strict capability
 
 ```csharp
 using Aster.Net.Clients;
 using CryptoExchange.Net.SharedApis;
 
-var sharedClient = new AsterRestClient().SpotV3Api.SharedClient;
-ISpotTickerRestClient tickerClient = sharedClient;
+using var restClient = new AsterRestClient();
+IGetTickerRest tickerClient = restClient.SpotV3Api.SharedApi;
 
 var symbol = new SharedSymbol(TradingMode.Spot, "ETH", "USDT");
-var result = await tickerClient.GetSpotTickerAsync(
+var result = await tickerClient.GetTickerAsync(
     new GetTickerRequest(symbol));
 
 if (!result.Success)
@@ -146,7 +126,7 @@ if (!result.Success)
 Console.WriteLine(result.Data.LastPrice);
 ```
 
-The request and response models belong to `CryptoExchange.Net.SharedApis`, so the same pattern can be used with another exchange's `SharedClient`.
+The request and response models belong to `CryptoExchange.Net.SharedApis`, so the same operation can accept another exchange's `IGetTickerRest` implementation. When using dependency injection, inject `IAsterSharedApiClient` to access all of the exchange's Shared API surfaces or inject a capability such as `IGetTickerRest` directly. Use `GetCapability` on the aggregate when the operation, transport, or trading mode is selected at runtime.
 
 ## AI documentation
 For AI coding assistants and quick onboarding:

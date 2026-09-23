@@ -8,6 +8,7 @@ using CryptoExchange.Net;
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Interfaces.Clients;
+using CryptoExchange.Net.SharedApis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
@@ -35,35 +36,13 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var options = new AsterOptions();
-            // Reset environment so we know if they're overridden
-            options.Rest.Environment = null!;
-            options.Socket.Environment = null!;
+            var options = AsterOptions.CreateFromConfiguration(configuration);
 
-            try
-            {
-                configuration.Bind(options);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new InvalidOperationException("Invalid configuration provided", ex);
-            }
+            services.AddSingleton(Options.Options.Create(options.Rest));
+            services.AddSingleton(Options.Options.Create(options.Socket));
+            services.AddSingleton(Options.Options.Create(options));
 
-            if (options.Rest == null || options.Socket == null)
-                throw new ArgumentException("Options null");
-
-            var restEnvName = options.Rest.Environment?.Name ?? options.Environment?.Name ?? AsterEnvironment.Live.Name;
-            var socketEnvName = options.Socket.Environment?.Name ?? options.Environment?.Name ?? AsterEnvironment.Live.Name;
-            options.Rest.Environment = AsterEnvironment.GetEnvironmentByName(restEnvName) ?? options.Rest.Environment!;
-            options.Rest.ApiCredentials = options.Rest.ApiCredentials ?? options.ApiCredentials;
-            options.Socket.Environment = AsterEnvironment.GetEnvironmentByName(socketEnvName) ?? options.Socket.Environment!;
-            options.Socket.ApiCredentials = options.Socket.ApiCredentials ?? options.ApiCredentials;
-
-
-            services.AddSingleton(x => Options.Options.Create(options.Rest));
-            services.AddSingleton(x => Options.Options.Create(options.Socket));
-
-            return AddAsterCore(services, "V3", options.SocketClientLifeTime);
+            return AddAsterCore(services, AsterApiVersion.V3, options.SocketClientLifeTime);
         }
 
         /// <summary>
@@ -76,29 +55,18 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             Action<AsterOptions>? optionsDelegate = null)
         {
-            var options = new AsterOptions();
-            // Reset environment so we know if they're overridden
-            options.Rest.Environment = null!;
-            options.Socket.Environment = null!;
-            optionsDelegate?.Invoke(options);
-            if (options.Rest == null || options.Socket == null)
-                throw new ArgumentException("Options null");
+            var options = AsterOptions.Create(optionsDelegate);
 
-            options.Rest.Environment = options.Rest.Environment ?? options.Environment ?? AsterEnvironment.Live;
-            options.Rest.ApiCredentials = options.Rest.ApiCredentials ?? options.ApiCredentials;
-            options.Socket.Environment = options.Socket.Environment ?? options.Environment ?? AsterEnvironment.Live;
-            options.Socket.ApiCredentials = options.Socket.ApiCredentials ?? options.ApiCredentials;
+            services.AddSingleton(Options.Options.Create(options.Rest));
+            services.AddSingleton(Options.Options.Create(options.Socket));
+            services.AddSingleton(Options.Options.Create(options));
 
-            services.AddSingleton(x => Options.Options.Create(options.Rest));
-            services.AddSingleton(x => Options.Options.Create(options.Socket));
-
-            var version = options.Rest.ApiCredentials?.V1 != null && options.Rest.ApiCredentials?.V3 == null ? "V1" : "V3";
-            return AddAsterCore(services, version, options.SocketClientLifeTime);
+            return AddAsterCore(services, options.SharedApi.ApiVersion, options.SocketClientLifeTime);
         }
 
         private static IServiceCollection AddAsterCore(
             this IServiceCollection services,
-            string version,
+            AsterApiVersion version,
             ServiceLifetime? socketClientLifeTime = null)
         {
             services.AddHttpClient<IAsterRestClient, AsterRestClient>((client, serviceProvider) =>
@@ -123,19 +91,39 @@ namespace Microsoft.Extensions.DependencyInjection
                     x.GetRequiredService<IOptions<AsterRestOptions>>(),
                     x.GetRequiredService<IOptions<AsterSocketOptions>>()));
 
-            if (version == "V1")
-            {
-                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedClient);
-                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedClient);
-            }
-            else
+            if (version == AsterApiVersion.V3)
             {
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotV3Api.SharedClient);
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesV3Api.SharedClient);
             }
+            else
+            {
+                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedClient);
+                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedClient);
+            }
 
-            services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().SpotV3Api.SharedClient);
-            services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IAsterSocketClient>().FuturesV3Api.SharedClient);
+            services.RegisterSharedApiClient<
+                IAsterSharedApiClient,
+                AsterSharedApiClient>(sharedApis =>
+                {
+                    if (version == AsterApiVersion.V3)
+                    {
+                        sharedApis
+                            .Add(client => client.SpotV3Rest)
+                            .Add(client => client.SpotV3Socket)
+                            .Add(client => client.FuturesV3Rest)
+                            .Add(client => client.FuturesV3Socket);
+
+                    }
+                    else
+                    {
+                        sharedApis
+                            .Add(client => client.SpotRest)
+                            .Add(client => client.SpotSocket)
+                            .Add(client => client.FuturesRest)
+                            .Add(client => client.FuturesSocket);
+                    }
+                });
 
             return services;
         }

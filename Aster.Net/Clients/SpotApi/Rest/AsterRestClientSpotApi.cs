@@ -1,0 +1,108 @@
+using Aster.Net.Clients.MessageHandlers;
+using Aster.Net.Interfaces.Clients.SpotApi;
+using Aster.Net.Objects.Options;
+using CryptoExchange.Net;
+using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Clients;
+using CryptoExchange.Net.Converters.MessageParsing;
+using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
+using CryptoExchange.Net.Converters.SystemTextJson;
+using CryptoExchange.Net.Interfaces;
+using CryptoExchange.Net.Objects;
+using CryptoExchange.Net.Objects.Errors;
+using CryptoExchange.Net.SharedApis;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Aster.Net.Clients.SpotApi
+{
+    /// <inheritdoc cref="IAsterRestClientSpotApi" />
+    internal partial class AsterRestClientSpotApi : RestApiClient<AsterEnvironment, AsterV1AuthenticationProvider, AsterCredentials>, IAsterRestClientSpotApi
+    {
+        #region fields 
+        private readonly AsterRestClientSpotSharedApi _sharedApi;
+
+        protected override IRestMessageHandler MessageHandler { get; } = new AsterRestMessageHandler(AsterErrors.SpotErrors);
+        protected override ErrorMapping ErrorMapping => AsterErrors.SpotErrors;
+
+        public new AsterRestOptions ClientOptions => (AsterRestOptions)base.ClientOptions;
+        #endregion
+
+        #region Api clients
+        /// <inheritdoc />
+        public IAsterRestClientSpotApiAccount Account { get; }
+        /// <inheritdoc />
+        public IAsterRestClientSpotApiExchangeData ExchangeData { get; }
+        /// <inheritdoc />
+        public IAsterRestClientSpotApiTrading Trading { get; }
+        /// <inheritdoc />
+        public string ExchangeName => "Aster";
+        #endregion
+
+        #region constructor/destructor
+        internal AsterRestClientSpotApi(ILoggerFactory? loggerFactory, HttpClient? httpClient, AsterRestOptions options)
+            : base(loggerFactory, 
+                  AsterExchange.Metadata.Id,
+                  httpClient,
+                  options.Environment.SpotRestClientAddress, 
+                  options,
+                  options.SpotOptions)
+        {
+            Account = new AsterRestClientSpotApiAccount(this);
+            ExchangeData = new AsterRestClientSpotApiExchangeData(_logger, this);
+            Trading = new AsterRestClientSpotApiTrading(_logger, this);
+
+            _sharedApi = new AsterRestClientSpotSharedApi(this);
+
+            RequestBodyEmptyContent = "";
+            RequestBodyFormat = RequestBodyFormat.FormData;
+        }
+        #endregion
+
+        /// <inheritdoc />
+        protected override IMessageSerializer CreateSerializer() => new SystemTextJsonMessageSerializer(AsterExchange._serializerContext);
+
+        /// <inheritdoc />
+        protected override AsterV1AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
+            => new AsterV1AuthenticationProvider(credentials);
+
+        internal async Task<HttpResult> SendAsync(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null)
+        {
+            var result = await base.SendAsync<Unit>(definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
+            if (!result.Success && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
+            {
+                _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+                TimeOffsetManager.ResetRestUpdateTime(ClientName);
+            }
+            return result;
+        }
+
+        internal async Task<HttpResult<T>> SendAsync<T>(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
+        {
+            var result = await base.SendAsync<T>(definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
+            if (!result.Success && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
+            {
+                _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+                TimeOffsetManager.ResetRestUpdateTime(ClientName);
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
+        protected override Task<HttpResult<DateTime>> GetServerTimestampAsync()
+            => ExchangeData.GetServerTimeAsync();
+
+        /// <inheritdoc />
+        public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverDate = null) 
+            => AsterExchange.FormatSymbol(baseAsset, quoteAsset, tradingMode, deliverDate);
+
+        /// <inheritdoc />
+        public IAsterRestClientSpotApiShared SharedClient => _sharedApi;
+        /// <inheritdoc />
+        public IAsterRestClientSpotSharedApi SharedApi => _sharedApi;
+    }
+}

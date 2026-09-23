@@ -77,14 +77,14 @@ For exchange-agnostic code, use `CryptoExchange.Net.SharedApis`:
 ```csharp
 using CryptoExchange.Net.SharedApis;
 
-var shared = new AsterRestClient().SpotV3Api.SharedClient;
-var ticker = await shared.GetSpotTickerAsync(
+var shared = new AsterRestClient().SpotV3Api.SharedApi;
+var ticker = await shared.GetTickerAsync(
     new GetTickerRequest(new SharedSymbol(TradingMode.Spot, "BTC", "USDT")));
 ```
 
-Same pattern works against `BinanceRestClient().SpotApi.SharedClient`, `OKXRestClient().UnifiedApi.SharedClient`, `BybitRestClient().V5Api.SharedClient`, and other CryptoExchange.Net libraries.
+Same pattern works against `BinanceRestClient().SpotApi.SharedApi`, `OKXRestClient().UnifiedApi.SharedApi`, `BybitRestClient().V5Api.SharedApi`, and other CryptoExchange.Net libraries.
 
-For shared V3 symbol discovery, use `ISpotSymbolRestClient.GetSpotSymbolsAsync(...)` or `IFuturesSymbolRestClient.GetFuturesSymbolsAsync(...)`. These methods honor `GetSymbolsRequest` asset-type filters and populate display/asset metadata. Only read `SpotSymbolCatalog` or `FuturesSymbolCatalog` after the corresponding symbol query has succeeded.
+For shared V3 symbol discovery, use `IGetSpotSymbolsRest.GetSpotSymbolsAsync(...)` or `IGetFuturesSymbolsRest.GetFuturesSymbolsAsync(...)`. These methods honor `GetSymbolsRequest` asset-type filters and populate display/asset metadata. Only read `SpotSymbolCatalog` or `FuturesSymbolCatalog` after the corresponding symbol query has succeeded.
 
 Shared book ticker, position, and user trade quantities use `SharedOrderQuantity`; select `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` instead of treating them as `decimal`. Aster shared order books use `SharedQuantityType.BaseAsset`.
 
@@ -99,7 +99,7 @@ Shared book ticker, position, and user trade quantities use `SharedOrderQuantity
 - Never pass a custom `clientOrderId` to `PlaceOrderAsync` unless required.
 - Always use `AsterCredentials().WithV3("userPrivateKey", "signerPrivateKey")` or `new AsterCredentials(new AsterV3Credential(...))` for V3, not generic `ApiCredentials`.
 - Always store WebSocket subscriptions and unsubscribe on shutdown.
-- Always use `.SharedClient` from V3 branches for cross-exchange code.
+- Always use `.SharedApi` from V3 branches for cross-exchange code.
 
 ## Reference
 
