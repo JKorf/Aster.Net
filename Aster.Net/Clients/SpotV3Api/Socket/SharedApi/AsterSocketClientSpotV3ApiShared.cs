@@ -47,5 +47,8 @@ namespace Aster.Net.Clients.SpotV3Api
                 SubscribeOrderBookOptions
                 );
         }
+
+        /// <inheritdoc />
+        public Task UnsubscribeAllAsync() => _api.UnsubscribeAllAsync();
     }
 }

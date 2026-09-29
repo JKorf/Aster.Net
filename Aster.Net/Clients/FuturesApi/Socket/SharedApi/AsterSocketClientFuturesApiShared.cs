@@ -47,5 +47,8 @@ namespace Aster.Net.Clients.FuturesApi
                 SubscribePositionOptions
                 );
         }
+
+        /// <inheritdoc />
+        public Task UnsubscribeAllAsync() => _api.UnsubscribeAllAsync();
     }
 }
