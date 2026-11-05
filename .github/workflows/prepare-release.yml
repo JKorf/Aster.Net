@@ -108,6 +108,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-dotnet@v4.3.1
         with:
@@ -175,11 +176,26 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      - name: Create release automation token
+        if: vars.RELEASE_APP_ID != ''
+        id: release-app
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - name: Commit release changes and open PR
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.release-app.outputs.token || github.token }}
+          RELEASE_APP_CONFIGURED: ${{ vars.RELEASE_APP_ID != '' }}
         run: |
           $plan = Get-Content "$env:RUNNER_TEMP/plan.json" -Raw | ConvertFrom-Json
+          gh auth setup-git
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot configure GitHub credentials for the release branch.' }
           git switch --create $plan.branch
           if ($LASTEXITCODE -ne 0) { throw 'Cannot create release branch.' }
           git config user.name 'github-actions[bot]'
@@ -193,3 +209,4 @@ jobs:
           $url = gh pr create --base $plan.base_branch --head $plan.branch --title "Release $($plan.package_id) $($plan.version)" --body-file "$env:RUNNER_TEMP/release-pr.md"
           if ($LASTEXITCODE -ne 0) { throw 'Branch was pushed, but PR creation failed. Open a PR from that branch manually.' }
           "Release PR: $url" >> $env:GITHUB_STEP_SUMMARY
+          if ($env:RELEASE_APP_CONFIGURED -ne 'true') { 'GitHub App is not configured. PR checks may require manual workflow approval with GITHUB_TOKEN.' >> $env:GITHUB_STEP_SUMMARY }
