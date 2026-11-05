@@ -1,0 +1,14 @@
+{
+  "baseBranch": "main",
+  "sdk": "10.0.401",
+  "packages": [
+    {
+      "key": "aster",
+      "project": "Aster.Net/Aster.Net.csproj",
+      "testProjects": ["Aster.Net.UnitTests/Aster.Net.UnitTests.csproj"],
+      "packageId": "Jkorf.Aster.Net",
+      "readme": "README.md",
+      "tagPrefix": "Aster.Net."
+    }
+  ]
+}
