@@ -109,11 +109,6 @@ $notesMarkdown
 
 ### Review before merging
 
-- [ ] Confirm the version and release notes.
-- [ ] Review version references, internal package dependencies, and documentation that need manual updates.
-- [ ] Confirm the preparation run and PR checks passed.
-
-Only the selected package is updated. Publishing is a separate step.
 "@
 $result = [ordered]@{
     package = $Package

@@ -145,11 +145,35 @@ jobs:
           INTEGRATION: ${{ inputs.integration_tests && '1' || '0' }}
         run: |
           $plan = Get-Content "$env:RUNNER_TEMP/plan.json" -Raw | ConvertFrom-Json
+          $resultsRoot = "$env:RUNNER_TEMP/release-test-results"
+          New-Item -ItemType Directory -Path $resultsRoot -Force | Out-Null
           if (@($plan.test_projects).Count -eq 0) { 'No test projects are configured for this package.' >> $env:GITHUB_STEP_SUMMARY }
+          $index = 0
           foreach ($project in @($plan.test_projects)) {
-            dotnet test $project --configuration Release --no-build --no-restore --verbosity normal
+            $index++
+            $results = Join-Path $resultsRoot "project-$index"
+            New-Item -ItemType Directory -Path $results -Force | Out-Null
+            dotnet test $project --configuration Release --no-build --no-restore --verbosity normal --results-directory $results --logger trx -- "NUnit.TestOutputXml=$results" NUnit.NewOutputXmlFileForEachRun=true NUnit.MapWarningTo=Passed
             if ($LASTEXITCODE -ne 0) { throw "Tests failed: $project" }
           }
+
+      - name: Include test warnings in release PR
+        env:
+          PREPARATION_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          $plan = Get-Content "$env:RUNNER_TEMP/plan.json" -Raw | ConvertFrom-Json
+          $expectResults = @($plan.test_projects).Count -gt 0
+          ./scripts/Add-TestWarnings.ps1 -ResultsDirectory "$env:RUNNER_TEMP/release-test-results" -BodyPath "$env:RUNNER_TEMP/release-pr.md" -SummaryPath "$env:RUNNER_TEMP/test-warnings.md" -RunUrl $env:PREPARATION_RUN_URL -ExpectResults:$expectResults
+          Get-Content "$env:RUNNER_TEMP/test-warnings.md" -Raw >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Retain test reports
+        if: ${{ always() && !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-preparation-test-results
+          path: ${{ runner.temp }}/release-test-results/
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Commit release changes and open PR
         env:

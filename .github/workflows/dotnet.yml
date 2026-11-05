@@ -24,9 +24,9 @@ jobs:
       run: dotnet nuget add source --username JKorf --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/JKorf/index.json"
     - name: Restore dependencies
       run: dotnet restore
-    - name: Test release preparation
+    - name: Test release warning reports
       shell: pwsh
-      run: ./scripts/tests/Test-PrepareRelease.ps1
+      run: ./scripts/tests/Test-TestWarnings.ps1
     - name: Build
       run: dotnet build --no-restore
     - name: Test
