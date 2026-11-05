@@ -34,7 +34,6 @@ namespace Aster.Net.Objects.Options
         /// </summary>
         public SocketApiOptions FuturesOptions { get; private set; } = new SocketApiOptions();
 
-
         internal AsterSocketOptions Set(AsterSocketOptions targetOptions)
         {
             targetOptions = base.Set<AsterSocketOptions>(targetOptions);            

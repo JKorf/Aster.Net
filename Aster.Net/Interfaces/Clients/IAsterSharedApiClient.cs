@@ -1,6 +1,4 @@
-using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
-using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
 using CryptoExchange.Net.SharedApis;
 
@@ -11,15 +9,6 @@ namespace Aster.Net.Interfaces.Clients
     /// </summary>
     public interface IAsterSharedApiClient : ISharedApiClientBase
     {
-        /// <summary>
-        /// Spot V1 REST shared API implementations
-        /// </summary>
-        IAsterRestClientSpotSharedApi SpotRest { get; }
-
-        /// <summary>
-        /// Futures V1 REST shared API implementations
-        /// </summary>
-        IAsterRestClientFuturesSharedApi FuturesRest { get; }
 
         /// <summary>
         /// Spot V3 REST shared API implementations
@@ -30,16 +19,6 @@ namespace Aster.Net.Interfaces.Clients
         /// Futures V3 REST shared API implementations
         /// </summary>
         IAsterRestClientFuturesV3SharedApi FuturesV3Rest { get; }
-
-        /// <summary>
-        /// Spot V1 WebSocket shared API implementations
-        /// </summary>
-        IAsterSocketClientSpotSharedApi SpotSocket { get; }
-
-        /// <summary>
-        /// Futures V1 WebSocket shared API implementations
-        /// </summary>
-        IAsterSocketClientFuturesSharedApi FuturesSocket { get; }
 
         /// <summary>
         /// Spot V3 WebSocket shared API implementations

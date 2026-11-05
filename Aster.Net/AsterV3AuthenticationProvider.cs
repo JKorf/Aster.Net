@@ -4,10 +4,8 @@ using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Authentication.Signing;
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
-using Secp256k1Net;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Aster.Net
 {
@@ -53,8 +51,8 @@ namespace Aster.Net
             string paramString;
             if (parameters.ContainsKey("signaction"))
             {
-                if (Credential.PrivateKey == null)
-                    throw new ArgumentException("Endpoint requires full credentials with private key");
+                if (Credential.Wallet?.PrivateKey == null)
+                    throw new ArgumentException("Endpoint requires full Wallet credentials with private key");
 
                 var signAction = (string)parameters["signaction"];
                 parameters.Remove("signaction");
@@ -67,7 +65,7 @@ namespace Aster.Net
                 var messageFields = GetMessageFields(parameters);
                 var message = CeEip712TypedDataEncoder.EncodeEip721(signAction, domainFields, messageFields);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
-                signatureHex = SignRequest(keccakSigned, Credential.PrivateKey!).ToLower();
+                signatureHex = Credential.Wallet.SignHash(keccakSigned).ToLower();
 
                 parameters["signatureChainId"] = 56;
                 paramString = request.GetPositionParameters().CreateParamString(false, request.ArraySerialization);
@@ -76,7 +74,7 @@ namespace Aster.Net
             {
                 parameters["nonce"] = nonce;
                 parameters["user"] = Credential.Key;
-                parameters["signer"] = Credential.SignerKey;
+                parameters["signer"] = Credential.Signer.PublicAddress;
 
                 var chainId = apiClient.EnvironmentName == TradeEnvironmentNames.Live ? AsterExchange._mainnetChainId : AsterExchange._testnetChainId;
 
@@ -85,7 +83,7 @@ namespace Aster.Net
                 var typedData = GetTradingTypedData(paramString, chainId);
                 var message = CeEip712TypedDataEncoder.EncodeTypedDataRaw(typedData);
                 var keccakSigned = CeSha3Keccack.CalculateHash(message);
-                signatureHex = SignRequest(keccakSigned, Credential.SignerPrivateKey).ToLower();
+                signatureHex = Credential.Signer.SignHash(keccakSigned);
                 parameters["signature"] = signatureHex;
             }
 
@@ -156,15 +154,6 @@ namespace Aster.Net
                     }
                 }
             };
-        }
-
-        public static string SignRequest(byte[] request, string secret)
-        {
-            (var signature, var recover) = Secp256k1.SignRecoverable(request, HexToBytesString(secret));
-            var hexCompactR = BytesToHexString(new ArraySegment<byte>(signature, 0, 32));
-            var hexCompactS = BytesToHexString(new ArraySegment<byte>(signature, 32, 32));
-            var hexCompactV = recover + 27;
-            return $"{hexCompactR}{hexCompactS}{recover:X2}";
         }
     }
 }

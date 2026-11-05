@@ -1,11 +1,9 @@
 using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
-using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Concurrent;
 using System.Net.Http;
 
 namespace Aster.Net.Clients

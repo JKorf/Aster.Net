@@ -1,5 +1,4 @@
-﻿using Aster.Net.Clients.FuturesApi;
-using Aster.Net.Objects.Internal;
+﻿using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Clients;

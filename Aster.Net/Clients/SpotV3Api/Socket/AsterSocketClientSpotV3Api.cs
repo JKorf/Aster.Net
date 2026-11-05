@@ -1,6 +1,5 @@
 using Aster.Net.Clients.MessageHandlers;
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
@@ -8,9 +7,7 @@ using Aster.Net.Objects.Options;
 using Aster.Net.Objects.Sockets;
 using Aster.Net.Objects.Sockets.Subscriptions;
 using CryptoExchange.Net;
-using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
-using CryptoExchange.Net.Converters.MessageParsing;
 using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Interfaces;
@@ -18,7 +15,6 @@ using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Errors;
 using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.SharedApis;
-using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default;
 using CryptoExchange.Net.Sockets.HighPerf;
 using CryptoExchange.Net.TokenManagement;
@@ -37,7 +33,7 @@ namespace Aster.Net.Clients.SpotV3Api
     /// <summary>
     /// Client providing access to the Aster Spot websocket Api
     /// </summary>
-    internal partial class AsterSocketClientSpotV3Api : SocketApiClient<AsterEnvironment, AsterV1AuthenticationProvider, AsterCredentials>, IAsterSocketClientSpotV3Api
+    internal partial class AsterSocketClientSpotV3Api : SocketApiClient<AsterEnvironment, AsterV3AuthenticationProvider, AsterCredentials>, IAsterSocketClientSpotV3Api
     {
         #region fields
         private readonly AsterSocketClientSpotV3SharedApi _sharedApi;
@@ -98,8 +94,8 @@ namespace Aster.Net.Clients.SpotV3Api
         public override ISocketMessageHandler CreateMessageConverter(WebSocketMessageType messageType)
             => new AsterSocketSpotMessageConverter();
         /// <inheritdoc />
-        protected override AsterV1AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
-            => new AsterV1AuthenticationProvider(credentials);
+        protected override AsterV3AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
+            => new AsterV3AuthenticationProvider(credentials);
 
         #region Aggregate Trade Streams
 

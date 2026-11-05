@@ -1,5 +1,4 @@
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
@@ -76,7 +75,7 @@ namespace Aster.Net.Clients.SpotV3Api
         public async Task<HttpResult<string>> StartUserStreamAsync(CancellationToken ct = default)
         {
             var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress,"api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
-            var result = await _baseClient.SendAsync<AsterListenKey>(request, null, ct).ConfigureAwait(false);
+            var result = await _baseClient.SendAsync<AsterListenKey>(request, null, ct, checkBuilderFee: false).ConfigureAwait(false);
             if (!result.Success)
                 return HttpResult.Fail<string>(result);
 
@@ -98,7 +97,7 @@ namespace Aster.Net.Clients.SpotV3Api
             };
 
             var request = _definitions.GetOrCreate(HttpMethod.Put, _baseClient.BaseAddress, "api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
-            return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
+            return await _baseClient.SendAsync(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
         }
 
         #endregion
@@ -115,7 +114,82 @@ namespace Aster.Net.Clients.SpotV3Api
             };
 
             var request = _definitions.GetOrCreate(HttpMethod.Delete, _baseClient.BaseAddress,"api/v3/listenKey", AsterExchange.RateLimiter.RestIp, 1, true);
-            return await _baseClient.SendAsync(request, parameters, ct).ConfigureAwait(false);
+            return await _baseClient.SendAsync(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Approve Builder
+
+        /// <inheritdoc />
+        public Task<HttpResult> ApproveBuilderAsync(CancellationToken ct = default)
+            => ApproveBuilderAsync(_baseClient.ClientOptions.BuilderAddress, (_baseClient.ClientOptions.BuilderFeePercentage ?? 0.01m) / 100, ct);
+
+        /// <inheritdoc />
+        public async Task<HttpResult> ApproveBuilderAsync(string builderAddress, decimal maxFeeRate, CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("builder", builderAddress);
+            parameters.Add("maxFeeRate", maxFeeRate, DecimalSerialization.String);
+            parameters.Add("signaction", "ApproveBuilder");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress, "api/v3/approveBuilder", AsterExchange.RateLimiter.RestIp, 5, true);
+            var result = await _baseClient.SendAsync(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+            if (!result.Success)
+                return HttpResult.Fail(result);
+
+            return HttpResult.Ok(result);
+        }
+
+        #endregion
+
+        #region Update Builder
+
+        /// <inheritdoc />
+        public async Task<HttpResult> UpdateBuilderAsync(string builderAddress, decimal newMaxFeeRate, CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("builder", builderAddress);
+            parameters.Add("maxFeeRate", newMaxFeeRate / 100, DecimalSerialization.String);
+            parameters.Add("signaction", "UpdateBuilder");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Post, _baseClient.BaseAddress, "api/v3/updateBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+            if (!result.Success)
+                return HttpResult.Fail(result);
+
+            return HttpResult.Ok(result);
+        }
+
+        #endregion
+
+        #region Delete Builder
+
+        /// <inheritdoc />
+        public async Task<HttpResult> DeleteBuilderAsync(string builderAddress, CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            parameters.Add("builder", builderAddress);
+            parameters.Add("signaction", "DelBuilder");
+
+            var request = _definitions.GetOrCreate(HttpMethod.Delete, _baseClient.BaseAddress, "api/v3/delBuilder", AsterExchange.RateLimiter.RestIp, 1, true);
+            var result = await _baseClient.SendAsync(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
+            if (!result.Success)
+                return HttpResult.Fail(result);
+
+            return HttpResult.Ok(result);
+        }
+
+        #endregion
+
+        #region Get Approved Builders
+
+        /// <inheritdoc />
+        public async Task<HttpResult<AsterBuilder[]>> GetApprovedBuildersAsync(CancellationToken ct = default)
+        {
+            var parameters = new Parameters(AsterExchange._parameterSerializationSettings);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "api/v3/builder", AsterExchange.RateLimiter.RestIp, 1, true);
+            return await _baseClient.SendAsync<AsterBuilder[]>(request, parameters, ct, checkBuilderFee: false).ConfigureAwait(false);
         }
 
         #endregion

@@ -2,6 +2,7 @@ using Aster.Net.Clients;
 using Aster.Net.Objects;
 using Aster.Net.Objects.Options;
 using CryptoExchange.Net.Testing;
+using CryptoExchange.Net.Web3;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
@@ -26,7 +27,9 @@ namespace Aster.Net.UnitTests
             {
                 AutoTimestamp = false,
                 OutputOriginalData = true,
-                ApiCredentials = Authenticated ? new AsterCredentials(new AsterV3Credential(key, sec)) : null
+                ApiCredentials = Authenticated ? new AsterCredentials(new AsterV3Credential(
+                    EthKey.FromPrivateKey(key),
+                    EthKey.FromPrivateKey(sec))) : null
             }));
         }
 

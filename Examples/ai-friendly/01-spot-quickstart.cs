@@ -13,6 +13,7 @@
 using Aster.Net;
 using Aster.Net.Clients;
 using Aster.Net.Enums;
+using CryptoExchange.Net.Web3;
 
 // ---- 1. PUBLIC CLIENT (no credentials needed for market data) ----
 // Reuse this client across the application; do not create per request.
@@ -33,7 +34,7 @@ Console.WriteLine($"24h volume: {ticker.Data.Volume} BTC");
 var tradingClient = new AsterRestClient(options =>
 {
     options.ApiCredentials = new AsterCredentials()
-        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
+        .WithV3(EthKey.FromPrivateKey("USER_PRIVATE_KEY"), EthKey.FromPrivateKey("SIGNER_PRIVATE_KEY"));
 });
 
 var account = await tradingClient.SpotV3Api.Account.GetAccountInfoAsync();

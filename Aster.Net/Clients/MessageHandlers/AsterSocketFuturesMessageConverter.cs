@@ -1,5 +1,4 @@
-﻿using Aster.Net.Objects.Internal;
-using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
+﻿using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
 using CryptoExchange.Net.Converters.SystemTextJson.MessageHandlers;
 using System.Collections.Generic;
 using System.Text.Json;

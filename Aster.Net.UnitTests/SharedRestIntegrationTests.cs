@@ -1,7 +1,6 @@
 ﻿using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.SharedApis;
 using Aster.Net.Interfaces.Clients;
-using Aster.Net.Interfaces.Clients.SpotApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;

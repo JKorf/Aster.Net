@@ -1,15 +1,9 @@
 using CryptoExchange.Net.Clients;
-using CryptoExchange.Net.Objects.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
-using Aster.Net.Interfaces.Clients.FuturesApi;
-using Aster.Net.Clients.FuturesApi;
-using Aster.Net.Clients.SpotApi;
-using Aster.Net.Interfaces.Clients.SpotApi;
-using CryptoExchange.Net.Authentication;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Clients.FuturesV3Api;
@@ -25,12 +19,8 @@ namespace Aster.Net.Clients
 
         #region Api clients
         
-         /// <inheritdoc />
-        public IAsterSocketClientSpotApi SpotApi { get; }
         /// <inheritdoc />
         public IAsterSocketClientSpotV3Api SpotV3Api { get; }
-        /// <inheritdoc />
-        public IAsterSocketClientFuturesApi FuturesApi { get; }
         /// <inheritdoc />
         public IAsterSocketClientFuturesV3Api FuturesV3Api { get; }
 
@@ -56,9 +46,7 @@ namespace Aster.Net.Clients
         {
             Initialize(options.Value);
 
-            SpotApi = AddApiClient(new AsterSocketClientSpotApi(loggerFactory, options.Value));
             SpotV3Api = AddApiClient(new AsterSocketClientSpotV3Api(loggerFactory, options.Value));
-            FuturesApi = AddApiClient(new AsterSocketClientFuturesApi(loggerFactory, options.Value));
             FuturesV3Api = AddApiClient(new AsterSocketClientFuturesV3Api(loggerFactory, options.Value));
         }
         #endregion

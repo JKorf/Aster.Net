@@ -1,5 +1,4 @@
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;

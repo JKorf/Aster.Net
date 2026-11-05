@@ -5,17 +5,13 @@ using Aster.Net.Interfaces.Clients;
 using Aster.Net.Objects.Options;
 using Aster.Net.SymbolOrderBooks;
 using CryptoExchange.Net;
-using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Interfaces;
-using CryptoExchange.Net.Interfaces.Clients;
 using CryptoExchange.Net.SharedApis;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Threading;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -96,33 +92,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotV3Api.SharedClient);
                 services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesV3Api.SharedClient);
             }
-            else
-            {
-                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().SpotApi.SharedClient);
-                services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IAsterRestClient>().FuturesApi.SharedClient);
-            }
 
             services.RegisterSharedApiClient<
                 IAsterSharedApiClient,
                 AsterSharedApiClient>(sharedApis =>
                 {
-                    if (version == AsterApiVersion.V3)
-                    {
-                        sharedApis
-                            .Add(client => client.SpotV3Rest)
-                            .Add(client => client.SpotV3Socket)
-                            .Add(client => client.FuturesV3Rest)
-                            .Add(client => client.FuturesV3Socket);
-
-                    }
-                    else
-                    {
-                        sharedApis
-                            .Add(client => client.SpotRest)
-                            .Add(client => client.SpotSocket)
-                            .Add(client => client.FuturesRest)
-                            .Add(client => client.FuturesSocket);
-                    }
+                    sharedApis
+                        .Add(client => client.SpotV3Rest)
+                        .Add(client => client.SpotV3Socket)
+                        .Add(client => client.FuturesV3Rest)
+                        .Add(client => client.FuturesV3Socket);
                 });
 
             return services;
