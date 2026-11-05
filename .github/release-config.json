@@ -8,7 +8,9 @@
       "testProjects": ["Aster.Net.UnitTests/Aster.Net.UnitTests.csproj"],
       "packageId": "Jkorf.Aster.Net",
       "readme": "README.md",
-      "tagPrefix": "Aster.Net."
+      "tagPrefix": "Aster.Net.",
+      "releaseIntegrationTests": false,
+      "publishToGitHubPackages": true
     }
   ]
 }

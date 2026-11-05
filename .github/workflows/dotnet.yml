@@ -27,6 +27,9 @@ jobs:
     - name: Test release warning reports
       shell: pwsh
       run: ./scripts/tests/Test-TestWarnings.ps1
+    - name: Test publishing validation
+      shell: pwsh
+      run: ./scripts/tests/Test-PublishRelease.ps1
     - name: Build
       run: dotnet build --no-restore
     - name: Test

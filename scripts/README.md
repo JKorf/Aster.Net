@@ -43,11 +43,13 @@ release PR if superseded. Do not edit version fields to bypass the approval gate
 The preparation workflow intentionally refuses to overwrite an existing release
 branch. Keep its version unchanged when adjusting that branch.
 
-The future publication stage must build and test the final merged commit; the
-initial preparation test report cannot validate later edits.
+The publication stage builds and tests the final merged commit; the initial
+preparation test report cannot validate later edits. See
+[publishing setup and recovery](../docs/publishing.md).
 
 ## Regression tests
 
 ```powershell
 ./scripts/tests/Test-TestWarnings.ps1
+./scripts/tests/Test-PublishRelease.ps1
 ```

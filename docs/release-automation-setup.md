@@ -33,23 +33,27 @@ installation access must be configured for each repository; this is setup work,
 not a per-release action. For personal-account repositories, that setup can be
 scripted rather than entered repeatedly through GitHub's website.
 
-## Publishing and batch approval design
+## Publishing and per-library approval
 
-The publishing workflow is the next implementation stage; it does not exist yet.
-Its trigger will be a preparation PR being merged into the configured main/master
-branch. Closing an unmerged PR or merging an ordinary feature PR must not publish.
-It will validate the package/release branch and build the exact merged commit,
-then pause at a protected `release` environment before any publication.
+The `publish-release.yml` workflow starts when a preparation PR is merged into
+the configured main/master branch. Closed, unmerged PRs and ordinary feature PRs
+do not publish. It validates the package/release branch, builds/tests/packs the
+exact merged commit, and pauses at the protected `release` environment before
+any publication. Complete the [publishing setup](publishing.md) before the first
+release, including the required reviewer and NuGet trusted publishing policy.
 
-Keep final publication approval. Manager will provide a review list with each
-library, version, source commit, checks/warnings, PR link, and workflow link. An
-explicit **Approve selected releases** action will submit the approvals under your
-user identity. This is not automatic approval by a bot.
+Keep final publication approval and one Manager job window per library.
+Library.PrepareAndRelease calls Library.PrepareRelease, then Library.ApproveRelease.
+You open the preparation PR in your browser, review it and merge it. The second
+job waits for that merge and the resulting publishing workflow, then asks for your
+explicit approval in Manager. It rechecks the run attempt, commit and environment
+before submitting that approval, then monitors publication to completion.
 
-GitHub's deployment-review API is per repository/run, so Manager must make separate
-requests for selected releases. One UI action can submit them all, while reporting
-individual failures; the operation is not atomic. Before each request, recheck the
-run attempt, commit and pending environment to avoid approving stale entries.
+The confirmation shows the package, version, merged commit, PR and publishing run.
+Use the workflow link to review final tests, warnings and artifacts before selecting
+Yes. No leaves the workflow waiting. The job does not merge PRs or approve a release
+automatically. Library.ApproveRelease can also resume an existing PR after a timeout
+or Manager restart without starting preparation again.
 
 The Manager credential must represent a required reviewer for each environment and
 have **Deployments: Read and write** and **Actions: Read** access, in addition to
@@ -57,9 +61,12 @@ the existing permissions used for preparation. The App token that creates PRs do
 not grant approval on your behalf. Leave Prevent self-review unchecked for your
 solo-maintainer workflow.
 
-Manager can similarly offer explicit batch merging of selected preparation PRs,
-after verifying their required checks. Merges must use your authenticated user
-credentials, not GITHUB_TOKEN, so merge events can start the publish workflow.
+Merge the PR in the browser with your user account so the merge event starts the
+publishing workflow. That workflow uses the run name
+`Publish release PR #<number>` to let Manager identify the matching publication.
+Install the workflow and its scripts in each library repository before enabling
+publication there. Package selection and main/master support come from the
+repository's `.github/release-config.json`.
 
 References:
 

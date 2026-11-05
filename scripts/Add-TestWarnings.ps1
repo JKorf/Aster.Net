@@ -4,6 +4,7 @@ param(
     [Parameter(Mandatory)][string]$BodyPath,
     [Parameter(Mandatory)][string]$SummaryPath,
     [string]$RunUrl = '',
+    [ValidateSet('Preparation', 'Publication')][string]$Stage = 'Preparation',
     [switch]$ExpectResults
 )
 
@@ -40,16 +41,20 @@ if ($ExpectResults -and $reportCount -eq 0) {
 
 $count = 0
 foreach ($test in $warnings) { $count += $test.Messages.Count }
-$header = "### Preparation test warnings`n`n"
+$header = "### $Stage test warnings`n`n"
 if ($reportCount -eq 0) {
     $header += "No test projects were configured; no tests ran.`n"
 } elseif ($count -eq 0) {
-    $header += "No NUnit warnings were reported in this preparation run.`n"
+    $header += "No NUnit warnings were reported in this $($Stage.ToLowerInvariant()) run.`n"
 } else {
-    $header += "$count warning(s) in $($warnings.Count) test result(s). Warnings do not block release preparation.`n"
+    $header += "$count warning(s) in $($warnings.Count) test result(s). Warnings do not block release $($Stage.ToLowerInvariant()).`n"
 }
-$header += "`nThis is a snapshot of the preparation tests. Later commits to the release branch require fresh PR checks; this section is not automatically refreshed.`n"
-if ($RunUrl) { $header += "`n[Preparation run and test reports]($RunUrl)`n" }
+if ($Stage -eq 'Preparation') {
+    $header += "`nThis is a snapshot of the preparation tests. Later commits to the release branch require fresh PR checks; this section is not automatically refreshed.`n"
+} else {
+    $header += "`nThis is a snapshot of the final publication tests for this run.`n"
+}
+if ($RunUrl) { $header += "`n[$Stage run and test reports]($RunUrl)`n" }
 
 # Keep space for release notes and GitHub's PR body limit. Full XML remains in the
 # workflow artifacts. Escape test data so it cannot break the Markdown/HTML layout.

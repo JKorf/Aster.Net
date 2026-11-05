@@ -60,6 +60,9 @@ New-Item -ItemType Directory -Path $cleanResults | Out-Null
 [IO.File]::WriteAllText($bodyPath, $originalBody)
 & $script -ResultsDirectory $cleanResults -BodyPath $bodyPath -SummaryPath $summaryPath -ExpectResults
 if (-not ([IO.File]::ReadAllText($summaryPath)).Contains('No NUnit warnings')) { throw 'Clean run reporting failed.' }
+& $script -ResultsDirectory $cleanResults -BodyPath $bodyPath -SummaryPath $summaryPath -Stage Publication -ExpectResults
+$publication = [IO.File]::ReadAllText($summaryPath)
+if (-not $publication.Contains('Publication test warnings') -or $publication.Contains('preparation')) { throw 'Final publication report used preparation wording.' }
 
 $emptyResults = Join-Path $fixture 'empty'
 New-Item -ItemType Directory -Path $emptyResults | Out-Null
