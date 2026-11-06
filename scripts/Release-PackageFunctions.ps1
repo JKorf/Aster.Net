@@ -97,7 +97,8 @@ function Get-RemotePackage([string]$Source, [string]$Id, [string]$Version, [hash
     $base = $resource[0].'@id'.TrimEnd('/')
     $lowerId = $Id.ToLowerInvariant()
     $lowerVersion = $Version.ToLowerInvariant()
-    Invoke-WebRequest -Uri "$base/$lowerId/$lowerVersion/$lowerId.$lowerVersion.nupkg" -Headers $Headers -OutFile $Destination -SkipHttpErrorCheck -StatusCodeVariable status | Out-Null
+    $response = Invoke-WebRequest -Uri "$base/$lowerId/$lowerVersion/$lowerId.$lowerVersion.nupkg" -Headers $Headers -OutFile $Destination -SkipHttpErrorCheck -PassThru
+    $status = [int]$response.StatusCode
     if ($status -eq 404) { return $false }
     if ($status -ne 200) { throw "Package lookup returned HTTP $status from $Source" }
     return $true

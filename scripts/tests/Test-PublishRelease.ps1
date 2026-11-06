@@ -58,6 +58,33 @@ try {
     Write-Json $plan output/manifest.json
     & "$scripts/Publish-Release.ps1" -ArtifactDirectory output -Repository owner/library -Commit $commit -PullRequest 7 -ValidateOnly
     $checks++
+    # Recovery validates original metadata as well as package identity/checksums.
+    # Only the GitHub HTTP transport is mocked; artifact checks remain real.
+    $script:recoveryRun = @{ event = 'pull_request'; path = '.github/workflows/publish-release.yml'; display_title = 'Publish release PR #7'; status = 'completed'; conclusion = 'failure'; head_sha = 'pr-head'; head_branch = 'release/example/2.0.0' }
+    $script:recoveryPr = @{ merged = $true; merge_commit_sha = $commit; head = @{ sha = 'pr-head'; ref = 'release/example/2.0.0'; repo = @{ full_name = 'owner/library' } }; base = @{ ref = 'master'; repo = @{ full_name = 'owner/library' } } }
+    $script:recoveryArtifact = @{ expired = $false; workflow_run = @{ id = 100 }; name = 'release-pr-7-attempt-1' }
+    function Invoke-RestMethod([string]$Uri, [string]$Method, [hashtable]$Headers, [switch]$SkipHttpErrorCheck, [string]$StatusCodeVariable) {
+        Set-Variable -Name $StatusCodeVariable -Value 200 -Scope 1
+        if ($Uri.EndsWith('/actions/runs/100')) { return $recoveryRun }
+        if ($Uri.EndsWith('/pulls/7')) { return $recoveryPr }
+        if ($Uri.EndsWith('/actions/artifacts/200')) { return $recoveryArtifact }
+        throw 'Unexpected recovery metadata request.'
+    }
+    $oldOutput = $env:GITHUB_OUTPUT
+    $oldSummary = $env:GITHUB_STEP_SUMMARY
+    try {
+        $env:GITHUB_OUTPUT = Join-Path $fixture 'recovery-output.txt'
+        $env:GITHUB_STEP_SUMMARY = Join-Path $fixture 'recovery-summary.md'
+        function Recover { & "$scripts/Get-RecoveryPlan.ps1" -Repository owner/library -OriginalRunId 100 -ArtifactId 200 -ArtifactDirectory output }
+        Recover
+        if (-not (Get-Content $env:GITHUB_OUTPUT -Raw).Contains("commit=$commit")) { throw 'Recovery lost the original source commit.' }
+        $checks++
+        $script:recoveryRun.head_sha = 'unrelated'; Reject { Recover }; $script:recoveryRun.head_sha = 'pr-head'
+        $script:recoveryRun.status = 'in_progress'; Reject { Recover }; $script:recoveryRun.status = 'completed'
+        $script:recoveryArtifact.workflow_run.id = 999; Reject { Recover }; $script:recoveryArtifact.workflow_run.id = 100
+        $script:recoveryArtifact.expired = $true; Reject { Recover }; $script:recoveryArtifact.expired = $false
+        $script:recoveryArtifact.name = 'publication-test-results-1'; Reject { Recover }; $script:recoveryArtifact.name = 'release-pr-7-attempt-1'
+    } finally { $env:GITHUB_OUTPUT = $oldOutput; $env:GITHUB_STEP_SUMMARY = $oldSummary }
     Reject { Assert-ReleaseArtifacts output owner/library $commit 8 }
     Reject { Assert-ReleaseArtifacts output owner/other $commit 7 }
     Add-Content output/release-notes.md 'unexpected change'

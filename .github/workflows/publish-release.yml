@@ -1,7 +1,17 @@
 name: Publish release
-run-name: 'Publish release PR #${{ github.event.pull_request.number }}'
+run-name: '${{ github.event_name == ''workflow_dispatch'' && format(''Recover release from run #{0}'', inputs.original_run_id) || format(''Publish release PR #{0}'', github.event.pull_request.number) }}'
 
 on:
+  workflow_dispatch:
+    inputs:
+      original_run_id:
+        description: Original failed publish workflow run ID
+        required: true
+        type: string
+      artifact_id:
+        description: Original release-pr artifact ID (not the test results artifact)
+        required: true
+        type: string
   pull_request:
     types: [closed]
     branches: [main, master]
@@ -10,12 +20,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: publish-${{ github.repository }}-${{ github.event.pull_request.head.ref }}
+  group: publish-${{ github.repository }}-${{ github.event.pull_request.head.ref || inputs.original_run_id }}
   cancel-in-progress: false
 
 jobs:
   build:
     if: >-
+      github.event_name == 'pull_request' &&
       github.event.pull_request.merged == true &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       startsWith(github.event.pull_request.head.ref, 'release/')
@@ -26,6 +37,8 @@ jobs:
       actions: read
     outputs:
       sdk: ${{ steps.plan.outputs.sdk }}
+      commit: ${{ github.event.pull_request.merge_commit_sha }}
+      pull_request: ${{ github.event.pull_request.number }}
       artifact_id: ${{ steps.artifacts.outputs.artifact-id }}
     defaults:
       run:
@@ -132,14 +145,50 @@ jobs:
           retention-days: 30
           if-no-files-found: error
 
+  recover:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      sdk: ${{ steps.plan.outputs.sdk }}
+      commit: ${{ steps.plan.outputs.commit }}
+      pull_request: ${{ steps.plan.outputs.pull_request }}
+      artifact_id: ${{ steps.plan.outputs.artifact_id }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.original_run_id }}
+          artifact-ids: ${{ inputs.artifact_id }}
+          path: ${{ runner.temp }}/original-release
+          merge-multiple: true
+      - name: Validate original run and release artifacts
+        id: plan
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGINAL_RUN_ID: ${{ inputs.original_run_id }}
+          ARTIFACT_ID: ${{ inputs.artifact_id }}
+        run: |
+          ./scripts/Get-RecoveryPlan.ps1 -Repository $env:GITHUB_REPOSITORY -OriginalRunId ([long]$env:ORIGINAL_RUN_ID) -ArtifactId ([long]$env:ARTIFACT_ID) -ArtifactDirectory "$env:RUNNER_TEMP/original-release"
+
   publish:
-    needs: build
+    needs: [build, recover]
+    if: ${{ !cancelled() && (needs.build.result == 'success' || needs.recover.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment:
       name: release
     permissions:
       contents: write
+      actions: read
       packages: write
       id-token: write
     defaults:
@@ -148,23 +197,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.pull_request.merge_commit_sha }}
           persist-credentials: false
 
       - uses: actions/setup-dotnet@v4.3.1
         with:
-          dotnet-version: ${{ needs.build.outputs.sdk }}
+          dotnet-version: ${{ needs.build.outputs.sdk || needs.recover.outputs.sdk }}
 
       - uses: actions/download-artifact@v4
         with:
-          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event_name == 'workflow_dispatch' && inputs.original_run_id || github.run_id }}
+          artifact-ids: ${{ needs.build.outputs.artifact_id || needs.recover.outputs.artifact_id }}
           path: ${{ runner.temp }}/approved-release
           merge-multiple: true
 
       - name: Verify approved artifacts
         env:
-          SOURCE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SOURCE_COMMIT: ${{ needs.build.outputs.commit || needs.recover.outputs.commit }}
+          PR_NUMBER: ${{ needs.build.outputs.pull_request || needs.recover.outputs.pull_request }}
         run: |
           ./scripts/Publish-Release.ps1 -ArtifactDirectory "$env:RUNNER_TEMP/approved-release" -Repository $env:GITHUB_REPOSITORY -Commit $env:SOURCE_COMMIT -PullRequest ([int]$env:PR_NUMBER) -ValidateOnly
 
@@ -178,7 +229,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
-          SOURCE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SOURCE_COMMIT: ${{ needs.build.outputs.commit || needs.recover.outputs.commit }}
+          PR_NUMBER: ${{ needs.build.outputs.pull_request || needs.recover.outputs.pull_request }}
         run: |
           ./scripts/Publish-Release.ps1 -ArtifactDirectory "$env:RUNNER_TEMP/approved-release" -Repository $env:GITHUB_REPOSITORY -Commit $env:SOURCE_COMMIT -PullRequest ([int]$env:PR_NUMBER)

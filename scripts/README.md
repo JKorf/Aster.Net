@@ -52,4 +52,5 @@ preparation test report cannot validate later edits. See
 ```powershell
 ./scripts/tests/Test-TestWarnings.ps1
 ./scripts/tests/Test-PublishRelease.ps1
+./scripts/tests/Test-ReleaseHttp.ps1
 ```
