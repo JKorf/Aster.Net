@@ -219,6 +219,18 @@ jobs:
         run: |
           ./scripts/Publish-Release.ps1 -ArtifactDirectory "$env:RUNNER_TEMP/approved-release" -Repository $env:GITHUB_REPOSITORY -Commit $env:SOURCE_COMMIT -PullRequest ([int]$env:PR_NUMBER) -ValidateOnly
 
+      - name: Create GitHub tag and release token
+        if: vars.RELEASE_APP_ID != ''
+        id: release-app
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-workflows: write
+
       - name: Obtain short-lived NuGet publishing credential
         id: nuget
         uses: NuGet/login@v1
@@ -227,7 +239,8 @@ jobs:
 
       - name: Publish approved packages and GitHub release
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.release-app.outputs.token || github.token }}
+          GITHUB_PACKAGES_TOKEN: ${{ github.token }}
           NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
           SOURCE_COMMIT: ${{ needs.build.outputs.commit || needs.recover.outputs.commit }}
           PR_NUMBER: ${{ needs.build.outputs.pull_request || needs.recover.outputs.pull_request }}

@@ -11,7 +11,9 @@ Create one GitHub App for release automation:
 1. In your GitHub account's developer settings, create a GitHub App. Webhooks are
    not required for this use case; disable Active for the webhook.
 2. Grant repository permissions **Contents: Read and write** and **Pull requests:
-   Read and write**. Metadata read access is included automatically.
+   Read and write**, plus **Workflows: Read and write** for publication/recovery.
+   Metadata read access is included automatically. For an existing App, save the
+   changed permissions and accept the permission update on its installation.
 3. Install the App on Aster.Net and later on the other library repositories.
 4. Generate a private key for the App.
 5. Under Aster.Net **Settings > Secrets and variables > Actions**, add:
@@ -22,6 +24,10 @@ The preparation workflow creates a short-lived token scoped to the current
 repository immediately before pushing its branch and creating its PR. Both git
 push and PR creation use that token. The token action revokes it afterward.
 No App credential is supplied to the package build or tests.
+After publication approval, the publishing job creates a separate App token with
+Contents/Workflows write access for tags and releases. GitHub can require workflow
+permission when tagging an older commit whose workflow files differ from main;
+GITHUB_TOKEN cannot supply it. GitHub Packages continues using GITHUB_TOKEN.
 
 If RELEASE_APP_ID is absent, preparation continues using GITHUB_TOKEN and reports
 that PR checks may require manual approval. If an App ID is configured but its key

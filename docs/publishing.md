@@ -19,10 +19,15 @@
    repository `Aster.Net`, workflow file `publish-release.yml` (filename only),
    environment `release`. Scope it to `Jkorf.Aster.Net`. Publishing uses an OIDC
    exchange for a short-lived key after approval; no NuGet API key secret is needed.
-5. For an existing GitHub package, ensure Aster.Net is connected and has Actions
+5. Give the existing release GitHub App **Contents** and **Workflows: Read and
+   write**, and accept the changed permissions on its installation. The workflow
+   uses RELEASE_APP_ID/RELEASE_APP_PRIVATE_KEY after approval for tags/releases.
+   This also supports recovery targeting an older commit whose workflow files
+   differ from main; GITHUB_TOKEN cannot grant the required workflow permission.
+6. For an existing GitHub package, ensure Aster.Net is connected and has Actions
    write access to it. New packages may need their visibility changed to public
    in GitHub's package settings. Publishing uses the workflow's `GITHUB_TOKEN`.
-6. Ensure the Manager credential has Actions read/write, Contents read, Pull
+7. Ensure the Manager credential has Actions read/write, Contents read, Pull
    requests read and Deployments write permissions, and belongs to the configured
    required reviewer. See [Manager approval setup](release-automation-setup.md).
 

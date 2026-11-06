@@ -20,8 +20,11 @@ $temp = Join-Path ([IO.Path]::GetTempPath()) ('release-publish-' + [guid]::NewGu
 New-Item -ItemType Directory -Path $temp | Out-Null
 $sources = @(@{ Name = 'NuGet.org'; Url = 'https://api.nuget.org/v3/index.json'; Key = $env:NUGET_API_KEY; Headers = @{} })
 if ($manifest.publishToGitHubPackages) {
-    $basic = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("${owner}:$env:GH_TOKEN"))
-    $sources += @{ Name = 'GitHub Packages'; Url = "https://nuget.pkg.github.com/$owner/index.json"; Key = $env:GH_TOKEN; Headers = @{ Authorization = "Basic $basic" } }
+    # Git tags/releases may need an App token with Workflows: write. Keep the
+    # registry on GITHUB_TOKEN, which has this repository's Packages permission.
+    $packageToken = if ([string]::IsNullOrWhiteSpace($env:GITHUB_PACKAGES_TOKEN)) { $env:GH_TOKEN } else { $env:GITHUB_PACKAGES_TOKEN }
+    $basic = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("${owner}:$packageToken"))
+    $sources += @{ Name = 'GitHub Packages'; Url = "https://nuget.pkg.github.com/$owner/index.json"; Key = $packageToken; Headers = @{ Authorization = "Basic $basic" } }
 }
 
 # Preflight every registry before creating a tag or uploading anything. A retry

@@ -69,7 +69,13 @@ function Invoke-ReleaseApi([string]$Path, [string]$Method = 'GET', $Body = $null
     if ($null -ne $Body) { $request.Body = $Body | ConvertTo-Json -Depth 8 -Compress; $request.ContentType = 'application/json' }
     $result = Invoke-RestMethod @request
     if ($status -eq 404 -and $AllowMissing) { return $null }
-    if ($status -lt 200 -or $status -ge 300) { throw "GitHub API $Method $Path returned HTTP $status." }
+    if ($status -lt 200 -or $status -ge 300) {
+        $detail = ''
+        if ($null -ne $result -and $result.PSObject.Properties.Name -contains 'message') {
+            $detail = ' ' + [string]$result.message
+        }
+        throw "GitHub API $Method $Path returned HTTP $status.$detail"
+    }
     return $result
 }
 

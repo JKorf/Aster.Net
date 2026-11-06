@@ -54,3 +54,18 @@ try {
     if (-not $failed) { throw 'Registry failure was ignored.' }
     Write-Host 'Real HTTP cmdlet checks passed: package download, missing version, and server failure. Only localhost was contacted.'
 } finally { $server.Dispose() }
+
+# The GitHub transport is mocked here so a 403 message is tested without a token
+# or a write request to GitHub. Preserve its message, not request credentials.
+function Invoke-RestMethod([string]$Uri, [string]$Method, [hashtable]$Headers, [switch]$SkipHttpErrorCheck,
+    [string]$StatusCodeVariable, [string]$Body, [string]$ContentType) {
+    Set-Variable -Name $StatusCodeVariable -Value 403 -Scope 1
+    return [pscustomobject]@{ message = 'Resource not accessible by integration' }
+}
+$rejected = $false
+try { Invoke-ReleaseApi 'repos/owner/library/git/refs' POST @{ ref = 'refs/tags/Example.1.2.3'; sha = 'example' } } catch {
+    if ($_.Exception.Message -notlike '*HTTP 403. Resource not accessible by integration*') { throw }
+    $rejected = $true
+}
+if (-not $rejected) { throw 'GitHub failure was ignored.' }
+Write-Host 'GitHub error detail regression check passed without contacting GitHub.'
