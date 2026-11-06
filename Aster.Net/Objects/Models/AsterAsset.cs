@@ -1,3 +1,4 @@
+using Aster.Net.Enums;
 using System.Text.Json.Serialization;
 
 namespace Aster.Net.Objects.Models
@@ -22,5 +23,10 @@ namespace Aster.Net.Objects.Models
         /// </summary>
         [JsonPropertyName("autoAssetExchange")]
         public decimal? AutoAssetExchange { get; set; }
+        /// <summary>
+        /// ["<c>assetType</c>"] Asset type
+        /// </summary>
+        [JsonPropertyName("assetType")]
+        public AssetType Type { get; set; }
     }
 }
