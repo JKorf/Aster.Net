@@ -243,6 +243,19 @@ Make a one time donation in a crypto currency of your choice. If you prefer to d
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Release notes
+* Version 5.0.0 - 06 Nov 2026
+    * Updated CryptoExchange.Net to v13.2.3
+    * Added CryptoExchange.Net.Web3 dependency
+    * Updated AsterCredentials to use EthKey instead of separate public/private key strings
+      * EthKey passing: new AsterV3Credential(EthKey.FromPrivateKey("<wallet PK>"), EthKey.FromPrivateKey("<signer PK>"))
+    * Removed SpotApi and FuturesApi (V1) from the library
+    * Added Builder logic for Spot API
+    * Added restClient.SpotV3Api.Account.ApproveBuilderAsync, UpdateBuilderAsync, DeleteBuilderAsync and GetApprovedBuildersAsync endpoints
+	* Added Type to AsterAsset model
+    * Updated SymbolOrderBook implementations to use V3 instead of V1 API
+    * Updated Tracker implementations to use V3 instead of V1 API
+    * Updated Builder registration check
+
 * Version 4.6.0 - 30 Sep 2026
     * Updated CryptoExchange.Net to V13.1.0
 
