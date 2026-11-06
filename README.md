@@ -70,7 +70,9 @@ var lastPrice = tickerResult.Data.LastPrice;
 *Place order:*
 ```csharp
 var restClient = new AsterRestClient(opts => {
-	opts.ApiCredentials = new AsterCredentials(new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY"));
+    opts.ApiCredentials = new AsterCredentials(
+        new AsterV3Credential(
+            EthKey.FromPrivateKey("PRIVATEKEY"), EthKey.FromPrivateKey("SIGNERPRIVATEKEY")));
 });
 
 // Place Limit order to go long for 0.1 ETH at 2000
@@ -139,32 +141,24 @@ For AI coding assistants and quick onboarding:
 See [cryptoexchange-skills-hub](https://github.com/JKorf/cryptoexchange-skills-hub) for installable skills.
 
 ## Authentication
-Depending on the API used different credentials types are required.  
-**V3 | SpotV3Api / FuturesV3Api**  
-The V3 API is recommended, API credentials can be provided via the AsterV3Credential overload available on the AsterCredentials object.  
+
+API credentials can be provided via the AsterV3Credential on the AsterCredentials object.  
 There are 2 ways to provide credentials for the V3 API:
-1. Use the private key of your wallet connected to Aster and the private signer key, which can be obtained via the Aster UI under [Api Management] => [Pro Api]  
+1. Use the private key of your wallet connected to Aster and the signer wallet private key.
+The signer wallet has to be registered in the UI or via `restClient.FuturesApi.Account.CreateOrApproveAgentAsync` (futures only).
 This gives access to all endpoints.
 ```
-var credentials = new AsterCredentials(new AsterV3Credential("PRIVATEKEY", "SIGNERPRIVATEKEY"));
+var credentials = new AsterCredentials(new AsterV3Credential(EthKey.FromPrivateKey("PRIVATEKEY"), EthKey.FromPrivateKey("SIGNERPRIVATEKEY")));
 var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
 var result = await client.FuturesV3Api.Account.GetBalancesAsync();
 ```
 
-2. Use the public address of your wallet connected to Aster and the public and private signer key which can be obtained via the Aster UI under [Api Management] => [Pro Api]  
+2. Use the public address of your wallet connected to Aster and the private signer key .
 This gives access to most but not all endpoints.
 ```
-var credentials = new AsterCredentials(new AsterV3Credential("PUBLICADDRESS", "SIGNERPUBLICKEY", "SIGNERPRIVATEKEY"));
+var credentials = new AsterCredentials(new AsterV3Credential(EthKey.FromPublicAddress("PUBLICADDRESS"), EthKey.FromPrivateKey("SIGNERPRIVATEKEY")));
 var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
 var result = await client.FuturesV3Api.Account.GetBalancesAsync();
-```
-
-**V1 | SpotApi / FuturesApi**  
-The V1 API only requires the credentials which can be obtained via the Aster UI under [Api Management] => [Api]
-```
-var credentials = new AsterCredentials(new HMACCredential("APIKEY", "APISECRET"));
-var client = new AsterRestClient(opts => { opts.ApiCredentials = credentials; });
-var result = await client.FuturesApi.Account.GetBalancesAsync();
 ```
 
 ## CryptoExchange.Net
@@ -213,18 +207,6 @@ A Discord server is available [here](https://discord.gg/MSpeEtSY8t). For discuss
 
 ## Supported functionality
 
-### Spot V1 REST
-|API|Supported|Location|
-|--|--:|--|
-|Market Data|✓|`restClient.SpotApi.ExchangeData`|
-|Account and Trading|✓|`restClient.SpotApi.Account` / `restClient.SpotApi.Trading`|
-
-### Spot V1 WebSocket
-|API|Supported|Location|
-|--|--:|--|
-|Market Data|✓|`socketClient.SpotApi`|
-|Account Information|✓|`socketClient.SpotApi`|
-
 ### Spot V3 REST
 |API|Supported|Location|
 |--|--:|--|
@@ -236,18 +218,6 @@ A Discord server is available [here](https://discord.gg/MSpeEtSY8t). For discuss
 |--|--:|--|
 |Market Data|✓|`socketClient.SpotV3Api`|
 |Account Information|✓|`socketClient.SpotV3Api`|
-
-### Futures REST
-|API|Supported|Location|
-|--|--:|--|
-|Market Data|✓|`restClient.FuturesApi.ExchangeData`|
-|Account and Trading|✓|`restClient.FuturesApi.Account` / `restClient.FuturesV3Api.Trading`|
-
-### Futures WebSocket
-|API|Supported|Location|
-|--|--:|--|
-|Market Data|✓|`socketClient.FuturesApi`|
-|Account Information|✓|`socketClient.FuturesApi`|
 
 ### Futures V3 REST
 |API|Supported|Location|

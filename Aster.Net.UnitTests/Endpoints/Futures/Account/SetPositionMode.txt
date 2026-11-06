@@ -1,7 +1,0 @@
-POST
-/fapi/v1/positionSide/dual
-true
-{
-	"code": 200,
-	"msg": "success"
-}

@@ -95,5 +95,70 @@ namespace Aster.Net.Interfaces.Clients.SpotV3Api
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
         Task<HttpResult> StopUserStreamAsync(string listenKey, CancellationToken ct = default);
+
+        /// <summary>
+        /// Approve a builder to charge a fee, uses the parameters from the client options
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/spot-endpoints/#approve-spot-builder-spot_trade" /><br />
+        /// Endpoint:<br />
+        /// POST /api/v3/approveBuilder
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        Task<HttpResult> ApproveBuilderAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Approve a builder to charge a fee
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/spot-endpoints/#approve-spot-builder-spot_trade" /><br />
+        /// Endpoint:<br />
+        /// POST /api/v3/approveBuilder
+        /// </para>
+        /// </summary>
+        /// <param name="builderAddress">["<c>builder</c>"] The builder address</param>
+        /// <param name="maxFeeRate">["<c>maxFeeRate</c>"] Max fee rate in percentage the builder can charge. 0.001 = 0.1%</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<HttpResult> ApproveBuilderAsync(string builderAddress, decimal maxFeeRate, CancellationToken ct = default);
+
+        /// <summary>
+        /// Update a previously approved builder
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/spot-endpoints/#update-spot-builder-spot_trade" /><br />
+        /// Endpoint:<br />
+        /// POST /api/v3/updateBuilder
+        /// </para>
+        /// </summary>
+        /// <param name="builderAddress">["<c>builder</c>"] The builder address</param>
+        /// <param name="newMaxFeeRate">["<c>maxFeeRate</c>"] Max new fee rate the builder can charge. 0.001 = 0.1%</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<HttpResult> UpdateBuilderAsync(string builderAddress, decimal newMaxFeeRate, CancellationToken ct = default);
+
+        /// <summary>
+        /// Remove a previously approved builder
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/spot-endpoints/#delete-spot-builder-spot_trade" /><br />
+        /// Endpoint:<br />
+        /// DELETE /api/v3/delBuilder
+        /// </para>
+        /// </summary>
+        /// <param name="builderAddress">["<c>builder</c>"] The builder address</param>
+        /// <param name="ct">Cancellation token</param>
+        Task<HttpResult> DeleteBuilderAsync(string builderAddress, CancellationToken ct = default);
+
+        /// <summary>
+        /// Get approved builders
+        /// <para>
+        /// Docs:<br />
+        /// <a href="https://asterdex.github.io/aster-api-website/asterCode/spot-endpoints/#get-spot-builders-user_data" /><br />
+        /// Endpoint:<br />
+        /// GET /api/v3/builder
+        /// </para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        Task<HttpResult<AsterBuilder[]>> GetApprovedBuildersAsync(CancellationToken ct = default);
     }
 }

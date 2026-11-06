@@ -1,12 +1,9 @@
 using Aster.Net.Clients.MessageHandlers;
-using Aster.Net.Interfaces.Clients.SpotApi;
 using Aster.Net.Interfaces.Clients.SpotV3Api;
 using Aster.Net.Objects.Options;
 using Aster.Net.Utils;
 using CryptoExchange.Net;
-using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Clients;
-using CryptoExchange.Net.Converters.MessageParsing;
 using CryptoExchange.Net.Converters.MessageParsing.DynamicConverters;
 using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Interfaces;
@@ -17,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -81,8 +77,11 @@ namespace Aster.Net.Clients.SpotV3Api
         protected override AsterV3AuthenticationProvider CreateAuthenticationProvider(AsterCredentials credentials)
             => new AsterV3AuthenticationProvider(credentials);
 
-        internal async Task<HttpResult> SendAsync(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null)
+        internal async Task<HttpResult> SendAsync(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null, bool checkBuilderFee = true)
         {
+            if (checkBuilderFee && definition.Authenticated)
+                await AsterUtils.CheckSpotBuilderFeeAsync(BaseClient).ConfigureAwait(false);
+
             var result = await base.SendAsync<Unit>(definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
             if (!result.Success && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
@@ -92,10 +91,10 @@ namespace Aster.Net.Clients.SpotV3Api
             return result;
         }
 
-        internal async Task<HttpResult<T>> SendAsync<T>(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
+        internal async Task<HttpResult<T>> SendAsync<T>(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null, bool checkBuilderFee = true) where T : class
         {
-            if (definition.Authenticated)
-                await AsterUtils.CheckBuilderFeeAsync(BaseClient).ConfigureAwait(false);
+            if (checkBuilderFee && definition.Authenticated)
+                await AsterUtils.CheckSpotBuilderFeeAsync(BaseClient).ConfigureAwait(false);
 
             var result = await base.SendAsync<T>(definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
             if (!result.Success && result.Error!.ErrorType == ErrorType.InvalidTimestamp && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))

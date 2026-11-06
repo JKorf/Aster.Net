@@ -1,6 +1,0 @@
-GET
-/fapi/v1/positionSide/dual
-true
-{
-	"dualSidePosition": true
-}

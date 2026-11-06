@@ -5,6 +5,7 @@ using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Interfaces.Clients;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Testing;
+using CryptoExchange.Net.Web3;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -17,8 +18,10 @@ namespace Aster.Net.UnitTests
         [Test]
         public void CheckSignatureExample1()
         {
-            var authProvider = new AsterV1AuthenticationProvider(new AsterCredentials("XXX", "XXX"));
-            var client = (RestApiClient)new AsterRestClient().FuturesApi;
+            var authProvider = new AsterV3AuthenticationProvider(new AsterCredentials(new Objects.AsterV3Credential(
+                    EthKey.FromPrivateKey("0x0000000000000000000000000000000000000000000000000000000000000001"),
+                    EthKey.FromPrivateKey("0x0000000000000000000000000000000000000000000000000000000000000001"))));
+            var client = (RestApiClient)new AsterRestClient().FuturesV3Api;
 
             CryptoExchange.Net.Testing.TestHelpers.CheckSignature(
                 client,
@@ -29,7 +32,7 @@ namespace Aster.Net.UnitTests
                 {
                     return bodyParams["signature"].ToString();
                 },
-                "D8931A9A64A70323E272938E34E56EA63FF665AA44AC8A9A7AA4BDFF74614816",
+                "0xAA7B7E6835234560E32F03C565FD4697FF7B1C0D64C751D4969B741089F18F244FA5221AE814A528A45D3AB8E8392A94D125DF85ED0581C6165F3CA2FB9E28701B",
                 new Parameters(AsterExchange._parameterSerializationSettings)
                 {
                     { "symbol", "LTCBTC" },
@@ -45,25 +48,6 @@ namespace Aster.Net.UnitTests
             CryptoExchange.Net.Testing.TestHelpers.CheckForMissingSocketInterfaces<AsterSocketClient>();
         }
 
-
-        [Test]
-        public void TestSocketFuturesSharedApiDiscoveryMatchesAggregate()
-        {
-            var (missingOptions, missingInterfaces) = CryptoExchange.Net.Testing.TestHelpers.ValidateSharedApi(new AsterSocketClient().FuturesApi.SharedApi);
-
-            Assert.That(missingOptions, Is.Empty);
-            Assert.That(missingInterfaces, Is.Empty);
-        }
-
-        [Test]
-        public void TestRestFuturesSharedApiDiscoveryMatchesAggregate()
-        {
-            var (missingOptions, missingInterfaces) = CryptoExchange.Net.Testing.TestHelpers.ValidateSharedApi(new AsterRestClient().FuturesApi.SharedApi);
-
-            Assert.That(missingOptions, Is.Empty);
-            Assert.That(missingInterfaces, Is.Empty);
-        }
-
         [Test]
         public void TestSocketFuturesV3SharedApiDiscoveryMatchesAggregate()
         {
@@ -77,24 +61,6 @@ namespace Aster.Net.UnitTests
         public void TestRestFuturesV3SharedApiDiscoveryMatchesAggregate()
         {
             var (missingOptions, missingInterfaces) = CryptoExchange.Net.Testing.TestHelpers.ValidateSharedApi(new AsterRestClient().FuturesV3Api.SharedApi);
-
-            Assert.That(missingOptions, Is.Empty);
-            Assert.That(missingInterfaces, Is.Empty);
-        }
-
-        [Test]
-        public void TestSocketSpotSharedApiDiscoveryMatchesAggregate()
-        {
-            var (missingOptions, missingInterfaces) = CryptoExchange.Net.Testing.TestHelpers.ValidateSharedApi(new AsterSocketClient().SpotApi.SharedApi);
-
-            Assert.That(missingOptions, Is.Empty);
-            Assert.That(missingInterfaces, Is.Empty);
-        }
-
-        [Test]
-        public void TestRestSpotSharedApiDiscoveryMatchesAggregate()
-        {
-            var (missingOptions, missingInterfaces) = CryptoExchange.Net.Testing.TestHelpers.ValidateSharedApi(new AsterRestClient().SpotApi.SharedApi);
 
             Assert.That(missingOptions, Is.Empty);
             Assert.That(missingInterfaces, Is.Empty);

@@ -1,4 +1,3 @@
-using Aster.Net.Clients.SpotApi;
 using CryptoExchange.Net.Interfaces.Clients;
 using System;
 

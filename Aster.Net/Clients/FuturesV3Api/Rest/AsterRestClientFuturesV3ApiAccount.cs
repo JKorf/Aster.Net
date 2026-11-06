@@ -1,16 +1,12 @@
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Objects.Internal;
 using Aster.Net.Objects.Models;
-using Aster.Net.Utils;
 using CryptoExchange.Net;
-using CryptoExchange.Net.Converters.SystemTextJson;
 using CryptoExchange.Net.Objects;
 using System;
 using System.Globalization;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

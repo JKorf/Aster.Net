@@ -1,5 +1,4 @@
 using Aster.Net.Enums;
-using Aster.Net.Interfaces.Clients.FuturesApi;
 using Aster.Net.Interfaces.Clients.FuturesV3Api;
 using Aster.Net.Objects.Models;
 using CryptoExchange.Net;

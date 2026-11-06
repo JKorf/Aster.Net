@@ -1,6 +1,0 @@
-GET
-/fapi/v1/multiAssetsMargin
-true
-{
-	"multiAssetsMargin": true
-}

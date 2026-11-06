@@ -72,9 +72,9 @@ namespace Aster.Net.SymbolOrderBooks
         {
             WebSocketResult<UpdateSubscription> subResult;
             if (Levels == null)
-                subResult = await _socketClient.FuturesApi.SubscribeToOrderBookUpdatesAsync(Symbol, _updateInterval, HandleUpdate).ConfigureAwait(false);
+                subResult = await _socketClient.FuturesV3Api.SubscribeToOrderBookUpdatesAsync(Symbol, _updateInterval, HandleUpdate).ConfigureAwait(false);
             else
-                subResult = await _socketClient.FuturesApi.SubscribeToPartialOrderBookUpdatesAsync(Symbol, Levels.Value, _updateInterval, HandleUpdate).ConfigureAwait(false);
+                subResult = await _socketClient.FuturesV3Api.SubscribeToPartialOrderBookUpdatesAsync(Symbol, Levels.Value, _updateInterval, HandleUpdate).ConfigureAwait(false);
 
             if (!subResult.Success)
                 return CallResult<UpdateSubscription>.Fail(subResult.Error!);
@@ -91,7 +91,7 @@ namespace Aster.Net.SymbolOrderBooks
                 // Wait up to 250ms until the first update has been received
                 await WaitUntilFirstUpdateBufferedAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(250), ct).ConfigureAwait(false);
 
-                var bookResult = await _restClient.FuturesApi.ExchangeData.GetOrderBookAsync(Symbol, Levels ?? 1000).ConfigureAwait(false);
+                var bookResult = await _restClient.FuturesV3Api.ExchangeData.GetOrderBookAsync(Symbol, Levels ?? 1000).ConfigureAwait(false);
                 if (!bookResult.Success)
                 {
                     _logger.Log(LogLevel.Debug, $"{Api} order book {Symbol} failed to retrieve initial order book");
@@ -134,7 +134,7 @@ namespace Aster.Net.SymbolOrderBooks
 
             // Wait up to 250ms until the first update has been received
             await WaitUntilFirstUpdateBufferedAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(250), ct).ConfigureAwait(false);
-            var bookResult = await _restClient.FuturesApi.ExchangeData.GetOrderBookAsync(Symbol, Levels ?? 1000).ConfigureAwait(false);
+            var bookResult = await _restClient.FuturesV3Api.ExchangeData.GetOrderBookAsync(Symbol, Levels ?? 1000).ConfigureAwait(false);
             if (!bookResult.Success)
                 return CallResult.Fail(bookResult.Error!);
 

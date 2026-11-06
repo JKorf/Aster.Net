@@ -1,6 +1,4 @@
-﻿using Aster.Net.Objects.Internal;
-using Aster.Net.Objects.Sockets;
-using CryptoExchange.Net;
+﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Sockets.HighPerf;
 using System;
 
