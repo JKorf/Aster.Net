@@ -251,6 +251,7 @@ Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/s
     * Removed SpotApi and FuturesApi (V1) from the library
     * Added Builder logic for Spot API
     * Added restClient.SpotV3Api.Account.ApproveBuilderAsync, UpdateBuilderAsync, DeleteBuilderAsync and GetApprovedBuildersAsync endpoints
+	* Added Type to AsterAsset model
     * Updated SymbolOrderBook implementations to use V3 instead of V1 API
     * Updated Tracker implementations to use V3 instead of V1 API
     * Updated Builder registration check
