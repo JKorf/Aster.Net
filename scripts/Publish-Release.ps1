@@ -88,19 +88,7 @@ foreach ($source in $sources) {
 dotnet nuget push $symbols --source https://api.nuget.org/v3/index.json --api-key $env:NUGET_API_KEY --skip-duplicate --timeout 300
 if ($LASTEXITCODE -ne 0) { throw 'Symbol package publishing failed.' }
 
-# NuGet accepts uploads before indexing them. Do not make the GitHub release
-# public until consumers can download the package and its payload is verified.
-$available = $false
-for ($attempt = 0; $attempt -lt 30; $attempt++) {
-    $download = Join-Path $temp 'available.nupkg'
-    if (Get-RemotePackage 'https://api.nuget.org/v3/index.json' $manifest.packageId $manifest.version @{} $download) {
-        Assert-ArchivePayloadEqual $package $download
-        $available = $true
-        break
-    }
-    Start-Sleep -Seconds 10
-}
-if (-not $available) { throw 'NuGet package is not available after five minutes. Keep the draft and re-run failed jobs later.' }
+# Registry acceptance completes publication; NuGet indexing proceeds separately.
 if ($release.draft) { $release = Invoke-ReleaseApi "repos/$Repository/releases/$($release.id)" 'PATCH' @{ draft = $false } }
 Write-Host "Published $($manifest.packageId) $($manifest.version): $($release.html_url)"
 if ($env:GITHUB_STEP_SUMMARY) {

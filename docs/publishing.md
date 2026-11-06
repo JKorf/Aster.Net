@@ -49,7 +49,7 @@ After approval, the workflow verifies package metadata, commit and SHA256 checks
 creates the configured Git tag and a draft GitHub release, and attaches both the
 NuGet package and symbol package, notes and manifest. It publishes the primary
 package to NuGet.org and GitHub Packages, and symbols to NuGet.org. Once the NuGet
-package is downloadable with the expected contents, it publishes the GitHub release.
+uploads are accepted, it publishes the GitHub release without waiting for indexing.
 There is no atomic transaction across these services: partial publication can occur.
 News API and Discord announcements are not part of this workflow yet.
 
@@ -101,7 +101,7 @@ in Manager for the announcements. Do not start preparation again.
 
 Do not choose **Re-run all jobs** after partial publication: a fresh build can
 produce different package bytes or metadata, which conflict with existing assets.
-Keep the draft, tag and artifact while recovering. If NuGet indexing exceeds five
-minutes, publication stops with the draft intact; retry failed jobs later. If the
+Keep the draft, tag and artifact while recovering. NuGet indexing does not block
+completion; packages may become downloadable after the release is published. If the
 30-day artifact retention expires, recover from the original draft attachments
 manually. Do not delete published versions or move tags to retry different code.
