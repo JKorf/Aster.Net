@@ -70,8 +70,11 @@ solo-maintainer workflow.
 Merge the PR in the browser with your user account so the merge event starts the
 publishing workflow. That workflow uses the run name
 `Publish release PR #<number>` to let Manager identify the matching publication.
-Install the workflow and its scripts in each library repository before enabling
-publication there. Package selection and main/master support come from the
+Install the two local workflow templates in each library repository before enabling
+publication there. They call shared actions pinned to a tested commit; scripts
+and script regression tests live in CryptoExchange.Net.ReleaseWorkflow. NuGet
+login and approval environments remain in the library workflow, so migration
+does not require a different trusted publishing policy. Package selection and main/master support come from the
 repository's `.github/release-config.json`.
 
 References:

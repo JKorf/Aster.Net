@@ -2,7 +2,7 @@
 
 ## One-time setup
 
-1. Merge `publish-release.yml`, its scripts and release configuration into main
+1. Merge `publish-release.yml` and release configuration into main
    before merging the first preparation PR.
 2. In **Settings > Environments**, create `release`. Add yourself as a required
    reviewer and leave **Prevent self-review** unchecked. Under deployment branches
@@ -51,15 +51,19 @@ NuGet package and symbol package, notes and manifest. It publishes the primary
 package to NuGet.org and GitHub Packages, and symbols to NuGet.org. Once the NuGet
 uploads are accepted, it publishes the GitHub release without waiting for indexing.
 There is no atomic transaction across these services: partial publication can occur.
-News API and Discord announcements are not part of this workflow yet.
+Manager sends News API and Discord announcements after PrepareAndRelease succeeds.
 
 ## Configuration and reuse
 
 `.github/release-config.json` selects `main` or `master` and lists independent
 packages. Each preparation PR selects one package using its
 `release/<key>/<version>` branch; other packages in that repository are untouched.
-Copy the workflow and scripts to other repositories and configure their package
-project, README, test projects, package ID and unique tag prefix. README entries
+The local workflows call shared composite actions pinned to a tested commit in
+[CryptoExchange.Net.ReleaseWorkflow](https://github.com/JKorf/CryptoExchange.Net.ReleaseWorkflow).
+Scripts and their regression tests are maintained there. Local script copies are
+unused by these workflows and can be removed after the first shared-action release.
+For other libraries, copy the shared repository's workflow templates and configure
+their project, README, test projects, package ID and unique tag prefix. README entries
 must follow the format produced by Prepare-Release.ps1. Stable three-part versions
 are supported. Each repository also needs the setup above.
 
@@ -79,7 +83,8 @@ and existing registry packages must have the same ZIP entries (ignoring NuGet's
 repository signature). Conflicts stop the run rather than overwrite a release.
 
 If the publishing script itself needs fixing, rerunning the old job will still
-use its old source commit. Commit/merge the corrected workflow and scripts into
+use its pinned automation revision. Update all shared-action references to a
+tested commit containing the fix and merge the corrected workflows into
 main/master, then open **Actions > Publish release > Run workflow** on that branch.
 Supply `original_run_id` and the original package `artifact_id`. Obtain IDs with:
 

@@ -1,6 +1,7 @@
 using Aster.Net;
 using Aster.Net.Clients;
 using Aster.Net.Enums;
+using CryptoExchange.Net.Web3;
 
 const string spotSymbol = "BTCUSDT";
 const string futuresSymbol = "ETHUSDT";
@@ -17,7 +18,7 @@ Console.WriteLine();
 var client = new AsterRestClient(options =>
 {
     options.ApiCredentials = new AsterCredentials()
-        .WithV3(userPrivateKey, signerPrivateKey);
+        .WithV3(EthKey.FromPrivateKey(userPrivateKey), EthKey.FromPrivateKey(signerPrivateKey));
 });
 
 await PlaceSpotLimitOrderAsync(client);
