@@ -131,14 +131,11 @@ Console.WriteLine(result.Data.LastPrice);
 The request and response models belong to `CryptoExchange.Net.SharedApis`, so the same operation can accept another exchange's `IGetTickerRest` implementation. When using dependency injection, inject `IAsterSharedApiClient` to access all of the exchange's Shared API surfaces or inject a capability such as `IGetTickerRest` directly. Use `GetCapability` on the aggregate when the operation, transport, or trading mode is selected at runtime.
 
 ## AI documentation
-For AI coding assistants and quick onboarding:
-* [AGENTS.md](AGENTS.md) skill-style instructions for Aster.Net usage
-* [`llms.txt`](llms.txt) provides concise AI context
-* [`llms-full.txt`](llms-full.txt) provides detailed patterns, pitfalls and endpoint routing
-* [`docs/ai-api-map.md`](docs/ai-api-map.md) maps common intents to V3 client members
-* [`Examples/ai-friendly`](Examples/ai-friendly) contains compact examples that are compiled by the test suite
 
-See [cryptoexchange-skills-hub](https://github.com/JKorf/cryptoexchange-skills-hub) for installable skills.
+* [Aster.Net skill](.claude/skills/aster-net/SKILL.md) contains consumer guidance and links to API routing and usage references. It is also included in the NuGet package.
+* [AGENTS.md](AGENTS.md) covers development of this repository.
+* [llms.txt](llms.txt) indexes the AI documentation and source references.
+* [Examples/ai-friendly](Examples/ai-friendly) contains complete programs compiled by the test suite.
 
 ## Authentication
 

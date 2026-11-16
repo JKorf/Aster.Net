@@ -1,183 +1,51 @@
----
-name: aster-net
-description: Use Aster.Net when generating C#/.NET code that interacts with Aster DEX, including Spot V3, Futures V3, REST endpoints, WebSocket subscriptions, account management, market data, or order placement. Triggers on Aster integration requests in C#, .NET, dotnet, F#, or VB.NET context.
----
+# Working on Aster.Net
 
-# Aster.Net Skill
+For library development, use this file. For code that consumes the library, read the [Aster.Net skill](.claude/skills/aster-net/SKILL.md). [llms.txt](llms.txt) indexes the remaining documentation.
 
-## Quick decision
+## Repository layout
 
-If the user asks for Aster API access in C#/.NET, use **Aster.Net**. Do not write raw `HttpClient` calls to Aster endpoints. For multi-exchange code, use `CryptoExchange.Net.SharedApis`.
+- [Client interfaces](Aster.Net/Interfaces/Clients/): public endpoint signatures and XML documentation.
+- [Clients](Aster.Net/Clients/): REST, WebSocket, and Shared API implementations, grouped by API and transport.
+- [Models](Aster.Net/Objects/Models/), [options](Aster.Net/Objects/Options/), and [enums](Aster.Net/Enums/): wire models and configuration.
+- [Unit tests](Aster.Net.UnitTests/): request/response fixtures, subscription validation, and example compilation.
+- [AI-friendly examples](Examples/ai-friendly/): complete consumer programs.
 
-## Installation
+## Build and validation
 
-```bash
-dotnet add package Jkorf.Aster.Net
+Run commands from the repository root. Use the SDK configured in the [build workflow](.github/workflows/dotnet.yml); targets and dependencies are defined in the [library project](Aster.Net/Aster.Net.csproj).
+
+```sh
+dotnet restore Aster.Net.sln
+dotnet build Aster.Net.sln --no-restore
+dotnet test Aster.Net.UnitTests/Aster.Net.UnitTests.csproj --no-build
 ```
 
-Targets: netstandard2.0, netstandard2.1, net8.0, net9.0, net10.0. Native AOT supported.
+Debug builds select a subset of frameworks. To check every supported target:
 
-## Core Pattern: REST Client Setup
-
-Always create the client via `AsterRestClient`. For V3 private endpoints, configure V3 credentials.
-
-```csharp
-using Aster.Net;
-using Aster.Net.Clients;
-
-var restClient = new AsterRestClient(options =>
-{
-    options.ApiCredentials = new AsterCredentials()
-        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
-});
+```sh
+dotnet build Aster.Net/Aster.Net.csproj -p:BuildAllFrameworks=true
 ```
 
-For read-only public market data:
+Run focused tests for the change. For edits to consumer examples:
 
-```csharp
-var publicClient = new AsterRestClient();
+```sh
+dotnet test Aster.Net.UnitTests/Aster.Net.UnitTests.csproj --filter FullyQualifiedName~AiExampleCompileTests
 ```
 
-## Core Pattern: Result Handling
+That test compiles the examples; it does not execute their exchange operations or validate Markdown snippets. Integration tests are disabled by default; do not enable authenticated exchange calls as part of routine validation.
 
-Every method returns `HttpResult<T>` (REST) or `WebSocketResult<T>` (WebSocket). Always check `.Success` before accessing `.Data`.
+## Implementation conventions
 
-```csharp
-var ticker = await restClient.SpotV3Api.ExchangeData.GetTickerAsync("BTCUSDT");
-if (!ticker.Success)
-{
-    Console.WriteLine($"Error: {ticker.Error}");
-    return;
-}
+- Use the matching client interface and a neighboring endpoint implementation as the starting point. Preserve endpoint metadata, serialization, signing, rate limits, and cancellation behavior.
+- Update public interfaces and XML documentation together with implementations. Add meaningful request/response or subscription coverage when behavior changes.
+- Keep Shared API adapters consistent with native endpoint behavior; verify capability support and trading modes against the implemented surface.
+- Preserve serialization compatibility and source-generated JSON metadata when changing models.
+- Keep changes compatible with every target in the library project; gate framework-specific APIs where required.
 
-var price = ticker.Data.LastPrice;
-```
+## AI documentation ownership
 
-## Core Pattern: V3 API Surface
-
-Use V3 by default:
-
-```csharp
-restClient.SpotV3Api.ExchangeData
-restClient.SpotV3Api.Account
-restClient.SpotV3Api.Trading
-
-restClient.FuturesV3Api.ExchangeData
-restClient.FuturesV3Api.Account
-restClient.FuturesV3Api.Trading
-
-socketClient.SpotV3Api
-socketClient.FuturesV3Api
-```
-
-V1 branches (`SpotApi`, `FuturesApi`) are compatibility branches. Avoid them in generated examples unless V1 is explicitly requested.
-
-## Core Pattern: Placing a Spot Order
-
-Let the library generate and manage the client order ID. Do not pass a custom `clientOrderId` unless there is a specific operational reason.
-
-```csharp
-using Aster.Net.Enums;
-
-var order = await restClient.SpotV3Api.Trading.PlaceOrderAsync(
-    symbol: "BTCUSDT",
-    side: OrderSide.Buy,
-    type: OrderType.Limit,
-    quantity: 0.001m,
-    price: 50000m,
-    timeInForce: TimeInForce.GoodTillCanceled);
-
-if (!order.Success) { Console.WriteLine(order.Error); return; }
-var orderId = order.Data.Id;
-```
-
-## Core Pattern: Placing a Futures Order
-
-```csharp
-using Aster.Net.Enums;
-
-await restClient.FuturesV3Api.Account.SetLeverageAsync("ETHUSDT", 10);
-
-var order = await restClient.FuturesV3Api.Trading.PlaceOrderAsync(
-    symbol: "ETHUSDT",
-    side: OrderSide.Buy,
-    type: OrderType.Market,
-    quantity: 0.1m);
-
-// In Hedge mode add positionSide: PositionSide.Long / PositionSide.Short.
-```
-
-## Core Pattern: WebSocket Subscriptions
-
-Use `AsterSocketClient`. Always store the `UpdateSubscription` and unsubscribe when done.
-
-```csharp
-var socketClient = new AsterSocketClient();
-
-var subscription = await socketClient.SpotV3Api.SubscribeToTickerUpdatesAsync(
-    "BTCUSDT",
-    update => Console.WriteLine(update.Data.LastPrice));
-
-if (!subscription.Success) { Console.WriteLine(subscription.Error); return; }
-
-await socketClient.UnsubscribeAsync(subscription.Data);
-```
-
-## Multi-Exchange via CryptoExchange.Net.SharedApis
-
-For exchange-agnostic code, use unified shared interfaces. Same pattern works against Aster, Binance, Bybit, OKX, Kraken, and other CryptoExchange.Net libraries.
-
-```csharp
-using Aster.Net.Clients;
-using CryptoExchange.Net.SharedApis;
-
-var asterShared = new AsterRestClient().SpotV3Api.SharedApi;
-var symbol = new SharedSymbol(TradingMode.Spot, "BTC", "USDT");
-var ticker = await asterShared.GetTickerAsync(new GetTickerRequest(symbol));
-```
-
-Shared symbol clients on both the V1 compatibility and V3 branches expose a symbol catalog. Call `GetSpotSymbolsAsync(...)` or `GetFuturesSymbolsAsync(...)` before reading `SpotSymbolCatalog` or `FuturesSymbolCatalog`; the catalog is unavailable until that initial query. V3 symbol queries also support `GetSymbolsRequest` asset-type filters and populate asset metadata. Spot assets are classified as crypto with stablecoin quotes, while futures can classify stock and commodity underlyings as TradFi equities or commodities.
-
-Shared book ticker, position, and user trade quantities use `SharedOrderQuantity`; read `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` as appropriate instead of treating the value as a `decimal`. Aster shared order books report `QuantityType` as `SharedQuantityType.BaseAsset`.
-
-## Dependency Injection
-
-```csharp
-using Aster.Net;
-using Microsoft.Extensions.DependencyInjection;
-
-services.AddAster(options =>
-{
-    options.ApiCredentials = new AsterCredentials()
-        .WithV3("USER_PRIVATE_KEY", "SIGNER_PRIVATE_KEY");
-});
-```
-
-Inject `IAsterRestClient` and `IAsterSocketClient`.
-
-## Common Pitfalls - AVOID
-
-- Do not use raw `HttpClient` to call Aster endpoints.
-- Do not use generic `ApiCredentials`; use `AsterCredentials`.
-- Do not use `new AsterCredentials("key", "secret")` for V3. That overload configures V1 HMAC credentials.
-- Do not default to `SpotApi` or `FuturesApi`; use `SpotV3Api` and `FuturesV3Api`.
-- Do not pass a custom `clientOrderId` unless required.
-- Do not mix sync and async. Always `await` async methods.
-- Do not instantiate clients per request.
-- Do not forget to unsubscribe from WebSocket streams.
-- Do not assume `HttpResult.Data` is non-null without checking `.Success`.
-
-## Environments
-
-```csharp
-var live = new AsterRestClient(o => o.Environment = AsterEnvironment.Live);
-```
-
-## Reference
-
-- Full client reference: https://cryptoexchange.jkorf.dev/Aster.Net/
-- Examples: `Examples/ai-friendly/`
-- Source: https://github.com/JKorf/Aster.Net
-- NuGet: https://www.nuget.org/packages/Jkorf.Aster.Net
-- Discord: https://discord.gg/MSpeEtSY8t
-
+- [SKILL.md](.claude/skills/aster-net/SKILL.md) owns consumer conventions and routes to detailed skill references.
+- [API surfaces](.claude/skills/aster-net/references/api-surfaces.md) owns endpoint routing; [usage](.claude/skills/aster-net/references/usage.md) owns snippets.
+- Link to those files instead of repeating API guides here or in tool-specific instructions.
+- Keep skill links relative. References outside the skill are checkout-only; packaged guidance must remain usable without repository sources.
+- The project packs [.claude/skills](.claude/skills/) into `skills/` in NuGet. After changing its layout, inspect package entries and verify referenced resources are included.

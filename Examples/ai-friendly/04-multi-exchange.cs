@@ -10,17 +10,17 @@
 using Aster.Net.Clients;
 using CryptoExchange.Net.SharedApis;
 
-// Each exchange client exposes a `.SharedClient` property on its API surfaces.
-// For Aster, prefer the V3 API branches.
-ISpotTickerRestClient asterShared = new AsterRestClient().SpotV3Api.SharedClient;
+// SharedApi exposes capabilities for individual operations.
+using var asterRest = new AsterRestClient();
+IGetTickerRest asterShared = asterRest.SpotV3Api.SharedApi;
 
 var btcusdt = new SharedSymbol(TradingMode.Spot, "BTC", "USDT");
 
 await PrintTicker(asterShared, btcusdt);
 
-async Task PrintTicker(ISpotTickerRestClient client, SharedSymbol symbol)
+async Task PrintTicker(IGetTickerRest client, SharedSymbol symbol)
 {
-    var result = await client.GetSpotTickerAsync(new GetTickerRequest(symbol));
+    var result = await client.GetTickerAsync(new GetTickerRequest(symbol));
     if (!result.Success)
     {
         Console.WriteLine($"[{client.Exchange}] Failed: {result.Error}");
@@ -30,15 +30,12 @@ async Task PrintTicker(ISpotTickerRestClient client, SharedSymbol symbol)
     Console.WriteLine($"[{client.Exchange}] {result.Data.Symbol}: {result.Data.LastPrice}");
 }
 
-// REST shared interfaces include:
-//   ISpotTickerRestClient, ISpotSymbolRestClient, ISpotOrderRestClient
-//   IFuturesOrderRestClient, IFuturesSymbolRestClient, IBalanceRestClient
-//   IPositionRestClient, IFeeRestClient, IOrderBookRestClient
-//   IRecentTradeRestClient, IKlineRestClient, ITransferRestClient
+// Other capabilities include IGetSpotSymbolsRest, IPlaceSpotOrderRest,
+// IPlaceFuturesOrderRest, IGetBalancesRest, and IGetOrderBookRest.
 
 // ---- WEBSOCKET EXAMPLE - SHARED SUBSCRIPTION ----
-var asterSocket = new AsterSocketClient();
-ITickerSocketClient asterTickerSocket = asterSocket.SpotV3Api.SharedClient;
+using var asterSocket = new AsterSocketClient();
+ISubscribeTickerSocket asterTickerSocket = asterSocket.SpotV3Api.SharedApi;
 
 var sub = await asterTickerSocket.SubscribeToTickerUpdatesAsync(
     new SubscribeTickerRequest(btcusdt),
@@ -50,10 +47,15 @@ if (!sub.Success)
     return;
 }
 
-Console.WriteLine("Press Enter to exit");
-Console.ReadLine();
-
-await asterSocket.UnsubscribeAsync(sub.Data);
+try
+{
+    Console.WriteLine("Press Enter to exit");
+    Console.ReadLine();
+}
+finally
+{
+    await asterSocket.UnsubscribeAsync(sub.Data);
+}
 
 // Note: shared socket interfaces do not expose UnsubscribeAsync.
 // Keep the concrete socket client and call concreteClient.UnsubscribeAsync(sub.Data).

@@ -1,20 +1,21 @@
-# Aster.Net AI API Quick Map
+# Aster.Net API surfaces
 
-Use this file to route common user intents to the correct Aster.Net client member. Prefer V3 APIs. If a method name or parameter is not listed here, inspect `Aster.Net/Interfaces/Clients/**` before generating code.
+Use this reference to route an intent to the relevant member. Table entries abbreviate overloads; confirm parameters in the installed package before use. For setup and result examples, see [usage](usage.md).
 
-## Client Roots
+## Client roots
 
-| Intent | Use |
-|---|---|
-| REST calls | `new AsterRestClient()` |
-| WebSocket streams | `new AsterSocketClient()` |
-| V3 API authentication | `options.ApiCredentials = new AsterCredentials().WithV3("userPrivateKey", "signerPrivateKey")` |
-| Live environment | `AsterEnvironment.Live` |
-| Dependency injection | `services.AddAster(options => { ... })` |
-| Spot V3 REST | `client.SpotV3Api` |
-| Futures V3 REST | `client.FuturesV3Api` |
-| Spot V3 socket | `socketClient.SpotV3Api` |
-| Futures V3 socket | `socketClient.FuturesV3Api` |
+| Surface | Purpose |
+| --- | --- |
+| `AsterRestClient.SpotV3Api.ExchangeData` | Spot market data |
+| `AsterRestClient.SpotV3Api.Account` | Spot balances, user streams, transfers, and commission rates |
+| `AsterRestClient.SpotV3Api.Trading` | Spot orders and user trades |
+| `AsterRestClient.FuturesV3Api.ExchangeData` | Futures market data |
+| `AsterRestClient.FuturesV3Api.Account` | Futures account, leverage, margin, and position mode |
+| `AsterRestClient.FuturesV3Api.Trading` | Futures orders, positions, and strategies |
+| `AsterSocketClient.SpotV3Api` | Spot subscriptions |
+| `AsterSocketClient.FuturesV3Api` | Futures subscriptions |
+
+Aster.Net 5.x has no V1 client branches. The tables below use `client` for an `AsterRestClient` and `socketClient` for an `AsterSocketClient` instance.
 
 ## Spot V3 REST
 
@@ -127,50 +128,52 @@ Use this file to route common user intents to the correct Aster.Net client membe
 | Subscribe futures liquidation updates | `socketClient.FuturesV3Api.SubscribeToLiquidationUpdatesAsync(symbol, handler)` |
 | Subscribe futures user data | `socketClient.FuturesV3Api.SubscribeToUserDataUpdatesAsync(...)` |
 
-## SharedApis
+## Futures strategy orders
 
-| User intent | Aster.Net member or interface |
-|---|---|
-| Shared spot REST client | `new AsterRestClient().SpotV3Api.SharedApi` |
-| Shared futures REST client | `new AsterRestClient().FuturesV3Api.SharedApi` |
-| Shared spot socket client | `new AsterSocketClient().SpotV3Api.SharedApi` |
-| Shared futures socket client | `new AsterSocketClient().FuturesV3Api.SharedApi` |
-| Shared spot ticker REST | `IGetTickerRest.GetTickerAsync(new GetTickerRequest(symbol))` |
-| Get/filter shared spot symbols | `IGetSpotSymbolsRest.GetSpotSymbolsAsync(new GetSymbolsRequest(...))` |
-| Read shared spot symbol catalog | `IGetSpotSymbolsRest.SpotSymbolCatalog` after a successful symbol query |
-| Get/filter shared futures symbols | `IGetFuturesSymbolsRest.GetFuturesSymbolsAsync(new GetSymbolsRequest(...))` |
-| Read shared futures symbol catalog | `IGetFuturesSymbolsRest.FuturesSymbolCatalog` after a successful symbol query |
-| Shared spot order REST | `IPlaceSpotOrderRest.PlaceSpotOrderAsync(...)` |
-| Shared futures order REST | `IPlaceFuturesOrderRest.PlaceFuturesOrderAsync(...)` |
-| Shared ticker socket | `ISubscribeTickerSocket.SubscribeToTickerUpdatesAsync(...)` |
-| Shared order book socket | `ISubscribeOrderBookSocket.SubscribeToOrderBookUpdatesAsync(...)` |
+The futures trading surface also exposes `PlaceChaseOrderAsync`, `PlaceStrategyOrderAsync`, `EditStrategyOrderAsync`, `GetOpenStrategyOrderAsync`, and `GetClosedStrategyOrderAsync`. For multi-leg responses, inspect nested results as well as outer success.
 
-For shared socket subscriptions, keep the concrete socket client and unsubscribe with `await socketClient.UnsubscribeAsync(subscription.Data)`.
+## Shared API V2
 
-V3 shared symbol queries apply the asset-type filters in `GetSymbolsRequest` and populate `DisplayName`, base/quote asset types, and subtypes. Spot symbols are classified as crypto with stablecoin quotes; futures stock and commodity underlyings are classified as TradFi equities and commodities. A symbol catalog is unavailable until its corresponding symbol query has completed successfully.
+For portable code, use `.SharedApi` on the selected native REST or socket root. Keep native request/model types separate from Shared API types.
 
-Shared book ticker, position, and user trade quantities use `SharedOrderQuantity`; read `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` as appropriate. Shared REST and socket order books report `QuantityType` as `SharedQuantityType.BaseAsset`.
+| Intent | Capability or member |
+| --- | --- |
+| Get a ticker | `IGetTickerRest.GetTickerAsync` |
+| Get/filter spot symbols | `IGetSpotSymbolsRest.GetSpotSymbolsAsync` |
+| Get/filter futures symbols | `IGetFuturesSymbolsRest.GetFuturesSymbolsAsync` |
+| Place a spot order | `IPlaceSpotOrderRest.PlaceSpotOrderAsync` |
+| Place a futures order | `IPlaceFuturesOrderRest.PlaceFuturesOrderAsync` |
+| Subscribe to tickers | `ISubscribeTickerSocket.SubscribeToTickerUpdatesAsync` |
+| Subscribe to trades | `ISubscribeTradesSocket.SubscribeToTradeUpdatesAsync` |
+| Subscribe to order books | `ISubscribeOrderBookSocket.SubscribeToOrderBookUpdatesAsync` |
 
-## Result Handling
+`IAsterSharedApiClient` groups the four supported surfaces:
 
-| Situation | Pattern |
-|---|---|
-| REST success check | `if (!result.Success) { Console.WriteLine(result.Error); return; }` |
-| Socket subscription success check | `if (!sub.Success) { Console.WriteLine(sub.Error); return; }` |
-| Read REST data | Read `result.Data` only after `result.Success` |
-| Retry decision | Retry only when `result.Error?.IsTransient == true` |
-| Cancellation | Pass `ct: cancellationToken` |
+| Property | Interface |
+| --- | --- |
+| `SpotV3Rest` | `IAsterRestClientSpotV3SharedApi` |
+| `FuturesV3Rest` | `IAsterRestClientFuturesV3SharedApi` |
+| `SpotV3Socket` | `IAsterSocketClientSpotV3SharedApi` |
+| `FuturesV3Socket` | `IAsterSocketClientFuturesV3SharedApi` |
 
-## Common Routing Pitfalls
+Use a surface property when the operation is known. For dynamic selection, call `GetCapability` on an aggregate instance with a typed descriptor such as `SharedCapabilities.Tickers.GetTicker.Rest`, and specify the intended trading mode when selecting between spot and futures. Check for a null match, then use its `Capability` and `Options`. Use `GetCapabilities` for all matches and `Discover` for summary metadata.
 
-| Do not use | Use instead |
-|---|---|
-| Raw `HttpClient` | `AsterRestClient` / `AsterSocketClient` |
-| `ApiCredentials` | `AsterCredentials` |
-| `new AsterCredentials("key", "secret")` for V3 | `new AsterCredentials().WithV3(...)` |
-| `SpotApi` for new code | `SpotV3Api` |
-| `FuturesApi` for new code | `FuturesV3Api` |
-| `.Data` without `.Success` check | Check `.Success` first |
-| Shared socket `UnsubscribeAsync(...)` | Keep the concrete socket client and call `socketClient.UnsubscribeAsync(subscription.Data)` |
-| Custom `clientOrderId` by default | Let Aster.Net auto-generate it |
-| `positionSide` in every futures order | Include only when hedge mode is intended |
+`AddAster` registers the aggregate and its supported capabilities. Where several surfaces or exchanges implement an injected capability, select the intended implementation explicitly instead of relying on the last DI registration.
+
+### Symbols and quantities
+
+Call `GetSpotSymbolsAsync` or `GetFuturesSymbolsAsync` successfully before reading the corresponding `SpotSymbolCatalog` or `FuturesSymbolCatalog`. `GetSymbolsRequest` supports asset-type filters. Symbol responses populate display names, base/quote asset types, and subtypes; futures can include stock and commodity underlyings.
+
+Shared book ticker, position, and user-trade quantities use `SharedOrderQuantity`. Read `QuantityInBaseAsset`, `QuantityInQuoteAsset`, or `QuantityInContracts` as appropriate. Aster shared order books report `QuantityType` as `SharedQuantityType.BaseAsset`.
+
+Shared subscriptions are closed through the concrete `AsterSocketClient.UnsubscribeAsync(subscription.Data)`.
+
+## Source navigation in a checkout
+
+These links are available in a source checkout, not in the standalone NuGet skill:
+
+- [Client interfaces](../../../../Aster.Net/Interfaces/Clients/): exact method signatures and endpoint documentation.
+- [Client implementations](../../../../Aster.Net/Clients/): transport and Shared API mappings.
+- [Compiled examples](../../../../Examples/ai-friendly/): complete programs.
+
+For packaged usage patterns, see [usage](usage.md).

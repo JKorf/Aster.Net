@@ -1,28 +1,18 @@
 # Aster.Net
 
-> Strongly typed .NET client library for the Aster DEX REST and WebSocket APIs. Supports Spot V3 and Futures V3 trading, with V1 compatibility branches. Part of the CryptoExchange.Net ecosystem providing a unified abstraction across cryptocurrency exchanges.
+> A .NET client library for Aster DEX Spot V3 and Futures V3 REST and WebSocket APIs.
 
-Aster.Net provides strongly typed public and private endpoints, automatic WebSocket reconnection, comprehensive error handling via the `HttpResult<T>` / `WebSocketResult<T>` pattern, native AOT support, and SharedApis integration for exchange-agnostic code. Shared V3 symbol queries support asset-type filtering and populate typed asset metadata plus spot/futures symbol catalogs. Current package version in this repository: 4.6.0. Targets netstandard2.0, netstandard2.1, net8.0, net9.0, net10.0.
+## Library usage
 
-## Documentation
+- [Aster.Net skill](.claude/skills/aster-net/SKILL.md): Consumer conventions and task-specific guidance.
+- [API surfaces](.claude/skills/aster-net/references/api-surfaces.md): Client roots, intent-to-method routing, and Shared APIs.
+- [Usage examples](.claude/skills/aster-net/references/usage.md): Authentication, REST, WebSockets, and dependency injection.
+- [Operational considerations](.claude/skills/aster-net/references/safety.md): Credentials, order handling, and retry decisions.
 
-- [README](https://github.com/JKorf/Aster.Net/blob/master/README.md): Overview, installation, supported features, basic usage examples, release notes
-- [Documentation Site](https://cryptoexchange.jkorf.dev/Aster.Net/): Full documentation hub including client reference, WebSocket subscriptions, dependency injection, and shared interfaces
-- [AI API Quick Map](https://github.com/JKorf/Aster.Net/blob/master/docs/ai-api-map.md): Quick intent-to-method map for routing common user requests to the correct V3 client member
-- [Full LLM Context](https://github.com/JKorf/Aster.Net/blob/master/llms-full.txt): Detailed AI/LLM guide with code patterns, endpoint map, common mistakes, and anti-hallucination rules
+## Repository and reference
 
-## Examples
-
-- [AI-friendly examples directory](https://github.com/JKorf/Aster.Net/tree/master/Examples/ai-friendly): Compact examples optimized for AI assistants and quick onboarding
-- [Spot V3 Quickstart](https://github.com/JKorf/Aster.Net/blob/master/Examples/ai-friendly/01-spot-quickstart.cs): Client setup, ticker, account balance, limit order placement, order status check
-- [Futures V3 Trading](https://github.com/JKorf/Aster.Net/blob/master/Examples/ai-friendly/02-futures.cs): Futures leverage, market order, position retrieval, position close
-- [WebSocket Streams](https://github.com/JKorf/Aster.Net/blob/master/Examples/ai-friendly/03-websocket.cs): Ticker and kline subscriptions with proper teardown
-- [Multi-Exchange Pattern](https://github.com/JKorf/Aster.Net/blob/master/Examples/ai-friendly/04-multi-exchange.cs): Using CryptoExchange.Net SharedApis for exchange-agnostic code
-- [Error Handling](https://github.com/JKorf/Aster.Net/blob/master/Examples/ai-friendly/05-error-handling.cs): HttpResult pattern, retry logic, common errors and their handling
-
-## Reference
-
-- [CryptoExchange.Net base library](https://github.com/JKorf/CryptoExchange.Net): Base abstractions used by Aster.Net and other exchange libraries
-- [CryptoClients.Net](https://github.com/JKorf/CryptoClients.Net): Bundle package providing unified access to exchange libraries
-- [NuGet Package](https://www.nuget.org/packages/Jkorf.Aster.Net): Latest stable release on NuGet
-- [Discord Community](https://discord.gg/MSpeEtSY8t): Maintainer-supported Discord for questions and discussion
+- [README](README.md): Overview, installation, release notes, and documentation site link.
+- [Repository instructions](AGENTS.md): Development workflow and documentation ownership.
+- [Client interfaces](Aster.Net/Interfaces/Clients/): Exact endpoint signatures and XML documentation.
+- [Library project](Aster.Net/Aster.Net.csproj): Package version, dependencies, and target frameworks.
+- [AI-friendly examples](Examples/ai-friendly/): Complete programs compiled by the documentation test.

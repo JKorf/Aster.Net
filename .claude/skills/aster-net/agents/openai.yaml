@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aster.Net"
+  short_description: "Build C# Aster DEX integrations with Aster.Net."
+  default_prompt: "Use $aster-net to implement an Aster.Net REST or websocket workflow."
