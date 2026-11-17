@@ -51,17 +51,17 @@ namespace Aster.Net
             var restClient = _serviceProvider?.GetRequiredService<IAsterRestClient>() ?? new AsterRestClient();
             var socketClient = _serviceProvider?.GetRequiredService<IAsterSocketClient>() ?? new AsterSocketClient();
 
-            IKlineRestClient sharedRestClient;
-            IKlineSocketClient sharedSocketClient;
+            IGetKlinesRest sharedRestClient;
+            ISubscribeKlinesSocket sharedSocketClient;
             if (symbol.TradingMode == TradingMode.Spot)
             {
-                sharedRestClient = restClient.SpotV3Api.SharedClient;
-                sharedSocketClient = socketClient.SpotV3Api.SharedClient;
+                sharedRestClient = restClient.SpotV3Api.SharedApi;
+                sharedSocketClient = socketClient.SpotV3Api.SharedApi;
             }
             else
             {
-                sharedRestClient = restClient.FuturesV3Api.SharedClient;
-                sharedSocketClient = socketClient.FuturesV3Api.SharedClient;
+                sharedRestClient = restClient.FuturesV3Api.SharedApi;
+                sharedSocketClient = socketClient.FuturesV3Api.SharedApi;
             }
 
             return new KlineTracker(
@@ -82,17 +82,17 @@ namespace Aster.Net
             var restClient = _serviceProvider?.GetRequiredService<IAsterRestClient>() ?? new AsterRestClient();
             var socketClient = _serviceProvider?.GetRequiredService<IAsterSocketClient>() ?? new AsterSocketClient();
 
-            IRecentTradeRestClient? sharedRestClient;
-            ITradeSocketClient sharedSocketClient;
+            IGetRecentTradesRest sharedRestClient;
+            ISubscribeTradesSocket sharedSocketClient;
             if (symbol.TradingMode == TradingMode.Spot)
             {
-                sharedRestClient = restClient.SpotV3Api.SharedClient;
-                sharedSocketClient = socketClient.SpotV3Api.SharedClient;
+                sharedRestClient = restClient.SpotV3Api.SharedApi;
+                sharedSocketClient = socketClient.SpotV3Api.SharedApi;
             }
             else
             {
-                sharedRestClient = restClient.FuturesV3Api.SharedClient;
-                sharedSocketClient = socketClient.FuturesV3Api.SharedClient;
+                sharedRestClient = restClient.FuturesV3Api.SharedApi;
+                sharedSocketClient = socketClient.FuturesV3Api.SharedApi;
             }
 
             return new TradeTracker(
