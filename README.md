@@ -240,6 +240,9 @@ Make a one time donation in a crypto currency of your choice. If you prefer to d
 Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Release notes
+* Version 5.1.0 - 17 Nov 2026
+    Updated CryptoExchange.Net to v13.3.0
+
 * Version 5.0.0 - 06 Nov 2026
     * Updated CryptoExchange.Net to v13.2.3
     * Added CryptoExchange.Net.Web3 dependency
