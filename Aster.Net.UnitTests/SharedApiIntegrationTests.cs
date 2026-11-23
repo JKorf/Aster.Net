@@ -26,14 +26,12 @@ namespace Aster.Net.UnitTests
             return provider.GetRequiredService<IAsterSharedApiClient>();
         }
 
-        protected override SharedApiTestConfig GetConfig(ISharedRest client)
+        protected override SharedApiTestConfig GetConfig(ISharedRest client, CapabilityOptions options)
         {
-            if (client is IAsterRestClientFuturesV3SharedApi)
-                return new SharedApiTestConfig(new SharedSymbol(TradingMode.PerpetualLinear, "ETH", "USDT"), "ETH");
-            if (client is IAsterRestClientSpotV3SharedApi)
+            if (options.SupportedTradingModes.Contains(TradingMode.Spot))
                 return new SharedApiTestConfig(new SharedSymbol(TradingMode.Spot, "ETH", "USDT"), "ETH");
 
-            throw new NotImplementedException();
+            return new SharedApiTestConfig(new SharedSymbol(TradingMode.PerpetualLinear, "ETH", "USDT"), "ETH");
         }
     }
 
@@ -58,14 +56,12 @@ namespace Aster.Net.UnitTests
             return provider.GetRequiredService<IAsterSharedApiClient>();
         }
 
-        protected override SharedApiTestConfig GetConfig(ISharedSocket client)
+        protected override SharedApiTestConfig GetConfig(ISharedSocket client, CapabilityOptions options)
         {
-            if (client is IAsterSocketClientFuturesV3SharedApi)
-                return new SharedApiTestConfig(new SharedSymbol(TradingMode.PerpetualLinear, "ETH", "USDT"), "ETH");
-            if (client is IAsterSocketClientSpotV3SharedApi)
+            if (options.SupportedTradingModes.Contains(TradingMode.Spot))
                 return new SharedApiTestConfig(new SharedSymbol(TradingMode.Spot, "ETH", "USDT"), "ETH");
 
-            throw new NotImplementedException();
+            return new SharedApiTestConfig(new SharedSymbol(TradingMode.PerpetualLinear, "ETH", "USDT"), "ETH");
         }
     }
 }
